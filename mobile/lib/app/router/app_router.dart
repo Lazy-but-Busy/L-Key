@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/shell/app_shell.dart';
 import 'package:l_key/core/config/environment.dart';
+import 'package:l_key/features/chords/presentation/chord_detail_page.dart';
 import 'package:l_key/features/chords/presentation/chords_page.dart';
 import 'package:l_key/features/foundation/presentation/foundation_page.dart';
 import 'package:l_key/features/home/presentation/home_page.dart';
@@ -68,6 +69,15 @@ GoRouter createRouter({Environment environment = Environment.local}) {
                     path: 'chords',
                     name: AppRoutes.chordsName,
                     builder: (context, state) => const ChordsPage(),
+                    routes: <RouteBase>[
+                      GoRoute(
+                        path: ':chordId',
+                        name: AppRoutes.chordDetailName,
+                        builder: (context, state) => ChordDetailPage(
+                          chordId: state.pathParameters['chordId'] ?? '',
+                        ),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'scales',

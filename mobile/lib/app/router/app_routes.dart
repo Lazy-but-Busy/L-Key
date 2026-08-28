@@ -35,6 +35,16 @@ abstract final class AppRoutes {
   /// Name for named navigation to [chords].
   static const String chordsName = 'chords';
 
+  /// A single chord, owned by the chord library.
+  ///
+  /// The first route in the app to carry a path parameter. `:chordId` is a
+  /// catalogue id such as `c-major` or `c-sharp-m7b5` — spelled out rather
+  /// than symbolic so it survives a URL unescaped.
+  static const String chordDetail = '/tools/chords/:chordId';
+
+  /// Name for named navigation to [chordDetail].
+  static const String chordDetailName = 'chordDetail';
+
   /// Scales, owned by Tools.
   static const String scales = '/tools/scales';
 
