@@ -79,5 +79,9 @@ the light danger red at 2.92:1 on the dark surface.
   `tokens:check:web`. Running the unscoped check on a machine without `dart`
   is a hard error, not a fallback — emitting unformatted Dart would report
   drift that regenerating cannot clear.
+- For the same reason this package's own `test` script is web-scoped. It is
+  reached by `npm test --workspaces` on the Node runner, so it must not need
+  a Dart toolchain. `build` is unscoped: generating is the whole point of it,
+  and full generation legitimately needs `dart`.
 - Generated Dart is analysed, not excluded. Excluding it once hid a real
   compile error.
