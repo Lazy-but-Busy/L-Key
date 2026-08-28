@@ -23,6 +23,12 @@ dependencies:
   # Message formatting for localisation.
   intl: any
 
+  # Annotations only — @immutable on the value types in core/music and the
+  # chord engine. Dart-team maintained, no runtime code, and the domain layer
+  # must not import package:flutter/foundation.dart to get the same thing
+  # (docs/adr/0009). Already present transitively; declared because we use it.
+  meta: ^1.15.0
+
   # Settings persistence. The platform offers no Dart-facing key-value store,
   # and this is the Flutter-team-maintained wrapper over NSUserDefaults and
   # SharedPreferences. See docs/adr/0008.
