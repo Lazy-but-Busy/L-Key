@@ -1126,7 +1126,7 @@ Entitlement
 | Tool | Version | Checked by |
 | --- | --- | --- |
 | Flutter | 3.47+ | `flutter doctor` |
-| Node | 20.11+ (see `.nvmrc`) | `node --version` |
+| Node | 20.19+, 22.12+, or 24+ (see `.nvmrc`) | `node --version` |
 | PostgreSQL | 16+ | needed from Phase 05 |
 
 ## Setup
