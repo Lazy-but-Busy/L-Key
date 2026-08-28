@@ -105,6 +105,31 @@ void main() {
       }
     });
 
+    test('the same shape is never listed twice', () {
+      // A curated open chord and a movable shape slid to the nut can stop
+      // identical frets and name different fingers. Two identical diagrams
+      // with different numbers on them help nobody.
+      for (final symbol in <String>['Em', 'Am', 'A7', 'Am7', 'E', 'C']) {
+        final chord = Chord(
+          root: Note.tryParse(symbol.substring(0, 1))!,
+          quality: switch (symbol.substring(1)) {
+            'm' => ChordQuality.minor,
+            '7' => ChordQuality.dominantSeventh,
+            'm7' => ChordQuality.minorSeventh,
+            _ => ChordQuality.major,
+          },
+        );
+        final shapes = ChordEngine.voicingsFor(
+          chord,
+        ).map((voicing) => voicing.fretString).toList();
+        expect(
+          shapes.toSet().length,
+          shapes.length,
+          reason: '$symbol lists $shapes',
+        );
+      }
+    });
+
     test('the same chord always produces the same shapes', () {
       // CLAUDE.md §17 — this is arithmetic, not a judgement call.
       final chord = _chord('F#', ChordQuality.minorSeventh);

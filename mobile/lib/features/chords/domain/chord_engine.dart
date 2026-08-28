@@ -68,6 +68,13 @@ abstract final class ChordEngine {
     int maxResults = defaultMaxResults,
   }) {
     final results = <ChordVoicing>[];
+    // Two shapes are the same shape when they stop the same frets. A curated
+    // open chord and a movable shape slid to the nut are often exactly that,
+    // differing only in which finger the table names — and showing a player
+    // two identical diagrams with different numbers on them is worse than
+    // showing one. The curated entry is added first and therefore wins.
+    final seen = <String>{};
+    bool keep(ChordVoicing voicing) => seen.add(voicing.fretString);
 
     if (chord.isSlash) {
       for (final slash in slashVoicings) {
@@ -77,14 +84,18 @@ abstract final class ChordEngine {
           continue;
         }
         final voicing = slash.toVoicing();
-        if (problemWith(voicing, chord, tuning) == null) results.add(voicing);
+        if (problemWith(voicing, chord, tuning) == null && keep(voicing)) {
+          results.add(voicing);
+        }
       }
     }
 
     for (final open in openVoicings) {
       if (open.root != chord.root || open.quality != chord.quality) continue;
       final voicing = open.toVoicing();
-      if (problemWith(voicing, chord, tuning) == null) results.add(voicing);
+      if (problemWith(voicing, chord, tuning) == null && keep(voicing)) {
+        results.add(voicing);
+      }
     }
 
     final movable = <ChordVoicing>[];
@@ -98,7 +109,7 @@ abstract final class ChordEngine {
       ]) {
         final voicing = shape.at(fret);
         if (problemWith(voicing, chord, tuning) != null) continue;
-        if (results.contains(voicing) || movable.contains(voicing)) continue;
+        if (!keep(voicing)) continue;
         movable.add(voicing);
       }
     }
