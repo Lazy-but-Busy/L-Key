@@ -441,6 +441,10 @@ export const tokens = {
     "disabled": {
       "value": 0.4,
       "source": "design system guidelines/brand-press.card.html \"Disabled is 40% opacity, never a grey re-tint\""
+    },
+    "stripe": {
+      "value": 0.2,
+      "source": "design system --lk-stripe; the 45° hatch over an orange progress fill"
     }
   },
   "semantic": {

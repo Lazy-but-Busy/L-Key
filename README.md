@@ -1127,7 +1127,7 @@ Entitlement
 | --- | --- | --- |
 | Flutter | 3.47+ | `flutter doctor` |
 | Node | 20.19+, 22.12+, or 24+ (see `.nvmrc`) | `node --version` |
-| PostgreSQL | 16+ | needed from Phase 05 |
+| PostgreSQL | 16+ | needed from Phase 06 |
 
 ## Setup
 
@@ -1194,7 +1194,16 @@ L Key is currently in the **early development / foundation phase**.
 * [x] Navigation — go_router
 * [x] Architecture — documented in `docs/ARCHITECTURE.md` with six ADRs
 
-## Phase 2 — Core Guitar Tools
+## Phase 2 — App Shell ✅
+
+* [x] Navigation — five-section shell, per-tab stacks, Android back
+* [x] Screens — Home, Tools, Learn, Practice, Songs, Profile
+* [x] Tool layouts — tuner, metronome, chords, scales (presentation only)
+* [x] Components — buttons, cards, headers, navigation, empty/error/loading
+* [x] Settings — language, appearance and reference pitch, persisted
+* [x] Accessibility — 44px targets, semantic labels, reduced motion
+
+## Phase 3 — Core Guitar Tools
 
 * [ ] Tuner
 * [ ] Chord Engine
@@ -1205,7 +1214,7 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Capo
 * [ ] Transposer
 
-## Phase 3 — Songs & Learning
+## Phase 4 — Songs & Learning
 
 * [ ] Song model
 * [ ] Song API
@@ -1215,7 +1224,7 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Lessons
 * [ ] Exercises
 
-## Phase 4 — Practice
+## Phase 5 — Practice
 
 * [ ] Practice sessions
 * [ ] Practice history
@@ -1223,7 +1232,7 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Progress
 * [ ] Basic analytics
 
-## Phase 5 — Backend
+## Phase 6 — Backend
 
 * [ ] Authentication
 * [ ] User profiles
@@ -1231,7 +1240,7 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Synchronization
 * [ ] Notifications
 
-## Phase 6 — Admin Portal
+## Phase 7 — Admin Portal
 
 * [ ] Admin authentication
 * [ ] Dashboard
@@ -1245,7 +1254,7 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Payment management
 * [ ] Analytics
 
-## Phase 7 — Premium
+## Phase 8 — Premium
 
 * [ ] Premium plans
 * [ ] Entitlements
@@ -1255,7 +1264,7 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Payment verification
 * [ ] Webhooks
 
-## Phase 8 — Advanced Tools
+## Phase 9 — Advanced Tools
 
 * [ ] Rhythm trainer
 * [ ] Strumming trainer
@@ -1265,13 +1274,13 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] CAGED system
 * [ ] Advanced fretboard
 
-## Phase 9 — AI
+## Phase 10 — AI
 
 * [ ] AI Guitar Assistant
 * [ ] AI Practice Coach
 * [ ] AI songwriting assistance
 
-## Phase 10 — Advanced Audio
+## Phase 11 — Advanced Audio
 
 * [ ] Chord recognition
 * [ ] Advanced pitch analysis

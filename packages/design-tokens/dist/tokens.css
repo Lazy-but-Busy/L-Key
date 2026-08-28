@@ -138,6 +138,7 @@
 
   /* unitless opacity */
   --lk-disabled-opacity: 0.4;
+  --lk-stripe-opacity: 0.2;
 
   /* semantic roles — light. Reference these, never the palette. */
   --lk-background: var(--lk-color-off-white);
