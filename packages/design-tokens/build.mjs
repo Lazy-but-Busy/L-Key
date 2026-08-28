@@ -241,6 +241,17 @@ function emitDart() {
   L.push("}");
   L.push("");
 
+  // --- opacity
+  L.push("/// Unitless opacity values. Separate from [LkDimens] because these");
+  L.push("/// carry no unit; a dimension would render as `0.4px` on the web.");
+  L.push("abstract final class LkOpacity {");
+  for (const [name, tok] of entries(T.opacity)) {
+    L.push(`  /// ${tok.value} — ${tok.source ?? words(name)}.`);
+    L.push(`  static const double ${name} = ${dartNum(tok.value)};`);
+  }
+  L.push("}");
+  L.push("");
+
   // --- typography
   L.push("/// Font families from DESIGN.md §8.");
   L.push("abstract final class LkFonts {");
@@ -345,6 +356,12 @@ function emitCss() {
   L.push("  /* component dimensions */");
   for (const [name, tok] of entries(T.dimension)) {
     L.push(`  --lk-${kebab(name)}: ${tok.value}px;`);
+  }
+
+  L.push("");
+  L.push("  /* unitless opacity */");
+  for (const [name, tok] of entries(T.opacity)) {
+    L.push(`  --lk-${kebab(name)}-opacity: ${tok.value};`);
   }
 
   L.push("");

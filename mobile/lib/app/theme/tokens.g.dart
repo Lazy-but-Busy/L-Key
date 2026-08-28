@@ -308,6 +308,58 @@ abstract final class LkDimens {
 
   /// 1232px — design system --lk-content-max.
   static const double contentMaxWidth = 1232;
+
+  /// 28px — design system components/core/AppButton.prompt.md "sm 26px"; measured 26.39 rounded up to the DESIGN.md §14 4px grid so the control clears its line box.
+  static const double buttonHeightSm = 28;
+
+  /// 48px — design system components/core/AppButton.jsx sm/md/lg/xl/hero ladder, md.
+  static const double buttonHeightMd = 48;
+
+  /// 52px — design system components/core/AppButton.jsx ladder, lg — the default mobile button.
+  static const double buttonHeightLg = 52;
+
+  /// 64px — design system components/core/AppButton.prompt.md "hero 61px"; measured 60.8 rounded up to the 4px grid.
+  static const double buttonHeightHero = 64;
+
+  /// 32px — design system components/core/AppIconButton.jsx painted box, small.
+  static const double iconBoxSm = 32;
+
+  /// 36px — design system components/core/AppIconButton.jsx default size.
+  static const double iconBoxMd = 36;
+
+  /// 48px — design system components/core/AppIconButton.jsx large, used for the Quick Tune play control.
+  static const double iconBoxLg = 48;
+
+  /// 64px — design system ui_kits/mobile_app/HomeScreen.jsx Import Tab circular mark.
+  static const double iconBoxCircle = 64;
+
+  /// 48px — design system components/core/AppTextField.jsx minHeight 45.59 rounded up to the 4px grid and to WCAG 2.5.5.
+  static const double textFieldMinHeight = 48;
+
+  /// 64px — design system components/navigation/BottomNavBar.prompt.md "active tab becomes a 64px Guitar Orange block".
+  static const double navItemMinWidth = 64;
+
+  /// 20px — design system components/navigation/BottomNavBar.jsx icon slot height 18, rounded up to the 4px grid.
+  static const double navIconSlot = 20;
+
+  /// 128px — design system components/music/SongCard.jsx artwork height.
+  static const double songArtworkHeight = 128;
+
+  /// 32px — design system components/music/PracticeProgress.jsx track height.
+  static const double progressTrackHeight = 32;
+
+  /// 3px — design system --lk-focus-width.
+  static const double focusRingWidth = 3;
+
+  /// 2px — design system --lk-focus-offset.
+  static const double focusRingOffset = 2;
+}
+
+/// Unitless opacity values. Separate from [LkDimens] because these
+/// carry no unit; a dimension would render as `0.4px` on the web.
+abstract final class LkOpacity {
+  /// 0.4 — design system guidelines/brand-press.card.html "Disabled is 40% opacity, never a grey re-tint".
+  static const double disabled = 0.4;
 }
 
 /// Font families from DESIGN.md §8.
@@ -379,6 +431,16 @@ abstract final class LkTypeScale {
     fontFamilyFallback: LkFonts.fallback,
     fontSize: 20,
     height: 1.5,
+    letterSpacing: 0,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// design system --lk-size-h4 18 / --lk-lh-h4 28; DESIGN.md §9 names no display step at 18
+  static const TextStyle h4 = TextStyle(
+    fontFamily: 'Space Grotesk',
+    fontFamilyFallback: LkFonts.fallback,
+    fontSize: 18,
+    height: 1.5556,
     letterSpacing: 0,
     fontWeight: FontWeight.w600,
   );
