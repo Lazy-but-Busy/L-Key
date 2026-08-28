@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:l_key/app/localization/generated/app_localizations.dart';
+import 'package:l_key/app/theme/tokens.g.dart';
+import 'package:l_key/shared/widgets/lk_icon_button.dart';
+import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
+
+/// The frame for a screen pushed above a section root.
+///
+/// The design system's top bar carries a menu on the left; a pushed screen
+/// needs a way back instead, and the icon set contains no back glyph, so this
+/// is a documented addition rather than a substituted lookalike.
+class LkDetailScaffold extends StatelessWidget {
+  /// Creates a detail scaffold.
+  const LkDetailScaffold({
+    required this.title,
+    required this.child,
+    super.key,
+    this.fallbackRoute,
+  });
+
+  /// Title shown in the top bar.
+  final String title;
+
+  /// Screen content. Scrolling is the caller's responsibility.
+  final Widget child;
+
+  /// Where to go when there is nothing to pop — which happens when the screen
+  /// was opened by a cold deep link.
+  final String? fallbackRoute;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            LkTopAppBar(
+              title: title,
+              compact: true,
+              leading: LkIconButton(
+                icon: Icons.arrow_back,
+                semanticLabel: l10n.commonBack,
+                variant: LkIconButtonVariant.bare,
+                onPressed: () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else if (fallbackRoute != null) {
+                    context.go(fallbackRoute!);
+                  }
+                },
+              ),
+            ),
+            Expanded(child: child),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Standard page padding for a section screen.
+const EdgeInsets lkScreenPadding = EdgeInsets.fromLTRB(
+  LkSpacing.s6,
+  0,
+  LkSpacing.s6,
+  LkSpacing.s6,
+);

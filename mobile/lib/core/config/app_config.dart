@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/core/config/environment.dart';
 
 /// Build-time application configuration.
@@ -38,3 +39,15 @@ class AppConfig {
   /// Whether debug-level logging is permitted.
   final bool enableVerboseLogging;
 }
+
+/// Provides the build-time configuration to the widget tree.
+///
+/// Deliberately unimplemented: it is overridden at the root in `main`, so a
+/// test that forgets to supply a configuration fails loudly rather than
+/// silently running against a default (ADR-0002).
+///
+/// It lives here rather than in `main.dart` so feature code can read the
+/// configuration without importing the application entry point.
+final appConfigProvider = Provider<AppConfig>(
+  (ref) => throw UnimplementedError('appConfigProvider must be overridden'),
+);

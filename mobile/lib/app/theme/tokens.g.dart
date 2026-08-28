@@ -360,6 +360,9 @@ abstract final class LkDimens {
 abstract final class LkOpacity {
   /// 0.4 — design system guidelines/brand-press.card.html "Disabled is 40% opacity, never a grey re-tint".
   static const double disabled = 0.4;
+
+  /// 0.2 — design system --lk-stripe; the 45° hatch over an orange progress fill.
+  static const double stripe = 0.2;
 }
 
 /// Font families from DESIGN.md §8.

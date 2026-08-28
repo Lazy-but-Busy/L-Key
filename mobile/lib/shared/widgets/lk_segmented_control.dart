@@ -30,21 +30,27 @@ class LkSegmentedControl<T> extends StatelessWidget {
     final colors = context.lkColors;
     final entries = segments.entries.toList();
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border.all(color: colors.border, width: LkBorders.regular),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          for (var i = 0; i < entries.length; i++)
-            _Segment<T>(
-              label: entries[i].value,
-              isSelected: entries[i].key == selected,
-              showDivider: i > 0,
-              onTap: () => onChanged(entries[i].key),
-            ),
-        ],
+    // Scrolls rather than clipping: DESIGN.md §43 covers small phones through
+    // tablets, and a four-segment group does not fit a narrow device once
+    // Burmese labels are longer than their English equivalents.
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(color: colors.border, width: LkBorders.regular),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            for (var i = 0; i < entries.length; i++)
+              _Segment<T>(
+                label: entries[i].value,
+                isSelected: entries[i].key == selected,
+                showDivider: i > 0,
+                onTap: () => onChanged(entries[i].key),
+              ),
+          ],
+        ),
       ),
     );
   }
