@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// One destination in [LkBottomNavBar].
@@ -57,14 +58,18 @@ class LkBottomNavBar extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: LkSpacing.s2),
+      // Each item takes an equal share and ellipsizes. Sizing to content
+      // overflows the row as soon as a translation is longer than its English
+      // original, which Burmese routinely is (DESIGN.md §36).
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           for (var i = 0; i < destinations.length; i++)
-            _NavItem(
-              destination: destinations[i],
-              isSelected: i == currentIndex,
-              onTap: () => onSelected(i),
+            Expanded(
+              child: _NavItem(
+                destination: destinations[i],
+                isSelected: i == currentIndex,
+                onTap: () => onSelected(i),
+              ),
             ),
         ],
       ),
@@ -100,12 +105,9 @@ class _NavItem extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Container(
-          constraints: const BoxConstraints(
-            minWidth: LkDimens.tapTarget,
-            minHeight: LkDimens.tapTarget,
-          ),
+          constraints: const BoxConstraints(minHeight: LkDimens.tapTarget),
           padding: const EdgeInsets.symmetric(
-            horizontal: LkSpacing.s2,
+            horizontal: LkSpacing.s1,
             vertical: LkSpacing.s1,
           ),
           decoration: isSelected
@@ -132,7 +134,7 @@ class _NavItem extends StatelessWidget {
                 destination.label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: LkTypeScale.label.copyWith(color: foreground),
+                style: context.lkType.label.copyWith(color: foreground),
               ),
             ],
           ),

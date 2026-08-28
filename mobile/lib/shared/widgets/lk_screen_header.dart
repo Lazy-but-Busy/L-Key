@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// The uppercase title and technical subtitle every section screen opens with.
@@ -27,13 +28,13 @@ class LkScreenHeader extends StatelessWidget {
           header: true,
           child: Text(
             title.toUpperCase(),
-            style: LkTypeScale.h1.copyWith(color: colors.textPrimary),
+            style: context.lkType.h1.copyWith(color: colors.textPrimary),
           ),
         ),
         if (sub != null)
           Text(
             sub.toUpperCase(),
-            style: LkTypeScale.technical.copyWith(
+            style: context.lkType.technical.copyWith(
               color: colors.textTertiary,
             ),
           ),
@@ -67,7 +68,7 @@ class LkPendingNote extends StatelessWidget {
       ),
       child: Text(
         message,
-        style: LkTypeScale.bodySmall.copyWith(color: colors.textSecondary),
+        style: context.lkType.bodySmall.copyWith(color: colors.textSecondary),
       ),
     );
   }

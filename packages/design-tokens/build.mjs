@@ -262,6 +262,11 @@ function emitDart() {
   L.push("");
   L.push("  /// Appended to every text style so Burmese renders instead of tofu.");
   L.push("  static const List<String> fallback = <String>[myanmar];");
+  L.push("");
+  L.push(`  /// ${T.typography.myanmarLineHeight.source}`);
+  L.push(
+    `  static const double myanmarLineHeight = ${dartNum(T.typography.myanmarLineHeight.value)};`,
+  );
   L.push("}");
   L.push("");
 
@@ -359,6 +364,12 @@ function emitCss() {
   }
 
   L.push("");
+  L.push("");
+  L.push("  /* Burmese needs a taller line box than the Latin scale */");
+  L.push(
+    `  --lk-myanmar-line-height: ${T.typography.myanmarLineHeight.value};`,
+  );
+
   L.push("  /* unitless opacity */");
   for (const [name, tok] of entries(T.opacity)) {
     L.push(`  --lk-${kebab(name)}-opacity: ${tok.value};`);

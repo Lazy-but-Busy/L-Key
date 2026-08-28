@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// The empty state: nothing is wrong, there is simply nothing here yet.
@@ -53,13 +54,15 @@ class LkEmptyState extends StatelessWidget {
             Text(
               headline.toUpperCase(),
               textAlign: centered ? TextAlign.center : TextAlign.start,
-              style: LkTypeScale.h2.copyWith(color: colors.textPrimary),
+              style: context.lkType.h2.copyWith(color: colors.textPrimary),
             ),
             if (text != null)
               Text(
                 text,
                 textAlign: centered ? TextAlign.center : TextAlign.start,
-                style: LkTypeScale.body.copyWith(color: colors.textSecondary),
+                style: context.lkType.body.copyWith(
+                  color: colors.textSecondary,
+                ),
               ),
             ?action,
           ],

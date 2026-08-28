@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// The bar every L Key screen starts with: leading control, wordmark, action.
@@ -52,9 +53,10 @@ class LkTopAppBar extends StatelessWidget implements PreferredSizeWidget {
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: (compact ? LkTypeScale.h2 : LkTypeScale.h1).copyWith(
-                  color: colors.textPrimary,
-                ),
+                style: (compact ? context.lkType.h2 : context.lkType.h1)
+                    .copyWith(
+                      color: colors.textPrimary,
+                    ),
               ),
             ),
             SizedBox(

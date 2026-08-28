@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/features/home/presentation/home_mock_data.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
@@ -44,12 +45,12 @@ class HomePage extends StatelessWidget {
       children: <Widget>[
         Text(
           _greeting(l10n, DateTime.now()),
-          style: LkTypeScale.h2.copyWith(color: colors.textPrimary),
+          style: context.lkType.h2.copyWith(color: colors.textPrimary),
         ),
         const SizedBox(height: LkSpacing.s1),
         Text(
           l10n.homeGuitarist.toUpperCase(),
-          style: LkTypeScale.h1.copyWith(color: colors.textPrimary),
+          style: context.lkType.h1.copyWith(color: colors.textPrimary),
         ),
         const SizedBox(height: LkSpacing.s8),
 
@@ -58,11 +59,20 @@ class HomePage extends StatelessWidget {
         ),
         const SizedBox(height: LkSpacing.s4),
 
-        _QuickToolRow(
-          label: l10n.navTools,
-          onTap: () => context.goNamed(AppRoutes.toolsName),
-        ),
-        const SizedBox(height: LkSpacing.s8),
+        // DESIGN.md §20 lists Quick Tools as its own section between Quick
+        // Tune and Continue Practice.
+        for (final tool in <(String, String)>[
+          (l10n.toolMetronome, AppRoutes.metronomeName),
+          (l10n.toolChords, AppRoutes.chordsName),
+          (l10n.toolScales, AppRoutes.scalesName),
+        ]) ...<Widget>[
+          _QuickToolRow(
+            label: tool.$1,
+            onTap: () => context.goNamed(tool.$2),
+          ),
+          const SizedBox(height: LkSpacing.s4),
+        ],
+        const SizedBox(height: LkSpacing.s5),
 
         _DailySessionCard(
           onResume: () => context.goNamed(AppRoutes.practiceName),
@@ -117,7 +127,7 @@ class _QuickTuneCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.homeQuickTune,
-                  style: LkTypeScale.h2.copyWith(color: colors.accentOn),
+                  style: context.lkType.h2.copyWith(color: colors.accentOn),
                 ),
               ),
               Icon(Icons.graphic_eq, color: colors.accentOn),
@@ -129,7 +139,7 @@ class _QuickTuneCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.homeQuickTuneTuning.toUpperCase(),
-                  style: LkTypeScale.technical.copyWith(
+                  style: context.lkType.technical.copyWith(
                     color: colors.accentOn,
                   ),
                 ),
@@ -169,7 +179,7 @@ class _QuickToolRow extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.center,
-              style: LkTypeScale.h4.copyWith(color: colors.textPrimary),
+              style: context.lkType.h4.copyWith(color: colors.textPrimary),
             ),
           ),
           Icon(
@@ -208,11 +218,11 @@ class _DailySessionCard extends StatelessWidget {
             children: <Widget>[
               Text(
                 '$mockSessionElapsedMinutes:00',
-                style: LkTypeScale.h1.copyWith(color: colors.textPrimary),
+                style: context.lkType.h1.copyWith(color: colors.textPrimary),
               ),
               Text(
                 '/ $mockSessionTotalMinutes:00',
-                style: LkTypeScale.technicalSm.copyWith(
+                style: context.lkType.technicalSm.copyWith(
                   color: colors.textSecondary,
                 ),
               ),
@@ -268,7 +278,7 @@ class _ImportTile extends StatelessWidget {
           ),
           Text(
             label,
-            style: LkTypeScale.h2.copyWith(color: colors.textPrimary),
+            style: context.lkType.h2.copyWith(color: colors.textPrimary),
           ),
         ],
       ),

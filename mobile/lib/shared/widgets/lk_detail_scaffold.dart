@@ -19,7 +19,8 @@ class LkDetailScaffold extends StatelessWidget {
     this.fallbackRoute,
   });
 
-  /// Title shown in the top bar.
+  /// The screen's name. Announced with the back control rather than painted
+  /// in the bar, which carries the wordmark.
   final String title;
 
   /// Screen content. Scrolling is the caller's responsibility.
@@ -38,7 +39,10 @@ class LkDetailScaffold extends StatelessWidget {
         child: Column(
           children: <Widget>[
             LkTopAppBar(
-              title: title,
+              // The wordmark, not the screen name: the body already sets the
+              // title as an H1, and the design system's bar always carries
+              // the wordmark.
+              title: l10n.appName,
               compact: true,
               leading: LkIconButton(
                 icon: Icons.arrow_back,

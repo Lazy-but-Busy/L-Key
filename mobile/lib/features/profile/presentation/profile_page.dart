@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
@@ -61,14 +62,14 @@ class ProfilePage extends ConsumerWidget {
                   children: <Widget>[
                     Text(
                       l10n.profileGuest,
-                      style: LkTypeScale.bodyLarge.copyWith(
+                      style: context.lkType.bodyLarge.copyWith(
                         color: colors.textPrimary,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       l10n.profileMemberSince(DateTime.now().year),
-                      style: LkTypeScale.label.copyWith(
+                      style: context.lkType.label.copyWith(
                         color: colors.textSecondary,
                       ),
                     ),
@@ -114,7 +115,7 @@ class ProfilePage extends ConsumerWidget {
             children: <Widget>[
               Text(
                 l10n.profileGoProBody,
-                style: LkTypeScale.body.copyWith(color: colors.accentOn),
+                style: context.lkType.body.copyWith(color: colors.accentOn),
               ),
               LkButton(label: l10n.profileSeePlans, block: true),
             ],
@@ -179,19 +180,19 @@ class _SettingRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.lkColors;
 
-    return Row(
-      spacing: LkSpacing.s3,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: LkSpacing.s2,
       children: <Widget>[
-        Expanded(
-          child: Text(
-            label,
-            style: LkTypeScale.body.copyWith(
-              color: colors.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
+        Text(
+          label,
+          style: context.lkType.body.copyWith(
+            color: colors.textPrimary,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        Flexible(child: control),
+        control,
       ],
     );
   }

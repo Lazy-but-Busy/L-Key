@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// Separates the sections of a screen.
@@ -36,7 +37,7 @@ class LkSectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title.toUpperCase(),
-            style: LkTypeScale.h2.copyWith(color: colors.textPrimary),
+            style: context.lkType.h2.copyWith(color: colors.textPrimary),
           ),
         ),
         if (label != null)
@@ -56,7 +57,7 @@ class LkSectionHeader extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       label.toUpperCase(),
-                      style: LkTypeScale.technical.copyWith(
+                      style: context.lkType.technical.copyWith(
                         color: colors.textPrimary,
                       ),
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// The single Premium signal in the system.
@@ -37,7 +38,7 @@ class LkPremiumBadge extends StatelessWidget {
         ),
         child: Text(
           label.toUpperCase(),
-          style: LkTypeScale.label.copyWith(
+          style: context.lkType.label.copyWith(
             color: inverse ? colors.textInverse : colors.accentOn,
             fontWeight: FontWeight.w700,
           ),

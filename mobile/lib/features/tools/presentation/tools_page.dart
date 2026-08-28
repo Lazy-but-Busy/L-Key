@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_detail_scaffold.dart';
 import 'package:l_key/shared/widgets/lk_premium_badge.dart';
@@ -87,7 +88,7 @@ class _ToolRow extends StatelessWidget {
           Flexible(
             child: Text(
               tool.label,
-              style: LkTypeScale.h4.copyWith(color: colors.textPrimary),
+              style: context.lkType.h4.copyWith(color: colors.textPrimary),
             ),
           ),
           if (tool.isPremium) LkPremiumBadge(label: l10n.commonPro),

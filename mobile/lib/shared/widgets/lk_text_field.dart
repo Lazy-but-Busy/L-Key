@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// A rectangular, high-contrast text input.
@@ -61,7 +62,7 @@ class LkTextField extends StatelessWidget {
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              style: LkTypeScale.technical.copyWith(
+              style: context.lkType.technical.copyWith(
                 color: colors.textPrimary,
               ),
               cursorColor: colors.textPrimary,
@@ -72,7 +73,7 @@ class LkTextField extends StatelessWidget {
                 focusedBorder: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
                 hintText: hint,
-                hintStyle: LkTypeScale.technical.copyWith(
+                hintStyle: context.lkType.technical.copyWith(
                   color: colors.textTertiary,
                 ),
               ),
@@ -93,7 +94,7 @@ class LkTextField extends StatelessWidget {
           if (!hideLabel)
             Text(
               label.toUpperCase(),
-              style: LkTypeScale.label.copyWith(color: colors.textSecondary),
+              style: context.lkType.label.copyWith(color: colors.textSecondary),
             ),
           field,
         ],

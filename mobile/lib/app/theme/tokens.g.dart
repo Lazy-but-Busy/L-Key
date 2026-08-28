@@ -381,6 +381,9 @@ abstract final class LkFonts {
 
   /// Appended to every text style so Burmese renders instead of tofu.
   static const List<String> fallback = <String>[myanmar];
+
+  /// DESIGN.md §36 requires Burmese font size and line wrapping be tested rather than assumed; Burmese stacked diacritics clip at the Latin line heights, which are as tight as 0.95
+  static const double myanmarLineHeight = 1.5;
 }
 
 /// Type scale from DESIGN.md §9-10.

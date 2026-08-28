@@ -136,6 +136,9 @@
   --lk-focus-ring-width: 3px;
   --lk-focus-ring-offset: 2px;
 
+
+  /* Burmese needs a taller line box than the Latin scale */
+  --lk-myanmar-line-height: 1.5;
   /* unitless opacity */
   --lk-disabled-opacity: 0.4;
   --lk-stripe-opacity: 0.2;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_pressable.dart';
 
@@ -85,11 +86,11 @@ class LkButton extends StatelessWidget {
     LkButtonSize.hero => LkDimens.buttonHeightHero,
   };
 
-  TextStyle get _textStyle => switch (size) {
-    LkButtonSize.small => LkTypeScale.label,
-    LkButtonSize.medium => LkTypeScale.technical,
-    LkButtonSize.large => LkTypeScale.h4,
-    LkButtonSize.hero => LkTypeScale.h2,
+  TextStyle _textStyle(BuildContext context) => switch (size) {
+    LkButtonSize.small => context.lkType.label,
+    LkButtonSize.medium => context.lkType.technical,
+    LkButtonSize.large => context.lkType.h4,
+    LkButtonSize.hero => context.lkType.h2,
   };
 
   /// DESIGN.md §10 — uppercase is how a technical label reads. The hero size
@@ -131,7 +132,7 @@ class LkButton extends StatelessWidget {
 
     final text = Text(
       _uppercase ? label.toUpperCase() : label,
-      style: _textStyle.copyWith(color: foreground),
+      style: _textStyle(context).copyWith(color: foreground),
       textAlign: TextAlign.center,
     );
 

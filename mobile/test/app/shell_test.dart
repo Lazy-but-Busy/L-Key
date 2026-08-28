@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<GoRouter> pumpApp(
   WidgetTester tester, {
   Environment environment = Environment.local,
+  Locale? locale,
 }) async {
   SharedPreferences.setMockInitialValues(<String, Object>{});
   final prefs = await SharedPreferences.getInstance();
@@ -45,6 +46,7 @@ Future<GoRouter> pumpApp(
       ],
       child: MaterialApp.router(
         routerConfig: router,
+        locale: locale,
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -137,6 +139,19 @@ void main() {
       // Pushed above the shell rather than nested under Profile, so the
       // player is not silently moved to another tab.
       expect(find.byType(SongsPage), findsNothing);
+    });
+
+    testWidgets('the bar survives Burmese on a small phone', (tester) async {
+      // Burmese labels are routinely longer than their English originals, and
+      // an earlier build overflowed the row by 20px on a 390pt phone
+      // (DESIGN.md §36). 320pt is the narrowest phone worth supporting.
+      tester.view.physicalSize = const Size(320 * 3, 640 * 3);
+      tester.view.devicePixelRatio = 3.0;
+      addTearDown(tester.view.reset);
+
+      await pumpApp(tester, locale: const Locale('my'));
+
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('the developer showcase is unreachable in production', (

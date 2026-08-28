@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// A compact statistic: an uppercase caption over a value.
@@ -37,12 +38,12 @@ class LkStatChip extends StatelessWidget {
             Text(
               label.toUpperCase(),
               textAlign: TextAlign.center,
-              style: LkTypeScale.label.copyWith(color: colors.textSecondary),
+              style: context.lkType.label.copyWith(color: colors.textSecondary),
             ),
             Text(
               value,
               textAlign: TextAlign.center,
-              style: LkTypeScale.technical.copyWith(
+              style: context.lkType.technical.copyWith(
                 color: colors.textPrimary,
                 fontWeight: FontWeight.w700,
               ),

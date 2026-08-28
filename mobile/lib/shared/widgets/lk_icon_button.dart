@@ -63,7 +63,7 @@ class LkIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.lkColors;
 
-    final (Color? background, Color foreground) = switch (variant) {
+    final (Color background, Color foreground) = switch (variant) {
       LkIconButtonVariant.plain => (colors.surface, colors.textPrimary),
       LkIconButtonVariant.ring => (colors.surface, colors.textPrimary),
       LkIconButtonVariant.solid => (
@@ -71,7 +71,9 @@ class LkIconButton extends StatelessWidget {
         colors.textInverse,
       ),
       LkIconButtonVariant.accent => (colors.accent, colors.accentOn),
-      LkIconButtonVariant.bare => (null, colors.textPrimary),
+      // Transparent, not null: a null background falls back to the surface
+      // colour and would paint a box around a glyph meant to sit bare.
+      LkIconButtonVariant.bare => (Colors.transparent, colors.textPrimary),
     };
 
     final elevation = switch (variant) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_pressable.dart';
 
@@ -85,7 +86,7 @@ class LkSongCard extends StatelessWidget {
                     ),
                     child: Text(
                       '$bpm BPM',
-                      style: LkTypeScale.label.copyWith(
+                      style: context.lkType.label.copyWith(
                         color: highlightTempo
                             ? colors.accentOn
                             : colors.textPrimary,
@@ -108,13 +109,13 @@ class LkSongCard extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: LkTypeScale.h4.copyWith(color: colors.textPrimary),
+                  style: context.lkType.h4.copyWith(color: colors.textPrimary),
                 ),
                 Text(
                   '${artist.toUpperCase()} • ${tag.toUpperCase()}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: LkTypeScale.label.copyWith(
+                  style: context.lkType.label.copyWith(
                     color: colors.textSecondary,
                   ),
                 ),

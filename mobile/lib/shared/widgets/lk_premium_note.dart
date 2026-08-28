@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_premium_badge.dart';
 
@@ -28,7 +29,7 @@ class LkPremiumNote extends StatelessWidget {
           child: Text(
             capability.toUpperCase(),
             textAlign: TextAlign.center,
-            style: LkTypeScale.technicalSm.copyWith(
+            style: context.lkType.technicalSm.copyWith(
               color: colors.textTertiary,
             ),
           ),

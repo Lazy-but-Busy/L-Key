@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 
 /// A row of mutually exclusive choices sharing one boundary.
@@ -98,7 +99,7 @@ class _Segment<T> extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             label.toUpperCase(),
-            style: LkTypeScale.label.copyWith(
+            style: context.lkType.label.copyWith(
               color: isSelected ? colors.textInverse : colors.textSecondary,
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
 import 'package:l_key/shared/widgets/lk_card.dart';
@@ -37,7 +38,7 @@ class SettingsPage extends ConsumerWidget {
 
           Text(
             l10n.settingsSectionGeneral.toUpperCase(),
-            style: LkTypeScale.label.copyWith(color: colors.textSecondary),
+            style: context.lkType.label.copyWith(color: colors.textSecondary),
           ),
           const SizedBox(height: LkSpacing.s3),
           LkCard(
@@ -78,7 +79,7 @@ class SettingsPage extends ConsumerWidget {
 
           Text(
             l10n.settingsSectionAudio.toUpperCase(),
-            style: LkTypeScale.label.copyWith(color: colors.textSecondary),
+            style: context.lkType.label.copyWith(color: colors.textSecondary),
           ),
           const SizedBox(height: LkSpacing.s3),
           LkCard(
@@ -87,7 +88,7 @@ class SettingsPage extends ConsumerWidget {
               label: l10n.settingsReferencePitch,
               control: Text(
                 '${settings.referencePitchHz.round()} Hz',
-                style: LkTypeScale.technical.copyWith(
+                style: context.lkType.technical.copyWith(
                   color: colors.textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
@@ -110,19 +111,19 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.lkColors;
 
-    return Row(
-      spacing: LkSpacing.s3,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: LkSpacing.s2,
       children: <Widget>[
-        Expanded(
-          child: Text(
-            label,
-            style: LkTypeScale.body.copyWith(
-              color: colors.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
+        Text(
+          label,
+          style: context.lkType.body.copyWith(
+            color: colors.textPrimary,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        Flexible(child: control),
+        control,
       ],
     );
   }

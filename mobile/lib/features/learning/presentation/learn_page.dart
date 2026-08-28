@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
 import 'package:l_key/shared/widgets/lk_card.dart';
@@ -95,7 +96,7 @@ class _CourseCard extends StatelessWidget {
               Flexible(
                 child: Text(
                   course.title,
-                  style: LkTypeScale.h3.copyWith(color: colors.textPrimary),
+                  style: context.lkType.h3.copyWith(color: colors.textPrimary),
                 ),
               ),
               if (course.isPremium) LkPremiumBadge(label: l10n.commonPro),
@@ -109,7 +110,7 @@ class _CourseCard extends StatelessWidget {
           ),
           Text(
             progress.toUpperCase(),
-            style: LkTypeScale.label.copyWith(color: colors.textSecondary),
+            style: context.lkType.label.copyWith(color: colors.textSecondary),
           ),
         ],
       ),

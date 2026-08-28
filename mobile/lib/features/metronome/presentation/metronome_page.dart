@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
 import 'package:l_key/shared/widgets/lk_detail_scaffold.dart';
@@ -80,13 +81,13 @@ class _MetronomePageState extends State<MetronomePage> {
                       children: <Widget>[
                         Text(
                           '$_bpm',
-                          style: LkTypeScale.displayXl.copyWith(
+                          style: context.lkType.displayXl.copyWith(
                             color: colors.textPrimary,
                           ),
                         ),
                         Text(
                           l10n.metronomeBpm,
-                          style: LkTypeScale.label.copyWith(
+                          style: context.lkType.label.copyWith(
                             color: colors.textSecondary,
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_pressable.dart';
 
@@ -103,7 +104,7 @@ class LkCard extends StatelessWidget {
       if (label != null)
         Text(
           label!.toUpperCase(),
-          style: LkTypeScale.label.copyWith(color: muted),
+          style: context.lkType.label.copyWith(color: muted),
         ),
       if (title != null || action != null)
         Row(
@@ -113,7 +114,7 @@ class LkCard extends StatelessWidget {
                   ? const SizedBox.shrink()
                   : Text(
                       title!,
-                      style: LkTypeScale.h2.copyWith(color: foreground),
+                      style: context.lkType.h2.copyWith(color: foreground),
                     ),
             ),
             ?action,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
 import 'package:l_key/shared/widgets/lk_detail_scaffold.dart';
@@ -79,13 +80,13 @@ class _TunerPageState extends ConsumerState<TunerPage> {
                   children: <Widget>[
                     Text(
                       string.note,
-                      style: LkTypeScale.displayXl.copyWith(
+                      style: context.lkType.displayXl.copyWith(
                         color: colors.textPrimary,
                       ),
                     ),
                     Text(
                       '${string.octave}',
-                      style: LkTypeScale.h2.copyWith(
+                      style: context.lkType.h2.copyWith(
                         color: colors.textTertiary,
                       ),
                     ),
@@ -96,7 +97,7 @@ class _TunerPageState extends ConsumerState<TunerPage> {
                 Text(
                   '${l10n.homeQuickTuneTuning.toUpperCase()} · '
                   '${pitch.round()} HZ',
-                  style: LkTypeScale.technical.copyWith(
+                  style: context.lkType.technical.copyWith(
                     color: colors.textSecondary,
                   ),
                 ),
@@ -190,7 +191,7 @@ class _StringButton extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: LkTypeScale.technical.copyWith(
+            style: context.lkType.technical.copyWith(
               color: isSelected ? colors.accentOn : colors.textPrimary,
               fontWeight: FontWeight.w700,
             ),

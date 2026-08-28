@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
+import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
 import 'package:l_key/shared/widgets/lk_card.dart';
@@ -84,13 +85,13 @@ class _PracticePageState extends State<PracticePage> {
                   children: <Widget>[
                     Text(
                       '$_mockElapsedMinutes:00',
-                      style: LkTypeScale.h1.copyWith(
+                      style: context.lkType.h1.copyWith(
                         color: colors.textPrimary,
                       ),
                     ),
                     Text(
                       '/ $_mockPlannedMinutes:00',
-                      style: LkTypeScale.technicalSm.copyWith(
+                      style: context.lkType.technicalSm.copyWith(
                         color: colors.textSecondary,
                       ),
                     ),
@@ -186,7 +187,7 @@ class _PlanRow extends StatelessWidget {
               Expanded(
                 child: Text(
                   item.title,
-                  style: LkTypeScale.technical.copyWith(
+                  style: context.lkType.technical.copyWith(
                     color: colors.textPrimary,
                     fontWeight: FontWeight.w700,
                   ),
@@ -194,7 +195,7 @@ class _PlanRow extends StatelessWidget {
               ),
               Text(
                 '${item.minutes}',
-                style: LkTypeScale.label.copyWith(
+                style: context.lkType.label.copyWith(
                   color: colors.textSecondary,
                 ),
               ),
