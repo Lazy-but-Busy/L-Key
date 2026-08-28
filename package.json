@@ -1,0 +1,27 @@
+{
+  "name": "l-key",
+  "version": "0.1.0",
+  "private": true,
+  "description": "L Key \u2014 Everything Your Guitar Needs. Tune. Learn. Practice. Play.",
+  "workspaces": [
+    "packages/*",
+    "backend",
+    "admin",
+    "website"
+  ],
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "tokens": "node packages/design-tokens/build.mjs",
+    "tokens:check": "node packages/design-tokens/build.mjs --check",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "mobile:format": "cd mobile && dart format --set-exit-if-changed .",
+    "mobile:analyze": "cd mobile && flutter analyze",
+    "mobile:test": "cd mobile && flutter test",
+    "mobile:verify": "npm run mobile:format && npm run mobile:analyze && npm run mobile:test",
+    "verify": "npm run tokens:check && npm run lint && npm run typecheck && npm run test && npm run mobile:verify"
+  }
+}

@@ -932,25 +932,31 @@ l-key/
 │   └── pubspec.yaml
 │
 ├── backend/
-│   ├── cmd/
-│   ├── internal/
-│   ├── migrations/
-│   └── ...
+│   ├── src/
+│   │   ├── common/       guards, filters, interceptors
+│   │   ├── config/       validated environment schema
+│   │   └── modules/      auth, users, content, entitlements, payments
+│   ├── prisma/
+│   └── package.json
 │
 ├── admin/
 │   ├── app/
-│   ├── components/
 │   ├── lib/
-│   └── ...
+│   └── package.json
 │
-└── website/
-    ├── app/
-    ├── components/
-    ├── lib/
-    └── ...
+├── website/
+│   ├── app/
+│   ├── lib/
+│   └── package.json
+│
+└── packages/
+    └── design-tokens/    single source for every design value
 ```
 
-The exact backend structure may change as implementation progresses.
+The backend is NestJS + TypeScript with Prisma against PostgreSQL. An earlier
+draft of this document sketched a Go layout (`cmd/`, `internal/`); the decision
+and its reasoning are recorded in
+[`docs/adr/0001-backend-runtime.md`](docs/adr/0001-backend-runtime.md).
 
 ---
 
@@ -1113,19 +1119,80 @@ Entitlement
 
 ---
 
+# 🏁 Getting Started
+
+## Prerequisites
+
+| Tool | Version | Checked by |
+| --- | --- | --- |
+| Flutter | 3.47+ | `flutter doctor` |
+| Node | 20.11+ (see `.nvmrc`) | `node --version` |
+| PostgreSQL | 16+ | needed from Phase 05 |
+
+## Setup
+
+```sh
+npm install                  # backend, admin, website, packages
+cd mobile && flutter pub get && flutter gen-l10n && cd ..
+```
+
+## Run
+
+```sh
+# Mobile — opens the design-token showcase
+cd mobile && flutter run --dart-define-from-file=config/local.json
+
+npm run dev --workspace @lkey/backend    # :3000
+npm run dev --workspace @lkey/admin      # :3001
+npm run dev --workspace @lkey/website    # :3002
+```
+
+Copy each `.env.example` to `.env` (backend) or `.env.local` (web) first —
+see [`docs/ENVIRONMENTS.md`](docs/ENVIRONMENTS.md).
+
+## Validate
+
+```sh
+npm run verify
+```
+
+Runs the token drift check and contrast gate, lints and typechecks all three
+TypeScript apps, and formats, analyses and tests the Flutter app. This is
+exactly what CI runs. See [`docs/VALIDATION.md`](docs/VALIDATION.md).
+
+## Design tokens
+
+Every colour, size, radius, shadow, duration and dimension lives in
+`packages/design-tokens/tokens.json`. Change it there, run `npm run tokens`,
+and commit the generated output. Never write a design value into a widget or
+component — see [`packages/design-tokens/README.md`](packages/design-tokens/README.md).
+
+## Documentation
+
+| Document | Purpose |
+| --- | --- |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Layer boundaries and the rules that are not negotiable |
+| [`docs/ENVIRONMENTS.md`](docs/ENVIRONMENTS.md) | Four environments, every variable, secret handling |
+| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | Commits, branches, definition of done |
+| [`docs/VALIDATION.md`](docs/VALIDATION.md) | What each check catches |
+| [`docs/SECURITY-NOTES.md`](docs/SECURITY-NOTES.md) | Accepted risks and why |
+| [`docs/adr/`](docs/adr/) | Architecture decision records |
+
+---
+
 # 🚧 Development Status
 
 L Key is currently in the **early development / foundation phase**.
 
-## Phase 1 — Foundation
+## Phase 1 — Foundation ✅
 
-* [ ] Repository setup
-* [ ] Flutter project
-* [ ] Design tokens
-* [ ] Theme
-* [ ] Localization
-* [ ] Navigation
-* [ ] Architecture
+* [x] Repository setup — npm workspaces, shared config, CI
+* [x] Flutter project — feature-oriented architecture, Riverpod
+* [x] Design tokens — single source, generated to Dart and CSS, contrast-gated
+* [x] Theme — light and dark from tokens, no hardcoded values
+* [x] Localization — English and Myanmar ARB with enforced key parity
+* [x] Navigation — go_router
+* [x] Architecture — documented in `docs/ARCHITECTURE.md` with six ADRs
 
 ## Phase 2 — Core Guitar Tools
 

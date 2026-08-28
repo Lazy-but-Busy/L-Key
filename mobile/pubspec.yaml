@@ -1,0 +1,81 @@
+name: l_key
+description: "L Key — Everything Your Guitar Needs. Tune. Learn. Practice. Play."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management. One approach across the whole app (CLAUDE.md §9);
+  # providers are testable without a widget tree, which is what keeps the
+  # music engines Flutter-free (CLAUDE.md §10). See docs/adr/0002.
+  flutter_riverpod: ^3.0.0
+
+  # Declarative routing with typed route names.
+  go_router: ^18.0.0
+
+  # Message formatting for localisation.
+  intl: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # Lint set. Stricter than flutter_lints; see analysis_options.yaml.
+  very_good_analysis: ^10.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Generates AppLocalizations from lib/app/localization/*.arb (see l10n.yaml).
+  generate: true
+
+  assets:
+    - assets/fonts/
+
+  # DESIGN.md §8 — three families, three jobs. Noto Sans Myanmar is the
+  # Burmese fallback: none of the three brand faces carry Burmese glyphs,
+  # so without it every Myanmar string renders as tofu (docs/adr/0006).
+  fonts:
+    - family: Space Grotesk
+      fonts:
+        - asset: assets/fonts/SpaceGrotesk-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/SpaceGrotesk-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/SpaceGrotesk-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/SpaceGrotesk-Bold.ttf
+          weight: 700
+
+    - family: Hanken Grotesk
+      fonts:
+        - asset: assets/fonts/HankenGrotesk-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/HankenGrotesk-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/HankenGrotesk-Bold.ttf
+          weight: 700
+
+    - family: JetBrains Mono
+      fonts:
+        - asset: assets/fonts/JetBrainsMono-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/JetBrainsMono-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/JetBrainsMono-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/JetBrainsMono-Bold.ttf
+          weight: 700
+
+    - family: Noto Sans Myanmar
+      fonts:
+        - asset: assets/fonts/NotoSansMyanmar-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansMyanmar-Bold.ttf
+          weight: 700

@@ -1,0 +1,189 @@
+/*
+  L KEY DESIGN TOKENS — GENERATED FILE. DO NOT EDIT.
+  
+  Source:    packages/design-tokens/tokens.json
+  Generator: packages/design-tokens/build.mjs
+  Regenerate with `npm run tokens`. CI runs `npm run tokens:check`.
+*/
+
+:root {
+  /* palette — DESIGN.md §5-6 */
+  --lk-color-black: #000000;
+  --lk-color-white: #FFFFFF;
+  --lk-color-off-white: #F0F0F0;
+  --lk-color-orange: #FF4D00;
+  --lk-color-grey100: #E5E5E5;
+  --lk-color-grey200: #D0D0D0;
+  --lk-color-grey300: #B5B5B5;
+  --lk-color-grey400: #888888;
+  --lk-color-grey500: #666666;
+  --lk-color-grey600: #333333;
+  --lk-color-dark-background: #000000;
+  --lk-color-dark-surface: #111111;
+  --lk-color-dark-surface2: #1C1C1C;
+  --lk-color-dark-text: #F0F0F0;
+  --lk-color-dark-text-secondary: #999999;
+  --lk-color-danger: #BA1A1A;
+  --lk-color-success: #1E7A34;
+  --lk-color-danger-dark: #F87171;
+  --lk-color-success-dark: #3DD68C;
+
+  /* typography — DESIGN.md §8-10 */
+  --lk-font-display: "Space Grotesk", "Noto Sans Myanmar", system-ui, sans-serif;
+  --lk-font-body: "Hanken Grotesk", "Noto Sans Myanmar", system-ui, sans-serif;
+  --lk-font-mono: "JetBrains Mono", "Noto Sans Myanmar", ui-monospace, monospace;
+  --lk-weight-light: 300;
+  --lk-weight-regular: 400;
+  --lk-weight-medium: 500;
+  --lk-weight-semi-bold: 600;
+  --lk-weight-bold: 700;
+  --lk-size-display-xl: 64px;
+  --lk-line-height-display-xl: 0.95;
+  --lk-tracking-display-xl: -0.05em;
+  --lk-size-display: 48px;
+  --lk-line-height-display: 1.1;
+  --lk-tracking-display: -0.02em;
+  --lk-size-h1: 32px;
+  --lk-line-height-h1: 1.1;
+  --lk-tracking-h1: -0.05em;
+  --lk-size-h2: 24px;
+  --lk-line-height-h2: 1.2;
+  --lk-tracking-h2: -0.05em;
+  --lk-size-h3: 20px;
+  --lk-line-height-h3: 1.5;
+  --lk-tracking-h3: 0em;
+  --lk-size-body-large: 18px;
+  --lk-line-height-body-large: 1.6;
+  --lk-tracking-body-large: 0em;
+  --lk-size-body: 16px;
+  --lk-line-height-body: 1.5;
+  --lk-tracking-body: 0em;
+  --lk-size-body-small: 14px;
+  --lk-line-height-body-small: 1.5;
+  --lk-tracking-body-small: 0em;
+  --lk-size-label: 12px;
+  --lk-line-height-label: 1.2;
+  --lk-tracking-label: 0em;
+  --lk-size-technical-lg: 16px;
+  --lk-line-height-technical-lg: 1.5;
+  --lk-tracking-technical-lg: 0.05em;
+  --lk-size-technical: 14px;
+  --lk-line-height-technical: 1.4;
+  --lk-tracking-technical: 0.05em;
+  --lk-size-technical-sm: 12px;
+  --lk-line-height-technical-sm: 1.2;
+  --lk-tracking-technical-sm: 0.05em;
+
+  /* spacing — DESIGN.md §14 */
+  --lk-space-1: 4px;
+  --lk-space-2: 8px;
+  --lk-space-3: 12px;
+  --lk-space-4: 16px;
+  --lk-space-5: 20px;
+  --lk-space-6: 24px;
+  --lk-space-8: 32px;
+  --lk-space-10: 40px;
+  --lk-space-12: 48px;
+  --lk-space-16: 64px;
+  --lk-space-20: 80px;
+
+  /* borders and radii — DESIGN.md §11-12 */
+  --lk-border-hairline: 1px;
+  --lk-border-default: 2px;
+  --lk-border-strong: 3px;
+  --lk-radius-none: 0px;
+  --lk-radius-sm: 4px;
+  --lk-radius-md: 8px;
+  --lk-radius-pill: 9999px;
+
+  /* shadows — DESIGN.md §13, zero blur */
+  --lk-shadow-sm: 2px 2px 0px var(--lk-border-color);
+  --lk-shadow-default: 4px 4px 0px var(--lk-border-color);
+  --lk-shadow-lg: 6px 6px 0px var(--lk-border-color);
+  --lk-shadow-pressed: 1px 1px 0px var(--lk-border-color);
+
+  /* motion — values from the design system; DESIGN.md §41 names none */
+  --lk-duration-fast: 90ms;
+  --lk-duration-base: 140ms;
+  --lk-ease: cubic-bezier(0.2,0,0,1);
+  --lk-press-translate: 3px;
+
+  /* component dimensions */
+  --lk-tap-target: 44px;
+  --lk-screen-padding: 16px;
+  --lk-screen-padding-wide: 24px;
+  --lk-admin-padding: 32px;
+  --lk-bottom-nav-height: 71px;
+  --lk-top-bar-height: 76px;
+  --lk-sidebar-width: 320px;
+  --lk-content-max-width: 1232px;
+
+  /* semantic roles — light. Reference these, never the palette. */
+  --lk-background: var(--lk-color-off-white);
+  --lk-surface: var(--lk-color-white);
+  --lk-surface-sunken: var(--lk-color-grey100);
+  --lk-surface-inverse: var(--lk-color-black);
+  --lk-text-primary: var(--lk-color-black);
+  --lk-text-secondary: var(--lk-color-grey600);
+  --lk-text-tertiary: var(--lk-color-grey500);
+  --lk-text-inverse: var(--lk-color-off-white);
+  --lk-border: var(--lk-color-black);
+  --lk-divider: var(--lk-color-black);
+  --lk-accent: var(--lk-color-orange);
+  --lk-accent-on: var(--lk-color-black);
+  --lk-focus-ring: var(--lk-color-black);
+  --lk-danger: var(--lk-color-danger);
+  --lk-success: var(--lk-color-success);
+  --lk-border-color: var(--lk-border);
+}
+
+/* Dark theme — DESIGN.md §6, §68. Three viewer states are covered:
+   an explicit choice stamps data-theme, and the default system setting
+   stamps nothing, leaving only prefers-color-scheme. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --lk-background: var(--lk-color-dark-background);
+    --lk-surface: var(--lk-color-dark-surface);
+    --lk-surface-sunken: var(--lk-color-dark-surface2);
+    --lk-surface-inverse: var(--lk-color-dark-text);
+    --lk-text-primary: var(--lk-color-dark-text);
+    --lk-text-secondary: var(--lk-color-dark-text-secondary);
+    --lk-text-tertiary: var(--lk-color-dark-text-secondary);
+    --lk-text-inverse: var(--lk-color-dark-background);
+    --lk-border: var(--lk-color-dark-text);
+    --lk-divider: var(--lk-color-dark-text);
+    --lk-accent: var(--lk-color-orange);
+    --lk-accent-on: var(--lk-color-black);
+    --lk-focus-ring: var(--lk-color-orange);
+    --lk-danger: var(--lk-color-danger-dark);
+    --lk-success: var(--lk-color-success-dark);
+    --lk-border-color: var(--lk-border);
+  }
+}
+
+:root[data-theme="dark"] {
+  --lk-background: var(--lk-color-dark-background);
+  --lk-surface: var(--lk-color-dark-surface);
+  --lk-surface-sunken: var(--lk-color-dark-surface2);
+  --lk-surface-inverse: var(--lk-color-dark-text);
+  --lk-text-primary: var(--lk-color-dark-text);
+  --lk-text-secondary: var(--lk-color-dark-text-secondary);
+  --lk-text-tertiary: var(--lk-color-dark-text-secondary);
+  --lk-text-inverse: var(--lk-color-dark-background);
+  --lk-border: var(--lk-color-dark-text);
+  --lk-divider: var(--lk-color-dark-text);
+  --lk-accent: var(--lk-color-orange);
+  --lk-accent-on: var(--lk-color-black);
+  --lk-focus-ring: var(--lk-color-orange);
+  --lk-danger: var(--lk-color-danger-dark);
+  --lk-success: var(--lk-color-success-dark);
+  --lk-border-color: var(--lk-border);
+}
+
+/* Motion is a preference, not decoration — DESIGN.md §41, §42. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --lk-duration-fast: 1ms;
+    --lk-duration-base: 1ms;
+  }
+}

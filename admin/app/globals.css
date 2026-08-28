@@ -1,0 +1,49 @@
+/*
+  Generated design tokens are the only source of visual values.
+  Regenerate with `npm run tokens`; never edit dist/tokens.css by hand.
+*/
+@import "@lkey/design-tokens/css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* DESIGN.md §43 — never hardcode screen dimensions. */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--lk-background);
+  color: var(--lk-text-primary);
+  font-family: var(--lk-font-body);
+  font-size: var(--lk-size-body);
+  line-height: var(--lk-line-height-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--lk-font-display);
+  margin: 0;
+}
+
+/* WCAG 2.4.11. The ring colour is a token because orange is only 2.92:1 on
+   the light ground and cannot carry this on its own (see tokens.json). */
+:focus-visible {
+  outline: 3px solid var(--lk-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

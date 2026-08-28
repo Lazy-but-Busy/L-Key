@@ -1,0 +1,24 @@
+{
+  "@@locale": "my",
+
+  "appName": "L Key",
+  "appTagline": "ညှိပါ။ လေ့လာပါ။ လေ့ကျင့်ပါ။ တီးပါ။",
+
+  "navHome": "ပင်မ",
+  "navTools": "ကိရိယာများ",
+  "navLearn": "လေ့လာရန်",
+  "navSongs": "သီချင်းများ",
+  "navProfile": "ကိုယ်ရေးအချက်အလက်",
+
+  "commonRetry": "ထပ်ကြိုးစားပါ",
+  "commonCancel": "ပယ်ဖျက်ပါ",
+
+  "errorNoConnection": "ချိတ်ဆက်၍မရပါ။",
+  "errorNoConnectionBody": "အင်တာနက်ချိတ်ဆက်မှုကို စစ်ဆေးပြီး ထပ်ကြိုးစားပါ။",
+  "errorUnexpected": "တစ်ခုခုမှားယွင်းသွားပါသည်။",
+  "errorUnexpectedBody": "ခဏအကြာတွင် ထပ်ကြိုးစားပါ။",
+
+  "foundationTitle": "အခြေခံ",
+  "foundationSubtitle": "ဒီဇိုင်းတိုကင်များ၊ အပြင်အဆင်နှစ်မျိုးလုံး",
+  "foundationMyanmarSample": "သင့်ဂစ်တာကို ညှိပါ"
+}

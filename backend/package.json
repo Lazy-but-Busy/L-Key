@@ -1,0 +1,40 @@
+{
+  "name": "@lkey/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "L Key backend API. Authoritative for auth, entitlements and payments.",
+  "scripts": {
+    "build": "nest build",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --passWithNoTests",
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format"
+  },
+  "dependencies": {
+    "@nestjs/common": "^12.0.0",
+    "@nestjs/config": "^12.0.0",
+    "@nestjs/core": "^12.0.0",
+    "@nestjs/platform-express": "^12.0.0",
+    "@prisma/client": "^7.10.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/testing": "^12.0.0",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "jest": "^30.0.0",
+    "prisma": "^7.10.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}
