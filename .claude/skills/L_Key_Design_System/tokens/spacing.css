@@ -1,0 +1,26 @@
+/* 4px-based spacing scale (DESIGN.md §14) */
+:root{
+  --lk-space-1:4px;
+  --lk-space-2:8px;
+  --lk-space-3:12px;
+  --lk-space-4:16px;
+  --lk-space-5:20px;
+  --lk-space-6:24px;
+  --lk-space-8:32px;
+  --lk-space-10:40px;
+  --lk-space-12:48px;
+  --lk-space-16:64px;
+  --lk-space-20:80px;
+
+  /* Layout constants observed in the file */
+  --lk-screen-padding:16px;         /* mobile screens (DESIGN.md §14) */
+  --lk-screen-padding-wide:24px;    /* (fig) mobile frames use 24px gutters */
+  --lk-admin-padding:32px;          /* (fig) admin content canvas */
+  --lk-mobile-width:390px;          /* (fig) frame width */
+  --lk-desktop-width:1280px;        /* (fig) marketing + admin frame width */
+  --lk-content-max:1232px;          /* (fig) bento grid width */
+  --lk-sidebar-width:320px;         /* (fig) admin drawer */
+  --lk-bottomnav-height:71px;       /* (fig) mobile tab bar */
+  --lk-topbar-height:76px;          /* (fig) TopAppBar */
+  --lk-tap-target:44px;
+}

@@ -1,0 +1,21 @@
+/* Reusable type + surface classes. Optional sugar over the tokens —
+   components may use either these or the raw custom properties. */
+.lk-hero{font-family:var(--lk-font-display);font-weight:400;font-size:var(--lk-size-hero);line-height:var(--lk-lh-hero);letter-spacing:var(--lk-ls-hero);text-transform:uppercase;color:var(--lk-text)}
+.lk-display{font-family:var(--lk-font-display);font-weight:700;font-size:var(--lk-size-display);line-height:var(--lk-lh-display);letter-spacing:var(--lk-ls-display);color:var(--lk-text)}
+.lk-h1{font-family:var(--lk-font-display);font-weight:700;font-size:var(--lk-size-h1);line-height:var(--lk-lh-h1);letter-spacing:var(--lk-ls-h1);color:var(--lk-text)}
+.lk-h2{font-family:var(--lk-font-display);font-weight:700;font-size:var(--lk-size-h2);line-height:var(--lk-lh-h2);color:var(--lk-text)}
+.lk-h3{font-family:var(--lk-font-display);font-weight:600;font-size:var(--lk-size-h2);line-height:var(--lk-lh-h2);color:var(--lk-text)}
+.lk-h4{font-family:var(--lk-font-display);font-weight:600;font-size:var(--lk-size-h4);line-height:var(--lk-lh-h4);color:var(--lk-text)}
+.lk-body-lg{font-family:var(--lk-font-body);font-weight:400;font-size:var(--lk-size-body-lg);line-height:var(--lk-lh-body-lg);color:var(--lk-text)}
+.lk-body{font-family:var(--lk-font-body);font-weight:400;font-size:var(--lk-size-body);line-height:var(--lk-lh-body);color:var(--lk-text)}
+.lk-tech{font-family:var(--lk-font-mono);font-weight:500;font-size:var(--lk-size-tech);line-height:var(--lk-lh-tech);color:var(--lk-text)}
+.lk-tech-label{font-family:var(--lk-font-mono);font-weight:500;font-size:var(--lk-size-tech);line-height:var(--lk-lh-tech);letter-spacing:var(--lk-ls-tech-track);text-transform:uppercase;color:var(--lk-text-technical)}
+.lk-label{font-family:var(--lk-font-mono);font-weight:500;font-size:var(--lk-size-label);line-height:var(--lk-lh-label);text-transform:uppercase;color:var(--lk-text-technical)}
+.lk-eyebrow{font-family:var(--lk-font-mono);font-weight:700;font-size:var(--lk-size-tech-lg);line-height:var(--lk-lh-tech-lg);letter-spacing:var(--lk-ls-tech-lg);text-transform:uppercase;color:var(--lk-text)}
+.lk-card{background:var(--lk-surface);box-shadow:var(--lk-shadow);border-radius:var(--lk-radius-none)}
+.lk-card-ring{background:var(--lk-surface);box-shadow:var(--lk-ring-shadow);border-radius:var(--lk-radius-none)}
+/* Keyboard focus. Applies to every control in the system; components must not
+   set `outline:none` inline, or this rule loses to the inline style. */
+:focus-visible{outline:var(--lk-focus-width) solid var(--lk-focus-color);outline-offset:var(--lk-focus-offset)}
+a{color:var(--lk-text);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+a:hover{color:var(--lk-accent);text-decoration-color:var(--lk-accent)}

@@ -1,0 +1,37 @@
+/* L Key typography. Three families, three jobs (DESIGN.md §8).
+   Every size/line-height/letter-spacing below is a value that appears in
+   L Key UIs.fig — no rounding, no invented steps. */
+:root{
+  --lk-font-display:"Space Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --lk-font-body:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --lk-font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  --lk-weight-light:300;
+  --lk-weight-regular:400;
+  --lk-weight-medium:500;
+  --lk-weight-semibold:600;
+  --lk-weight-bold:700;
+
+  /* Display — Space Grotesk */
+  --lk-size-hero:96px;         --lk-lh-hero:86.4px;    --lk-ls-hero:-4.8px;
+  --lk-size-display:48px;      --lk-lh-display:52.8px; --lk-ls-display:-0.96px;
+  --lk-ls-display-tight:-2.4px;   /* sidebar wordmark */
+  --lk-size-h1:36px;           --lk-lh-h1:39.6px;      --lk-ls-h1:-1.8px;
+  --lk-size-h2:24px;           --lk-lh-h2:28.8px;      --lk-ls-h2:-1.2px;
+  --lk-size-h3:20px;           --lk-lh-h3:30px;
+  --lk-size-h4:18px;           --lk-lh-h4:28px;
+
+  /* Body — Hanken Grotesk */
+  --lk-size-body-lg:18px;      --lk-lh-body-lg:28.8px;
+  --lk-size-body:16px;         --lk-lh-body:24px;
+
+  /* Technical — JetBrains Mono */
+  --lk-size-tech-lg:20px;      --lk-lh-tech-lg:28px;   --lk-ls-tech-lg:2px;
+  --lk-size-tech-md:16px;      --lk-lh-tech-md:24px;
+  --lk-size-tech:14px;         --lk-lh-tech:19.6px;
+  --lk-ls-tech-track:0.7px;    /* uppercase labels */
+  --lk-ls-tech-wide:1.4px;     /* chord formulas */
+  --lk-size-label:12px;        --lk-lh-label:14.4px;
+  --lk-size-micro:10px;        --lk-lh-micro:14.4px;
+  --lk-lh-chord-chip:35px;     /* chord chip sitting above a lyric line */
+}

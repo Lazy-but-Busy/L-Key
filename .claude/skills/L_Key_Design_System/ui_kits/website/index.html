@@ -1,0 +1,22 @@
+<!-- @dsCard group="Website" viewport="1280x760" name="L Key landing page" subtitle="Hero + bento feature grid" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>L Key — Landing</title><link rel="stylesheet" href="../../styles.css"><style>html,body{margin:0;background:var(--lk-paper)}#root{width:1280px;margin:0 auto}</style></head><body><div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel" src="LandingScreen.jsx"></script>
+<script type="text/babel">
+const { TopAppBar, AppIconButton } = window.LKeyDesignSystem_355d7c;
+const Landing = window.LKWebLanding;
+const MenuGlyph = () => <svg width="18" height="12" viewBox="0 0 18 12" fill="#000"><path d="M 0 12 L 0 10 L 18 10 L 18 12 L 0 12 M 0 7 L 0 5 L 18 5 L 18 7 L 0 7 M 0 2 L 0 0 L 18 0 L 18 2 L 0 2 Z"/></svg>;
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <div>
+    <header style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 24px",minHeight:76,boxSizing:"border-box",background:"var(--lk-bg)"}}>
+      <AppIconButton label="Menu" variant="bare" size={34} style={{height:36}}><MenuGlyph/></AppIconButton>
+      <span style={{fontFamily:"var(--lk-font-display)",fontWeight:400,fontSize:16,lineHeight:"24px",letterSpacing:"-0.8px"}}>L KEY</span>
+      <AppIconButton label="Settings" variant="bare"><img src="../../assets/icons/settings.svg" width="20.1" height="20" alt="" /></AppIconButton>
+    </header>
+    <Landing />
+  </div>
+);
+</script></body></html>

@@ -1,0 +1,46 @@
+/* L Key color system.
+   Base ramp values come from DESIGN.md §5-6; every hex marked (fig) was
+   transcribed verbatim from the L Key UIs.fig frames. */
+:root{
+  /* Ink + paper */
+  --lk-black:#000000;
+  --lk-white:#FFFFFF;
+  --lk-off-white:#F0F0F0;          /* DESIGN.md canonical background */
+  --lk-paper:#F9F9F9;              /* (fig) actual screen background used on every frame */
+  --lk-canvas:#F3F3F3;             /* (fig) admin content canvas */
+
+  /* Accent */
+  --lk-orange:#FF4D00;             /* GUITAR_ORANGE — active / playable / premium / recording */
+
+  /* Grey ramp (DESIGN.md §5) */
+  --lk-grey-100:#E5E5E5;
+  --lk-grey-200:#D0D0D0;
+  --lk-grey-300:#B5B5B5;
+  --lk-grey-400:#888888;
+  --lk-grey-500:#666666;
+  --lk-grey-600:#333333;
+
+  /* Extra neutral fills observed in the file (fig) */
+  --lk-fill-chip:#E2E2E2;          /* chord metadata bento */
+  --lk-fill-tag:#EEEEEE;           /* table key tag */
+  --lk-fill-thead:#E8E8E8;         /* admin table head */
+  --lk-fill-ghost:#E5E7EB;         /* hairline stroke in admin forms */
+  --lk-fill-ornament:#E5E5E5;      /* stat-card ornament circle */
+
+  /* Semantic status */
+  --lk-danger:#BA1A1A;             /* (fig) muted string "X", destructive icon */
+  --lk-success:#28A745;            /* (fig) published dot */
+  --lk-success-bg:#E6FFED;         /* (fig) published pill background */
+
+  /* Overlays */
+  --lk-overlay-image:rgba(0,0,0,0.1);   /* (fig) song artwork scrim */
+  --lk-overlay-chord:rgba(255,255,255,0.002); /* (fig) chord chip over lyrics */
+  --lk-stripe:rgba(0,0,0,0.2);          /* diagonal hatch on progress fills */
+
+  /* Dark-mode base values (DESIGN.md §6) kept on :root so tooling can read them */
+  --lk-dark-bg:#000000;
+  --lk-dark-surface:#111111;
+  --lk-dark-surface-2:#1C1C1C;
+  --lk-dark-text:#F0F0F0;
+  --lk-dark-text-2:#999999;
+}

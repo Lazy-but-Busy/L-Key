@@ -1,0 +1,43 @@
+/* Borders, radii and the hard-shadow system (DESIGN.md §11-13).
+   In the .fig, "borders" on cards are drawn as inset box-shadows so the border
+   never eats the box — the tokens below preserve that technique. */
+:root{
+  --lk-border-hairline:1px;
+  --lk-border:2px;                 /* primary neo-brutalist border */
+  --lk-border-strong:3px;          /* important interactive components */
+
+  --lk-radius-none:0px;            /* default */
+  --lk-radius-sm:2px;              /* (fig) icon-button hit area */
+  --lk-radius-md:4px;
+  --lk-radius-lg:8px;
+  --lk-radius-pill:9999px;         /* (fig) circular play / avatar / ornament */
+
+  /* Hard offset shadows — never blurred */
+  --lk-shadow-sm:2px 2px 0px 0px var(--lk-black);
+  --lk-shadow:4px 4px 0px 0px var(--lk-black);
+  --lk-shadow-lg:6px 6px 0px 0px var(--lk-black);
+  --lk-shadow-pressed:1px 1px 0px 0px var(--lk-black);
+  --lk-shadow-accent:4px 4px 0px 0px var(--lk-orange);   /* (fig) admin logout button */
+  --lk-shadow-rail:4px 0px 0px 0px var(--lk-black);      /* (fig) admin sidebar edge */
+
+  /* Inset "borders" */
+  --lk-ring:inset 0 0 0 2px var(--lk-black);
+  --lk-ring-hairline:inset 0 0 0 1px var(--lk-black);
+  --lk-ring-shadow:inset 0 0 0 2px var(--lk-black),4px 4px 0px 0px var(--lk-black);
+  --lk-ring-shadow-sm:inset 0 0 0 2px var(--lk-black),2px 2px 0px 0px var(--lk-black);
+
+  /* Focus. Guitar Orange as a 3px ring: 3.33:1 on white, 3.16:1 on paper and
+     6.31:1 on the dark ground — all above the 3:1 minimum for non-text. */
+  --lk-focus-width:3px;
+  --lk-focus-color:var(--lk-orange);
+  --lk-focus-offset:2px;
+
+  /* Press motion (DESIGN.md §15, §41) */
+  --lk-press-translate:3px;
+  --lk-duration-fast:90ms; /* @kind other */
+  --lk-duration:140ms; /* @kind other */
+  --lk-ease:cubic-bezier(0.2,0,0,1); /* @kind other */
+
+  /* Diagonal hatch used on progress fills (fig) */
+  --lk-hatch:repeating-linear-gradient(45deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 4px,rgb(0,0,0) 4px,rgb(0,0,0) 8px); /* @kind other */
+}

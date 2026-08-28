@@ -1,0 +1,74 @@
+/* Semantic aliases — reference these in components, not the base ramp. */
+:root{
+  --lk-bg:var(--lk-paper);
+  --lk-bg-canvas:var(--lk-canvas);
+  --lk-surface:var(--lk-white);
+  --lk-surface-sunken:var(--lk-paper);
+  --lk-surface-chip:var(--lk-grey-100);
+  --lk-surface-inverse:var(--lk-black);
+
+  --lk-text:var(--lk-black);
+  --lk-text-secondary:var(--lk-grey-500);
+  --lk-text-tertiary:var(--lk-grey-500);   /* grey-400 is 3.37:1 on paper — fails AA below 24px */
+  --lk-text-technical:var(--lk-grey-600);
+  --lk-text-inverse:var(--lk-white);
+  --lk-text-accent:var(--lk-orange);
+  --lk-text-danger:var(--lk-danger);
+
+  --lk-border-color:var(--lk-black);
+  --lk-divider:var(--lk-black);
+
+  --lk-accent:var(--lk-orange);
+  --lk-accent-on:var(--lk-black);      /* text/icon colour on top of orange */
+
+  /* Component-level aliases */
+  --lk-btn-primary-bg:var(--lk-black);
+  --lk-btn-primary-fg:var(--lk-white);
+  --lk-btn-accent-bg:var(--lk-orange);
+  --lk-btn-accent-fg:var(--lk-black);
+  --lk-btn-secondary-bg:var(--lk-white);
+  --lk-btn-secondary-fg:var(--lk-black);
+
+  --lk-nav-active-bg:var(--lk-orange);
+  --lk-nav-active-fg:var(--lk-black);
+  --lk-nav-idle-fg:var(--lk-black);
+
+  --lk-string:var(--lk-black);         /* fretboard / chord diagram strings */
+  --lk-marker:var(--lk-black);         /* finger markers */
+  --lk-marker-root:var(--lk-orange);   /* root note (DESIGN.md §25) */
+  --lk-in-tune:var(--lk-orange);       /* tuner lock (DESIGN.md §22) */
+}
+
+/* Dark mode (DESIGN.md §6, §68) — not present in the .fig, values from DESIGN.md. */
+[data-theme="dark"]{
+  --lk-bg:var(--lk-dark-bg);
+  --lk-bg-canvas:var(--lk-dark-surface);
+  --lk-surface:var(--lk-dark-surface);
+  --lk-surface-sunken:var(--lk-dark-surface-2);
+  --lk-surface-chip:var(--lk-dark-surface-2);
+  --lk-surface-inverse:var(--lk-dark-text);
+
+  --lk-text:var(--lk-dark-text);
+  --lk-text-secondary:var(--lk-dark-text-2);
+  --lk-text-tertiary:var(--lk-dark-text-2);
+  --lk-text-technical:var(--lk-dark-text-2);
+  --lk-text-inverse:var(--lk-dark-bg);
+
+  --lk-border-color:var(--lk-dark-text);
+  --lk-divider:var(--lk-dark-text);
+
+  --lk-btn-primary-bg:var(--lk-dark-text);
+  --lk-btn-primary-fg:var(--lk-dark-bg);
+  --lk-btn-secondary-bg:var(--lk-dark-surface-2);
+  --lk-btn-secondary-fg:var(--lk-dark-text);
+
+  --lk-shadow-sm:2px 2px 0px 0px var(--lk-dark-text);
+  --lk-shadow:4px 4px 0px 0px var(--lk-dark-text);
+  --lk-shadow-lg:6px 6px 0px 0px var(--lk-dark-text);
+  --lk-ring:inset 0 0 0 2px var(--lk-dark-text);
+  --lk-ring-shadow:inset 0 0 0 2px var(--lk-dark-text),4px 4px 0px 0px var(--lk-dark-text);
+  --lk-ring-shadow-sm:inset 0 0 0 2px var(--lk-dark-text),2px 2px 0px 0px var(--lk-dark-text);
+
+  --lk-string:var(--lk-dark-text);
+  --lk-marker:var(--lk-dark-text);
+}

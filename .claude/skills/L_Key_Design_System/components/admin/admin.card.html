@@ -1,0 +1,32 @@
+<!-- @dsCard group="Components" viewport="700x400" name="Admin" subtitle="Stat card, data table, filter bar, status badge, content editor" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css"><style>body{margin:0;padding:20px;background:var(--lk-canvas)}</style></head><body><div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+const { StatCard, DataTable, FilterBar, StatusBadge, ContentEditor, AppButton, AppTextField, AppChip } = window.LKeyDesignSystem_355d7c;
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <div style={{display:"flex",flexDirection:"column",gap:20}}>
+    <div style={{display:"flex",gap:16}}>
+      <StatCard label="Total users" value="12,542" delta="+14.2%" icon={<img src="../../assets/icons/users.svg" width={22} height={16} alt="" />} />
+      <StatCard label="Active today" value="2,341" delta="+8.1%" ornament="square" />
+      <StatCard label="Premium" value="1,203" note="+24 this week" ornament="none" />
+    </div>
+    <FilterBar groups={[{key:"range",label:"Range",options:["7D","30D","All"]},{key:"status",label:"Status",options:["All","Published","Draft"]}]}
+      activeValues={{range:"7D",status:"All"}}
+      trailing={<AppButton size="md">Add new song</AppButton>} />
+    <DataTable
+      columns={[{key:"id",label:"ID",width:96,strong:true},{key:"title",label:"Title",font:"body"},{key:"key",label:"Key",width:96},{key:"bpm",label:"BPM",width:96},{key:"status",label:"Status",width:150}]}
+      rows={[
+        {id:"#8021",title:"Neon Skyline",key:<AppChip variant="tag">C#m</AppChip>,bpm:"118",status:<StatusBadge status="published" />},
+        {id:"#8022",title:"The Midnight",key:<AppChip variant="tag">A Mix</AppChip>,bpm:"105",status:<StatusBadge status="draft" />},
+        {id:"#8023",title:"Slow Burn",key:<AppChip variant="tag">D Min</AppChip>,bpm:"140",status:<StatusBadge status="archived" />}]}
+      footerNote="Showing 1 to 3 of 42 entries"
+      pagination={<><AppButton size="sm" variant="secondary">1</AppButton><AppButton size="sm" variant="secondary">2</AppButton><AppButton size="sm" variant="secondary">Next ›</AppButton></>} />
+    <ContentEditor title="Song Information" status={<StatusBadge status="draft" />}
+      sections={[{title:"Basic information", children:<><AppTextField label="Title" placeholder="Neon Skyline" /><AppTextField label="Artist" placeholder="The Midnight" /></>}]}
+      actions={<><AppButton size="md" variant="secondary">Save draft</AppButton><AppButton size="md">Publish</AppButton></>} />
+  </div>
+);
+</script></body></html>
