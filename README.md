@@ -1206,8 +1206,8 @@ L Key is currently in the **early development / foundation phase**.
 ## Phase 3 — Core Guitar Tools
 
 * [ ] Tuner
-* [ ] Chord Engine
-* [ ] Chord UI
+* [x] Chord Engine — spelled notes, 18 qualities, movable and open voicings
+* [x] Chord UI — browser, search, diagram, voicing selector
 * [ ] Fretboard
 * [ ] Scale Engine
 * [ ] Metronome
