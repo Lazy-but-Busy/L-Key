@@ -52,6 +52,9 @@
   --lk-size-h3: 20px;
   --lk-line-height-h3: 1.5;
   --lk-tracking-h3: 0em;
+  --lk-size-h4: 18px;
+  --lk-line-height-h4: 1.5556;
+  --lk-tracking-h4: 0em;
   --lk-size-body-large: 18px;
   --lk-line-height-body-large: 1.6;
   --lk-tracking-body-large: 0em;
@@ -117,6 +120,28 @@
   --lk-top-bar-height: 76px;
   --lk-sidebar-width: 320px;
   --lk-content-max-width: 1232px;
+  --lk-button-height-sm: 28px;
+  --lk-button-height-md: 48px;
+  --lk-button-height-lg: 52px;
+  --lk-button-height-hero: 64px;
+  --lk-icon-box-sm: 32px;
+  --lk-icon-box-md: 36px;
+  --lk-icon-box-lg: 48px;
+  --lk-icon-box-circle: 64px;
+  --lk-text-field-min-height: 48px;
+  --lk-nav-item-min-width: 64px;
+  --lk-nav-icon-slot: 20px;
+  --lk-song-artwork-height: 128px;
+  --lk-progress-track-height: 32px;
+  --lk-focus-ring-width: 3px;
+  --lk-focus-ring-offset: 2px;
+
+
+  /* Burmese needs a taller line box than the Latin scale */
+  --lk-myanmar-line-height: 1.5;
+  /* unitless opacity */
+  --lk-disabled-opacity: 0.4;
+  --lk-stripe-opacity: 0.2;
 
   /* semantic roles — light. Reference these, never the palette. */
   --lk-background: var(--lk-color-off-white);

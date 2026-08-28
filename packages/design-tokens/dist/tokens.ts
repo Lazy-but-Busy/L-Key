@@ -104,6 +104,10 @@ export const tokens = {
         "source": "gap-fill — the three brand faces carry no Burmese glyphs; see docs/adr/0006-myanmar-font-fallback.md"
       }
     },
+    "myanmarLineHeight": {
+      "value": 1.5,
+      "source": "DESIGN.md §36 requires Burmese font size and line wrapping be tested rather than assumed; Burmese stacked diacritics clip at the Latin line heights, which are as tight as 0.95"
+    },
     "weight": {
       "light": {
         "value": 300
@@ -161,6 +165,14 @@ export const tokens = {
         "family": "display",
         "weight": "semiBold",
         "source": "DESIGN.md §9 H3"
+      },
+      "h4": {
+        "size": 18,
+        "lineHeight": 1.5556,
+        "letterSpacing": 0,
+        "family": "display",
+        "weight": "semiBold",
+        "source": "design system --lk-size-h4 18 / --lk-lh-h4 28; DESIGN.md §9 names no display step at 18"
       },
       "bodyLarge": {
         "size": 18,
@@ -367,6 +379,76 @@ export const tokens = {
     "contentMaxWidth": {
       "value": 1232,
       "source": "design system --lk-content-max"
+    },
+    "buttonHeightSm": {
+      "value": 28,
+      "source": "design system components/core/AppButton.prompt.md \"sm 26px\"; measured 26.39 rounded up to the DESIGN.md §14 4px grid so the control clears its line box"
+    },
+    "buttonHeightMd": {
+      "value": 48,
+      "source": "design system components/core/AppButton.jsx sm/md/lg/xl/hero ladder, md"
+    },
+    "buttonHeightLg": {
+      "value": 52,
+      "source": "design system components/core/AppButton.jsx ladder, lg — the default mobile button"
+    },
+    "buttonHeightHero": {
+      "value": 64,
+      "source": "design system components/core/AppButton.prompt.md \"hero 61px\"; measured 60.8 rounded up to the 4px grid"
+    },
+    "iconBoxSm": {
+      "value": 32,
+      "source": "design system components/core/AppIconButton.jsx painted box, small"
+    },
+    "iconBoxMd": {
+      "value": 36,
+      "source": "design system components/core/AppIconButton.jsx default size"
+    },
+    "iconBoxLg": {
+      "value": 48,
+      "source": "design system components/core/AppIconButton.jsx large, used for the Quick Tune play control"
+    },
+    "iconBoxCircle": {
+      "value": 64,
+      "source": "design system ui_kits/mobile_app/HomeScreen.jsx Import Tab circular mark"
+    },
+    "textFieldMinHeight": {
+      "value": 48,
+      "source": "design system components/core/AppTextField.jsx minHeight 45.59 rounded up to the 4px grid and to WCAG 2.5.5"
+    },
+    "navItemMinWidth": {
+      "value": 64,
+      "source": "design system components/navigation/BottomNavBar.prompt.md \"active tab becomes a 64px Guitar Orange block\""
+    },
+    "navIconSlot": {
+      "value": 20,
+      "source": "design system components/navigation/BottomNavBar.jsx icon slot height 18, rounded up to the 4px grid"
+    },
+    "songArtworkHeight": {
+      "value": 128,
+      "source": "design system components/music/SongCard.jsx artwork height"
+    },
+    "progressTrackHeight": {
+      "value": 32,
+      "source": "design system components/music/PracticeProgress.jsx track height"
+    },
+    "focusRingWidth": {
+      "value": 3,
+      "source": "design system --lk-focus-width"
+    },
+    "focusRingOffset": {
+      "value": 2,
+      "source": "design system --lk-focus-offset"
+    }
+  },
+  "opacity": {
+    "disabled": {
+      "value": 0.4,
+      "source": "design system guidelines/brand-press.card.html \"Disabled is 40% opacity, never a grey re-tint\""
+    },
+    "stripe": {
+      "value": 0.2,
+      "source": "design system --lk-stripe; the 45° hatch over an orange progress fill"
     }
   },
   "semantic": {

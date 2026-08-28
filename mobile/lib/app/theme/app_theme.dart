@@ -78,6 +78,40 @@ abstract final class AppTheme {
     );
   }
 
+  /// Returns [base] with a line-height floor suitable for Burmese.
+  ///
+  /// DESIGN.md §36 requires Burmese font size and line wrapping to be tested
+  /// rather than assumed. The Latin scale runs as tight as 0.95, which clips
+  /// the stacked diacritics Burmese builds above and below the baseline, so
+  /// every style takes a taller line box when the resolved locale is Burmese.
+  /// Sizes, weights and colours are untouched -- only the leading changes.
+  static ThemeData forMyanmar(ThemeData base) {
+    TextStyle? relax(TextStyle? style) {
+      if (style == null) return null;
+      final height = style.height ?? 1;
+      return height >= LkFonts.myanmarLineHeight
+          ? style
+          : style.copyWith(height: LkFonts.myanmarLineHeight);
+    }
+
+    final t = base.textTheme;
+    return base.copyWith(
+      textTheme: t.copyWith(
+        displayLarge: relax(t.displayLarge),
+        displayMedium: relax(t.displayMedium),
+        headlineLarge: relax(t.headlineLarge),
+        headlineMedium: relax(t.headlineMedium),
+        headlineSmall: relax(t.headlineSmall),
+        bodyLarge: relax(t.bodyLarge),
+        bodyMedium: relax(t.bodyMedium),
+        bodySmall: relax(t.bodySmall),
+        labelLarge: relax(t.labelLarge),
+        labelMedium: relax(t.labelMedium),
+        labelSmall: relax(t.labelSmall),
+      ),
+    );
+  }
+
   /// Maps the generated type scale onto Material's slots.
   ///
   /// DESIGN.md §9 defines ten steps; Material defines fifteen. Only the slots

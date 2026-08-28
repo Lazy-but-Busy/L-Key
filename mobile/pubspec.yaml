@@ -23,6 +23,11 @@ dependencies:
   # Message formatting for localisation.
   intl: any
 
+  # Settings persistence. The platform offers no Dart-facing key-value store,
+  # and this is the Flutter-team-maintained wrapper over NSUserDefaults and
+  # SharedPreferences. See docs/adr/0008.
+  shared_preferences: ^2.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
