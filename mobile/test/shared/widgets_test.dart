@@ -12,6 +12,7 @@ import 'package:l_key/shared/widgets/lk_button.dart';
 import 'package:l_key/shared/widgets/lk_empty_state.dart';
 import 'package:l_key/shared/widgets/lk_error_state.dart';
 import 'package:l_key/shared/widgets/lk_premium_badge.dart';
+import 'package:l_key/shared/widgets/lk_pressable.dart';
 import 'package:l_key/shared/widgets/lk_segmented_control.dart';
 import 'package:l_key/shared/widgets/lk_skeleton.dart';
 
@@ -59,6 +60,41 @@ void main() {
           child: LkButton(label: 'Go', onPressed: () {}),
         );
         expect(find.text('GO'), findsOneWidget);
+      }
+    });
+  });
+
+  group('reduced motion', () {
+    testWidgets('the press animation collapses when the OS asks', (
+      tester,
+    ) async {
+      // DESIGN.md §42 requires reduced-motion support and had no
+      // implementation anywhere in the app before this phase.
+      for (final disabled in <bool>[false, true]) {
+        await pumpLk(
+          tester,
+          disableAnimations: disabled,
+          child: LkPressable(onTap: () {}, child: const Text('Press')),
+        );
+
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.text('Press')),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+
+        final container = tester.widget<AnimatedContainer>(
+          find.byType(AnimatedContainer),
+        );
+        expect(
+          container.duration,
+          disabled ? Duration.zero : LkMotion.durationFast,
+          reason: disabled
+              ? 'the state change is instant, never absent'
+              : 'the press animates normally by default',
+        );
+        await gesture.up();
+        await tester.pumpAndSettle();
       }
     });
   });
