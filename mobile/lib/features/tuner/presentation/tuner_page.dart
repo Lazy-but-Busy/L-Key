@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
-import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
@@ -47,84 +46,79 @@ class _TunerPageState extends ConsumerState<TunerPage> {
     );
     final string = _standardTuning[_selected];
 
-    return LkDetailScaffold(
-      title: l10n.toolTuner,
-      fallbackRoute: AppRoutes.tools,
-      child: ListView(
-        padding: lkScreenPadding,
-        children: <Widget>[
-          LkScreenHeader(
-            title: l10n.toolTuner,
-            subtitle: l10n.tunerSubtitle,
-          ),
-          const SizedBox(height: LkSpacing.s6),
+    return ListView(
+      padding: lkFullScreenPadding,
+      children: <Widget>[
+        LkScreenHeader(
+          title: l10n.toolTuner,
+          subtitle: l10n.tunerSubtitle,
+        ),
+        const SizedBox(height: LkSpacing.s6),
 
-          Container(
-            padding: const EdgeInsets.all(LkSpacing.s6),
-            decoration: BoxDecoration(
-              color: colors.surface,
-              border: Border.all(
-                color: colors.border,
-                width: LkBorders.regular,
-              ),
-              boxShadow: <BoxShadow>[LkShadows.regular(colors.border)],
+        Container(
+          padding: const EdgeInsets.all(LkSpacing.s6),
+          decoration: BoxDecoration(
+            color: colors.surface,
+            border: Border.all(
+              color: colors.border,
+              width: LkBorders.regular,
             ),
-            child: Column(
-              spacing: LkSpacing.s6,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  spacing: LkSpacing.s2,
-                  children: <Widget>[
-                    Text(
-                      string.note,
-                      style: context.lkType.displayXl.copyWith(
-                        color: colors.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      '${string.octave}',
-                      style: context.lkType.h2.copyWith(
-                        color: colors.textTertiary,
-                      ),
-                    ),
-                  ],
-                ),
-                // The needle rests at centre because nothing is listening.
-                _RestingMeter(),
-                Text(
-                  '${l10n.homeQuickTuneTuning.toUpperCase()} · '
-                  '${pitch.round()} HZ',
-                  style: context.lkType.technical.copyWith(
-                    color: colors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
+            boxShadow: <BoxShadow>[LkShadows.regular(colors.border)],
           ),
-          const SizedBox(height: LkSpacing.s6),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            spacing: LkSpacing.s6,
             children: <Widget>[
-              for (var i = 0; i < _standardTuning.length; i++)
-                _StringButton(
-                  label:
-                      '${_standardTuning[i].note}${_standardTuning[i].octave}',
-                  isSelected: i == _selected,
-                  onTap: () => setState(() => _selected = i),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                spacing: LkSpacing.s2,
+                children: <Widget>[
+                  Text(
+                    string.note,
+                    style: context.lkType.displayXl.copyWith(
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    '${string.octave}',
+                    style: context.lkType.h2.copyWith(
+                      color: colors.textTertiary,
+                    ),
+                  ),
+                ],
+              ),
+              // The needle rests at centre because nothing is listening.
+              _RestingMeter(),
+              Text(
+                '${l10n.homeQuickTuneTuning.toUpperCase()} · '
+                '${pitch.round()} HZ',
+                style: context.lkType.technical.copyWith(
+                  color: colors.textSecondary,
                 ),
+              ),
             ],
           ),
-          const SizedBox(height: LkSpacing.s6),
+        ),
+        const SizedBox(height: LkSpacing.s6),
 
-          LkPendingNote(message: l10n.tunerPending),
-          const SizedBox(height: LkSpacing.s4),
-          LkPremiumNote(capability: l10n.tunerProNote),
-        ],
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            for (var i = 0; i < _standardTuning.length; i++)
+              _StringButton(
+                label: '${_standardTuning[i].note}${_standardTuning[i].octave}',
+                isSelected: i == _selected,
+                onTap: () => setState(() => _selected = i),
+              ),
+          ],
+        ),
+        const SizedBox(height: LkSpacing.s6),
+
+        LkPendingNote(message: l10n.tunerPending),
+        const SizedBox(height: LkSpacing.s4),
+        LkPremiumNote(capability: l10n.tunerProNote),
+      ],
     );
   }
 }

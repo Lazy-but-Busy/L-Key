@@ -16,6 +16,7 @@ import 'package:l_key/features/songs/presentation/songs_page.dart';
 import 'package:l_key/features/tools/presentation/tools_page.dart';
 import 'package:l_key/features/tuner/presentation/tuner_page.dart';
 import 'package:l_key/shared/widgets/lk_bottom_nav_bar.dart';
+import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Boots the real router inside the real app scaffolding.
@@ -139,6 +140,59 @@ void main() {
       // Pushed above the shell rather than nested under Profile, so the
       // player is not silently moved to another tab.
       expect(find.byType(SongsPage), findsNothing);
+    });
+
+    testWidgets('the wordmark bar appears only on the five sections', (
+      tester,
+    ) async {
+      await pumpApp(tester);
+      expect(find.byType(LkTopAppBar), findsOneWidget);
+
+      for (final section in <String>['Tools', 'Learn', 'Songs', 'Profile']) {
+        await tester.tap(tab(section));
+        await tester.pumpAndSettle();
+        expect(
+          find.byType(LkTopAppBar),
+          findsOneWidget,
+          reason: '$section is a section root and keeps the bar',
+        );
+      }
+    });
+
+    testWidgets('a screen inside a branch takes the full height', (
+      tester,
+    ) async {
+      await pumpApp(tester);
+
+      await tester.tap(tab('Tools'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Tuner'));
+      await tester.pumpAndSettle();
+
+      // No wordmark bar, and no second one either -- the tool screens used to
+      // render the shell's bar and their own, stacked.
+      expect(find.byType(LkTopAppBar), findsNothing);
+      expect(find.byType(TunerPage), findsOneWidget);
+
+      // The bottom bar stays, so the section is still one tap away.
+      expect(find.byType(LkBottomNavBar), findsOneWidget);
+
+      // Tapping the active tab returns to its root, which is the way back.
+      await tester.tap(tab('Tools'));
+      await tester.pumpAndSettle();
+      expect(find.byType(ToolsPage), findsOneWidget);
+      expect(find.byType(LkTopAppBar), findsOneWidget);
+    });
+
+    testWidgets('settings keeps the bar above the shell', (tester) async {
+      await pumpApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SettingsPage), findsOneWidget);
+      expect(find.byType(LkTopAppBar), findsOneWidget);
+      expect(find.byType(LkBottomNavBar), findsNothing);
     });
 
     testWidgets('the bar survives Burmese on a small phone', (tester) async {

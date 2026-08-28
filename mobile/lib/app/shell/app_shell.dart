@@ -6,6 +6,16 @@ import 'package:l_key/shared/widgets/lk_bottom_nav_bar.dart';
 import 'package:l_key/shared/widgets/lk_icon_button.dart';
 import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 
+/// The five branch roots. Only these carry the top bar; anything pushed above
+/// one of them is a full-screen surface.
+const Set<String> _branchRoots = <String>{
+  AppRoutes.home,
+  AppRoutes.tools,
+  AppRoutes.learn,
+  AppRoutes.songs,
+  AppRoutes.profile,
+};
+
 /// The persistent frame around the five primary sections.
 ///
 /// Holds the bottom navigation and the top app bar so neither is rebuilt on a
@@ -31,6 +41,14 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
+    // The wordmark belongs to the five sections. A screen pushed inside a
+    // branch -- a tool, a practice session -- takes the full height instead,
+    // and returns to its section through the bar below or the system back
+    // gesture.
+    final isBranchRoot = _branchRoots.contains(
+      GoRouterState.of(context).matchedLocation,
+    );
+
     final destinations = <LkNavDestination>[
       LkNavDestination(icon: Icons.home_outlined, label: l10n.navHome),
       LkNavDestination(icon: Icons.tune, label: l10n.navTools),
@@ -55,15 +73,16 @@ class AppShell extends StatelessWidget {
           bottom: false,
           child: Column(
             children: <Widget>[
-              LkTopAppBar(
-                title: l10n.appName,
-                trailing: LkIconButton(
-                  icon: Icons.settings_outlined,
-                  semanticLabel: l10n.commonSettings,
-                  variant: LkIconButtonVariant.bare,
-                  onPressed: () => context.pushNamed(AppRoutes.settingsName),
+              if (isBranchRoot)
+                LkTopAppBar(
+                  title: l10n.appName,
+                  trailing: LkIconButton(
+                    icon: Icons.settings_outlined,
+                    semanticLabel: l10n.commonSettings,
+                    variant: LkIconButtonVariant.bare,
+                    onPressed: () => context.pushNamed(AppRoutes.settingsName),
+                  ),
                 ),
-              ),
               Expanded(child: navigationShell),
             ],
           ),

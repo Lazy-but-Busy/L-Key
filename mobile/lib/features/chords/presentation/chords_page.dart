@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
-import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_detail_scaffold.dart';
@@ -22,29 +21,25 @@ class ChordsPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final colors = context.lkColors;
 
-    return LkDetailScaffold(
-      title: l10n.toolChords,
-      fallbackRoute: AppRoutes.tools,
-      child: ListView(
-        padding: lkScreenPadding,
-        children: <Widget>[
-          LkScreenHeader(
-            title: l10n.toolChords,
-            subtitle: l10n.chordsSubtitle,
+    return ListView(
+      padding: lkFullScreenPadding,
+      children: <Widget>[
+        LkScreenHeader(
+          title: l10n.toolChords,
+          subtitle: l10n.chordsSubtitle,
+        ),
+        const SizedBox(height: LkSpacing.s6),
+        Container(
+          padding: const EdgeInsets.all(LkSpacing.s6),
+          decoration: BoxDecoration(
+            color: colors.surface,
+            boxShadow: <BoxShadow>[LkShadows.regular(colors.border)],
           ),
-          const SizedBox(height: LkSpacing.s6),
-          Container(
-            padding: const EdgeInsets.all(LkSpacing.s6),
-            decoration: BoxDecoration(
-              color: colors.surface,
-              boxShadow: <BoxShadow>[LkShadows.regular(colors.border)],
-            ),
-            child: const LkSkeletonList(itemCount: 4),
-          ),
-          const SizedBox(height: LkSpacing.s6),
-          LkPendingNote(message: l10n.chordsPending),
-        ],
-      ),
+          child: const LkSkeletonList(itemCount: 4),
+        ),
+        const SizedBox(height: LkSpacing.s6),
+        LkPendingNote(message: l10n.chordsPending),
+      ],
     );
   }
 }

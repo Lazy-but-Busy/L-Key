@@ -54,6 +54,26 @@ Practice is reached from both Home and Learn. It is assigned to Learn rather
 than duplicated, matching the design system, and entering it from Home moves
 the selected tab to Learn — which is honest about where the player now is.
 
+## Where the chrome goes
+
+The wordmark bar belongs to the five sections and to `/settings`. Everything
+else is full screen.
+
+| Surface | Top bar | Bottom bar |
+| --- | --- | --- |
+| The five section roots | yes | yes |
+| `/settings` | yes, with a back control | no |
+| A screen inside a branch (tools, practice) | no | yes |
+| `/foundation` | no | no |
+
+A screen inside a branch keeps the bottom bar, so its section is one tap away
+and tapping the active tab returns to that section's root. It therefore needs
+no back control of its own, and repeating the wordmark above a screen that
+already sets its own name as an H1 says nothing.
+
+This also removed a real defect: those screens previously rendered the shell's
+bar *and* their own, stacked.
+
 ## Consequences
 
 - **Every key and route is constructed inside `createRouter()`.**

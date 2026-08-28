@@ -5,11 +5,16 @@ import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/shared/widgets/lk_icon_button.dart';
 import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 
-/// The frame for a screen pushed above a section root.
+/// The frame for a screen pushed above the shell.
 ///
-/// The design system's top bar carries a menu on the left; a pushed screen
-/// needs a way back instead, and the icon set contains no back glyph, so this
-/// is a documented addition rather than a substituted lookalike.
+/// Only `/settings` uses this. A screen pushed *inside* a branch keeps the
+/// bottom bar and takes the full height instead, so it needs no frame of its
+/// own — see [lkFullScreenPadding].
+///
+/// The design system's top bar carries a menu on the left; a screen above the
+/// shell has no bottom bar to return through, so it needs a way back, and the
+/// icon set contains no back glyph. This is a documented addition rather than
+/// a substituted lookalike.
 class LkDetailScaffold extends StatelessWidget {
   /// Creates a detail scaffold.
   const LkDetailScaffold({
@@ -65,10 +70,15 @@ class LkDetailScaffold extends StatelessWidget {
   }
 }
 
-/// Standard page padding for a section screen.
+/// Page padding for a screen sitting under the top bar, which already
+/// provides the space above the content.
 const EdgeInsets lkScreenPadding = EdgeInsets.fromLTRB(
   LkSpacing.s6,
   0,
   LkSpacing.s6,
   LkSpacing.s6,
 );
+
+/// Page padding for a full-screen surface, which has no bar above it and so
+/// must open its own space.
+const EdgeInsets lkFullScreenPadding = EdgeInsets.all(LkSpacing.s6);
