@@ -1,0 +1,7 @@
+# Localisation codegen (CLAUDE.md §33 — never hardcode user-facing strings).
+arb-dir: lib/app/localization
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+output-dir: lib/app/localization/generated
+nullable-getter: false

@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Tokens, backend, admin, website
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Fails if a generated token file drifts from tokens.json, and re-runs
+      # the WCAG contrast gate. tokens.g.dart is committed in `dart format`
+      # shape and so is checked by the Flutter job below — this runner has no
+      # `dart`, and regenerating it here would report drift that no amount of
+      # regenerating could fix.
+      - name: Token drift (web) and contrast gate
+        run: npm run tokens:check:web
+
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+      - name: Validate Prisma schema
+        working-directory: backend
+        run: npx prisma validate
+        env:
+          # No database is provisioned; validate only parses the schema.
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/lkey
+
+  mobile:
+    name: Flutter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.1
+          channel: stable
+          cache: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # The Dart half of the token drift gate. This is the only job with
+      # `dart` on PATH, so it is the only one that can reproduce the committed
+      # file. The generator uses node: builtins alone, so no install first.
+      - name: Token drift (Dart)
+        run: npm run tokens:check:dart
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Generate localisations
+        working-directory: mobile
+        run: flutter gen-l10n
+
+      - name: Check formatting
+        working-directory: mobile
+        run: dart format --set-exit-if-changed .
+
+      - name: Analyze
+        working-directory: mobile
+        run: flutter analyze
+
+      - name: Test
+        working-directory: mobile
+        run: flutter test

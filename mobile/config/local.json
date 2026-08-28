@@ -1,0 +1,9 @@
+{
+  "APP_ENV": "local",
+  "API_BASE_URL": "http://localhost:3000",
+  "ENABLE_AI_ASSISTANT": false,
+  "ENABLE_CHORD_RECOGNITION": false,
+  "ENABLE_BACKING_TRACKS": false,
+  "ENABLE_RECORDING": false,
+  "ENABLE_COMMUNITY": false
+}

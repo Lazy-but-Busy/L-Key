@@ -1,0 +1,23 @@
+<!-- @dsCard group="Components" viewport="700x400" name="Music" subtitle="Chord diagram, fretboard, tuner, BPM, practice progress, song card" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css"><style>body{margin:0;padding:20px;background:var(--lk-paper)}.grid{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}</style></head><body><div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+const { ChordDiagram, Fretboard, TunerMeter, BpmDisplay, PracticeProgress, SongCard, AppIconButton } = window.LKeyDesignSystem_355d7c;
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <div className="grid">
+    <ChordDiagram name="C Major" width={180} openStrings={[1,2]} mutedStrings={[0]}
+      positions={[{string:1,fret:3,finger:3},{string:3,fret:2,finger:2},{string:4,fret:1,finger:1,root:true}]} />
+    <TunerMeter width={300} note="E" octave={2} frequency={82.41} cents={-2} />
+    <div style={{display:"flex",flexDirection:"column",gap:20,width:300}}>
+      <BpmDisplay bpm={120} activeBeat={0} timeSignature="4/4" />
+      <PracticeProgress value={30} max={60} elapsed="30:00" total="60:00 MIN" label="Focus: pentatonic speed" />
+      <SongCard title="Master of Puppets" artist="Metallica" tag="Rhythm" bpm={120} cover="../../assets/images/song-cover-1.jpg"
+        action={<AppIconButton label="More" variant="bare" size={24}><img src="../../assets/icons/more-vertical.svg" width={4} height={16} alt="" /></AppIconButton>} />
+    </div>
+    <Fretboard frets={8} fretWidth={44} rowHeight={30} markers={[{string:5,fret:5,label:"A",root:true},{string:5,fret:7,label:"B"},{string:4,fret:5,label:"D"},{string:4,fret:7,label:"E"}]} />
+  </div>
+);
+</script></body></html>

@@ -1,0 +1,164 @@
+// L Key database schema.
+//
+// Deliberately small. CLAUDE.md §26 says not to create every table before a
+// feature needs it, so Phase 01 models only what the specifications describe
+// concretely and what later phases cannot safely change later: identity,
+// roles, and the payment order state machine.
+//
+// Content entities (Song, Chord, Scale, Lesson, ...) arrive with their
+// features.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7 moved connection URLs out of the schema; the datasource block
+// declares only the provider. The URL lives in prisma.config.ts for the CLI,
+// and reaches PrismaClient through a driver adapter at runtime.
+datasource db {
+  provider = "postgresql"
+}
+
+/// Administrative roles (CLAUDE.md §27). Enforced server-side by RolesGuard.
+enum AdminRole {
+  SUPPORT
+  EDITOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+/// Account lifecycle. Suspension is reversible and never deletes user data.
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+/// Payment order lifecycle (PRD.md §46, CLAUDE.md §25).
+///
+/// Terminal states are COMPLETE, FAILED, EXPIRED and REFUNDED. Only the
+/// backend may move an order to COMPLETE, and only after verifying a webhook
+/// — the client is never trusted to report success (CLAUDE.md §24).
+enum PaymentStatus {
+  PENDING
+  COMPLETE
+  FAILED
+  EXPIRED
+  REFUNDED
+}
+
+/// Subscription entitlement state (PRD.md §46).
+enum EntitlementStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  REFUNDED
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String?    @unique
+  /// Null for guest accounts — PRD.md §9 makes authentication optional.
+  name      String?
+  status    UserStatus @default(ACTIVE)
+  /// Null for ordinary players; set only for Admin Portal operators.
+  adminRole AdminRole?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders PaymentOrder[]
+
+  @@index([status])
+  @@map("users")
+}
+
+/// A single attempt to purchase Premium.
+///
+/// CLAUDE.md §25 requires idempotency: repeated webhook delivery must not
+/// create duplicate entitlements. `providerReference` is unique, so a replayed
+/// webhook collides at the database rather than granting Premium twice.
+model PaymentOrder {
+  id     String @id @default(cuid())
+  userId String
+
+  /// Plan identifier. Prices live in the Admin Portal, never hardcoded
+  /// (PRD.md §47), and never trusted from the client (CLAUDE.md §51).
+  planId String
+
+  /// Minor units, to avoid floating-point money.
+  amount   Int
+  currency String @default("MMK")
+
+  provider String @default("myanmyanpay")
+
+  /// Provider-side transaction id. Unique: this is the idempotency key.
+  providerReference String? @unique
+
+  status PaymentStatus @default(PENDING)
+
+  /// When the generated MMQR stops being valid (DESIGN.md §34).
+  expiresAt   DateTime?
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User           @relation(fields: [userId], references: [id])
+  events PaymentEvent[]
+
+  @@index([userId, status])
+  @@index([status, createdAt])
+  @@map("payment_orders")
+}
+
+/// An append-only record of every webhook and state change on an order.
+///
+/// CLAUDE.md §52 requires administrative and payment actions be auditable.
+/// Rows are never updated or deleted.
+model PaymentEvent {
+  id      String @id @default(cuid())
+  orderId String
+
+  /// Provider event name, or an internal transition label.
+  type String
+
+  /// Status the order moved to, when this event caused a transition.
+  resultingStatus PaymentStatus?
+
+  /// Raw provider payload, retained for dispute resolution.
+  /// Must be redacted of signatures before storage (CLAUDE.md §38).
+  payload Json?
+
+  createdAt DateTime @default(now())
+
+  order PaymentOrder @relation(fields: [orderId], references: [id])
+
+  @@index([orderId, createdAt])
+  @@map("payment_events")
+}
+
+/// Server-authoritative Premium access (CLAUDE.md §23, PRD.md §46).
+///
+/// The client may cache this for UX but is never the source of truth.
+model Entitlement {
+  id     String @id @default(cuid())
+  userId String
+
+  planId String
+  status EntitlementStatus @default(PENDING)
+
+  startedAt DateTime?
+  expiresAt DateTime?
+
+  /// The order that granted this entitlement, when it came from a purchase.
+  grantedByOrderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, planId])
+  @@index([userId, status])
+  @@map("entitlements")
+}

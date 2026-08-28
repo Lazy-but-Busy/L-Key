@@ -1,0 +1,41 @@
+{
+  "@@locale": "en",
+
+  "appName": "L Key",
+  "@appName": { "description": "Product name. Not translated." },
+
+  "appTagline": "Tune. Learn. Practice. Play.",
+  "@appTagline": { "description": "Product tagline shown on the splash and about screens." },
+
+  "navHome": "Home",
+  "@navHome": { "description": "Bottom navigation label for the Home tab." },
+  "navTools": "Tools",
+  "@navTools": { "description": "Bottom navigation label for the Tools tab." },
+  "navLearn": "Learn",
+  "@navLearn": { "description": "Bottom navigation label for the Learn tab." },
+  "navSongs": "Songs",
+  "@navSongs": { "description": "Bottom navigation label for the Songs tab." },
+  "navProfile": "Profile",
+  "@navProfile": { "description": "Bottom navigation label for the Profile tab." },
+
+  "commonRetry": "Retry",
+  "@commonRetry": { "description": "Button that re-runs a failed operation." },
+  "commonCancel": "Cancel",
+  "@commonCancel": { "description": "Button that dismisses a dialog without acting." },
+
+  "errorNoConnection": "Couldn't connect.",
+  "@errorNoConnection": { "description": "Headline when the device has no network. CLAUDE.md §37 — never show the exception." },
+  "errorNoConnectionBody": "Check your internet connection and try again.",
+  "@errorNoConnectionBody": { "description": "Body text under errorNoConnection." },
+  "errorUnexpected": "Something went wrong.",
+  "@errorUnexpected": { "description": "Headline for an unhandled failure." },
+  "errorUnexpectedBody": "Try again in a moment.",
+  "@errorUnexpectedBody": { "description": "Body text under errorUnexpected." },
+
+  "foundationTitle": "Foundation",
+  "@foundationTitle": { "description": "Title of the developer-only design-token showcase screen." },
+  "foundationSubtitle": "Design tokens, both themes",
+  "@foundationSubtitle": { "description": "Subtitle of the developer-only showcase screen." },
+  "foundationMyanmarSample": "Tune your guitar",
+  "@foundationMyanmarSample": { "description": "Short sentence rendered in both locales to verify Burmese shaping and line height." }
+}

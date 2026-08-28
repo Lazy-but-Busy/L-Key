@@ -1,0 +1,39 @@
+<!-- @dsCard group="Components" viewport="700x330" name="Core" subtitle="Buttons, icon buttons, input, chips, card, section header, PRO badge" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css"><style>body{margin:0;padding:20px;background:var(--lk-paper);font-family:var(--lk-font-body)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px}</style></head><body><div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+const { AppButton, AppIconButton, AppTextField, AppChip, AppCard, AppSectionHeader, PremiumBadge } = window.LKeyDesignSystem_355d7c;
+const I = (n, s) => <img src={"../../assets/icons/" + n + ".svg"} width={s} height={s} alt="" />;
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <div>
+    <div className="row">
+      <AppButton variant="primary" size="lg">Resume</AppButton>
+      <AppButton variant="accent" size="hero">Play Chord</AppButton>
+      <AppButton variant="secondary" size="md">Export Report</AppButton>
+      <AppButton variant="primary" size="sm">7D</AppButton>
+      <AppButton variant="secondary" size="sm">30D</AppButton>
+      <AppButton variant="ghost" size="md" disabled>Disabled</AppButton>
+    </div>
+    <div className="row">
+      <AppIconButton label="Menu" variant="plain">{I("settings", 20)}</AppIconButton>
+      <AppIconButton label="Edit" variant="ring" size={32}>{I("edit", 15)}</AppIconButton>
+      <AppIconButton label="Add" variant="solid" size={32}><svg width="14" height="14" viewBox="0 0 14 14" fill="#fff"><path d="M 6 8 L 0 8 L 0 6 L 6 6 L 6 0 L 8 0 L 8 6 L 14 6 L 14 8 L 8 8 L 8 14 L 6 14 L 6 8 Z"/></svg></AppIconButton>
+      <AppIconButton label="Play" variant="circle" size={48}><svg width="11" height="14" viewBox="0 0 11 14" fill="#000"><path d="M 0 14 L 0 0 L 11 7 L 0 14 Z"/></svg></AppIconButton>
+      <AppChip label="KEY">G Major</AppChip>
+      <AppChip variant="accent">120 BPM</AppChip>
+      <AppChip variant="tag">C#m</AppChip>
+      <AppChip variant="dark">82.4 Hz</AppChip>
+      <PremiumBadge />
+    </div>
+    <div className="row" style={{alignItems:"stretch"}}>
+      <div style={{width:300}}><AppTextField label="Search" placeholder="Search ID, Title, Artist..." icon={I("search", 18)} /></div>
+      <AppCard label="FOCUS: PENTATONIC SPEED" title="Daily Session" style={{width:300}}>
+        <AppSectionHeader title="Recent Riffs" actionLabel="View library" />
+      </AppCard>
+    </div>
+  </div>
+);
+</script></body></html>

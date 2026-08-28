@@ -1,0 +1,14 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Semantic status" subtitle="Danger, success, pending — always paired with a word or dot" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css"><style>body{margin:0;padding:16px;background:var(--lk-paper);font-family:var(--lk-font-body);box-sizing:border-box}.sw{display:flex;gap:0}.sw>div{flex:1;height:72px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;box-sizing:border-box;font-family:var(--lk-font-mono);font-size:10px;line-height:14px;text-transform:uppercase}.hex{font-weight:700}.row{display:flex;gap:12px;align-items:center;margin-top:12px;font-family:var(--lk-font-mono);font-size:14px}.pill{display:inline-flex;align-items:center;gap:8px;padding:3px 8px;box-shadow:var(--lk-shadow-sm)}.dot{width:8px;height:8px;border-radius:9999px}</style></head><body>
+<div class="sw" style="box-shadow:var(--lk-ring)">
+<div style="background:var(--lk-success-bg);color:#000"><span>Success bg</span><span class="hex">#E6FFED</span></div>
+<div style="background:var(--lk-success);color:#000"><span>Success</span><span class="hex">#28A745</span></div>
+<div style="background:var(--lk-danger);color:#fff"><span>Danger</span><span class="hex">#BA1A1A</span></div>
+<div style="background:var(--lk-orange);color:#000"><span>Pending</span><span class="hex">#FF4D00</span></div>
+</div>
+<div class="row">
+<span class="pill" style="background:var(--lk-success-bg)"><span class="dot" style="background:var(--lk-success)"></span>Published</span>
+<span class="pill" style="background:var(--lk-fill-tag)"><span class="dot" style="background:var(--lk-grey-400)"></span>Draft</span>
+<span class="pill" style="background:var(--lk-orange)"><span class="dot" style="background:#000"></span>Pending</span>
+<span class="pill" style="background:#fff;color:var(--lk-danger)"><span class="dot" style="background:var(--lk-danger)"></span>Failed</span>
+</div></body></html>

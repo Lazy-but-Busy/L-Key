@@ -1,0 +1,64 @@
+<!-- @dsCard group="Mobile App" viewport="390x844" name="L Key mobile app" subtitle="Home → Chords → Song viewer, click-through" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>L Key — Mobile App</title><link rel="stylesheet" href="../../styles.css"><style>html,body{margin:0;background:var(--lk-paper)}#root{width:390px;margin:0 auto;min-height:100vh;background:var(--lk-paper);position:relative;overflow-x:hidden}.screen{padding-bottom:71px}</style></head><body><div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel" src="HomeScreen.jsx"></script>
+<script type="text/babel" src="ChordScreen.jsx"></script>
+<script type="text/babel" src="SongViewerScreen.jsx"></script>
+<script type="text/babel" src="ToolsScreens.jsx"></script>
+<script type="text/babel" src="LibraryScreens.jsx"></script>
+<script type="text/babel" src="ProfileScreens.jsx"></script>
+<script type="text/babel">
+const { BottomNavBar } = window.LKeyDesignSystem_355d7c;
+const AppBar = window.LKMobileAppBar, Home = window.LKMobileHome, Chord = window.LKMobileChord, SongViewer = window.LKMobileSongViewer;
+const ToolsHub = window.LKToolsHub, Tuner = window.LKTuner, Metronome = window.LKMetronome, Scales = window.LKScales;
+const SongLibrary = window.LKSongLibrary, Learn = window.LKLearn, Practice = window.LKPractice;
+const Profile = window.LKProfile, Paywall = window.LKPaywall, Payment = window.LKPayment;
+const TabIcon = (n, w, h) => <img src={"../../assets/icons/" + n + ".svg"} width={w} height={h || w} alt="" style={{display:"block"}} />;
+const HomeGlyph = () => <svg width="16" height="18" viewBox="0 0 16 18" fill="currentColor"><path d="M 0 18 L 0 6 L 8 0 L 16 6 L 16 18 L 10 18 L 10 11 L 6 11 L 6 18 L 0 18 Z" /></svg>;
+
+const TABS = [
+  { label: "Home", icon: <HomeGlyph /> },
+  { label: "Tools", icon: TabIcon("settings-alt", 16, 16) },
+  { label: "Learn", icon: TabIcon("graduation-cap", 18, 15) },
+  { label: "Songs", icon: TabIcon("library-music", 17, 17) },
+  { label: "Profile", icon: TabIcon("users", 18, 13) },
+];
+
+const TAB_FOR = { home: 0, tools: 1, tuner: 1, metronome: 1, chord: 1, scales: 1, learn: 2, practice: 2, songs: 3, song: 3, profile: 4, paywall: 4, payment: 4 };
+
+function App() {
+  const [view, setView] = React.useState("home");
+  const [transpose, setTranspose] = React.useState(0);
+  const [scroll, setScroll] = React.useState(false);
+  const [pro, setPro] = React.useState(false);
+  const go = (v, becamePro) => { if (becamePro === true) setPro(true); setView(v); window.scrollTo(0, 0); };
+  const tab = TAB_FOR[view] ?? 0;
+  return (
+    <div>
+      <AppBar />
+      <div className="screen">
+        {view === "home" ? <Home onOpenChord={() => go("chord")} onOpenSong={() => go("song")} onTune={() => go("tuner")} onPractice={() => go("practice")} /> : null}
+        {view === "tools" ? <ToolsHub go={go} /> : null}
+        {view === "tuner" ? <Tuner /> : null}
+        {view === "metronome" ? <Metronome /> : null}
+        {view === "chord" ? <Chord /> : null}
+        {view === "scales" ? <Scales /> : null}
+        {view === "learn" ? <Learn onPractice={() => go("practice")} /> : null}
+        {view === "practice" ? <Practice /> : null}
+        {view === "songs" ? <SongLibrary onOpenSong={() => go("song")} /> : null}
+        {view === "song" ? <SongViewer transpose={transpose} onTranspose={(d) => setTranspose(transpose + d)} autoScroll={scroll} onAutoScroll={() => setScroll(!scroll)} /> : null}
+        {view === "profile" ? <Profile go={go} pro={pro} /> : null}
+        {view === "paywall" ? <Paywall go={go} /> : null}
+        {view === "payment" ? <Payment go={go} /> : null}
+      </div>
+      <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:390,zIndex:5}}>
+        <BottomNavBar items={TABS} activeIndex={tab} onSelect={(i) => go(["home", "tools", "learn", "songs", "profile"][i])} />
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script></body></html>

@@ -1,0 +1,29 @@
+{
+  "name": "@lkey/admin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "L Key Admin Portal. Data-first operations surface.",
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"no admin tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "@lkey/design-tokens": "*",
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.0.0",
+    "typescript": "^5.7.0"
+  }
+}
