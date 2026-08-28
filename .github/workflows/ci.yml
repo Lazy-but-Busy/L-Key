@@ -24,10 +24,13 @@ jobs:
 
       - run: npm ci
 
-      # Fails if any generated token file drifts from tokens.json, and
-      # re-runs the WCAG contrast gate.
-      - name: Token drift and contrast gate
-        run: npm run tokens:check
+      # Fails if a generated token file drifts from tokens.json, and re-runs
+      # the WCAG contrast gate. tokens.g.dart is committed in `dart format`
+      # shape and so is checked by the Flutter job below — this runner has no
+      # `dart`, and regenerating it here would report drift that no amount of
+      # regenerating could fix.
+      - name: Token drift (web) and contrast gate
+        run: npm run tokens:check:web
 
       - run: npm run lint
       - run: npm run typecheck
@@ -51,6 +54,16 @@ jobs:
           flutter-version: 3.47.1
           channel: stable
           cache: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # The Dart half of the token drift gate. This is the only job with
+      # `dart` on PATH, so it is the only one that can reproduce the committed
+      # file. The generator uses node: builtins alone, so no install first.
+      - name: Token drift (Dart)
+        run: npm run tokens:check:dart
 
       - name: Install dependencies
         working-directory: mobile

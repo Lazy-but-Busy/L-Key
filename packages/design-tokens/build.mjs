@@ -12,8 +12,10 @@
  * review found real failures (3.37:1 and 2.05:1) shipped in the UI kits; this
  * check is what stops them coming back.
  *
- *   node build.mjs            write the generated files
- *   node build.mjs --check    verify committed output matches; exit 1 on drift
+ *   node build.mjs                   write the generated files
+ *   node build.mjs --check           verify committed output; exit 1 on drift
+ *   node build.mjs --targets=web     CSS + TS only; needs no `dart`
+ *   node build.mjs --targets=dart    tokens.g.dart only; requires `dart`
  */
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
@@ -427,6 +429,10 @@ function stripMeta(node) {
  * output has to already be formatted or the two checks fight each other: the
  * formatter rewrites the file, and the drift check then reports it as stale.
  * Formatting here makes the committed file the fixed point of both.
+ *
+ * A missing `dart` is therefore fatal rather than a warning. Falling back to
+ * unformatted output would silently compare two different shapes of the same
+ * tokens and report drift that regenerating cannot fix.
  */
 function dartFormat(source) {
   const scratch = join(tmpdir(), `lk-tokens-${process.pid}.dart`);
@@ -438,11 +444,12 @@ function dartFormat(source) {
       { encoding: "utf8" },
     );
     if (r.error || r.status !== 0) {
-      console.warn(
-        "  note  dart not available — emitting unformatted Dart.\n" +
-          "        Run `npm run tokens` on a machine with Flutter before committing.",
+      console.error(
+        "\n`dart` is not on PATH, so tokens.g.dart cannot be produced in the\n" +
+          "`dart format` shape it is committed in. Install Flutter, or pass\n" +
+          "`--targets=web` to work on the CSS and TS outputs alone.",
       );
-      return source;
+      process.exit(1);
     }
     // Defensive: older Dart appends a "Formatted N files ..." summary to
     // stdout even with --output=show, which would land inside the file.
@@ -456,14 +463,37 @@ function dartFormat(source) {
 
 checkContrast();
 
+/*
+ * Targets exist because the outputs need different toolchains. tokens.g.dart
+ * is committed in `dart format` shape and can only be reproduced where `dart`
+ * lives, so CI splits the gate: the Node job checks `web`, the Flutter job
+ * checks `dart`. Run together they are the same check as before.
+ */
+const ALL_TARGETS = ["dart", "web"];
+const targetsArg = process.argv.find((a) => a.startsWith("--targets="));
+const TARGETS = targetsArg ? targetsArg.slice("--targets=".length).split(",") : ALL_TARGETS;
+
+for (const t of TARGETS) {
+  if (!ALL_TARGETS.includes(t)) {
+    console.error(`Unknown target "${t}". Expected one or more of: ${ALL_TARGETS.join(", ")}.`);
+    process.exit(1);
+  }
+}
+
+// Bodies are thunks so an unselected Dart target never shells out to `dart`.
 const outputs = [
-  { path: join(REPO, "mobile/lib/app/theme/tokens.g.dart"), body: dartFormat(emitDart()) },
-  { path: join(HERE, "dist/tokens.css"), body: emitCss() },
-  { path: join(HERE, "dist/tokens.ts"), body: emitTs() },
-];
+  {
+    target: "dart",
+    path: join(REPO, "mobile/lib/app/theme/tokens.g.dart"),
+    render: () => dartFormat(emitDart()),
+  },
+  { target: "web", path: join(HERE, "dist/tokens.css"), render: emitCss },
+  { target: "web", path: join(HERE, "dist/tokens.ts"), render: emitTs },
+].filter((o) => TARGETS.includes(o.target));
 
 let drifted = 0;
-for (const { path, body } of outputs) {
+for (const { path, render } of outputs) {
+  const body = render();
   const rel = path.replace(REPO + "/", "");
   if (CHECK) {
     let current = null;
@@ -492,4 +522,8 @@ if (CHECK && drifted) {
   process.exit(1);
 }
 
-console.log(CHECK ? "\nTokens are in sync." : "\nTokens generated.");
+console.log(
+  CHECK
+    ? `\nTokens are in sync (${TARGETS.join(", ")}).`
+    : `\nTokens generated (${TARGETS.join(", ")}).`,
+);

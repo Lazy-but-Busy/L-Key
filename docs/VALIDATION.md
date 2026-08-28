@@ -12,6 +12,7 @@ local run means a green pipeline.
 | Command | What it catches |
 | --- | --- |
 | `npm run tokens:check` | Generated Dart/CSS/TS drifting from `tokens.json` |
+| | CI splits this: the Node job runs `tokens:check:web`, the Flutter job `tokens:check:dart` |
 | `npm run lint` | ESLint across backend, admin, website |
 | `npm run typecheck` | `tsc --noEmit` across all three |
 | `npm run test` | Jest (backend) and the token drift check |

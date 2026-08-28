@@ -11,11 +11,16 @@ tokens.json  ──►  build.mjs  ──┬──►  mobile/lib/app/theme/toke
 ## Commands
 
 ```sh
-npm run tokens         # regenerate all three targets
-npm run tokens:check   # fail if committed output has drifted
+npm run tokens              # regenerate all three targets
+npm run tokens:check        # fail if committed output has drifted
+
+npm run tokens:check:web    # CSS + TS only; needs no `dart`
+npm run tokens:check:dart   # tokens.g.dart only; requires `dart`
 ```
 
-Both run from the repository root.
+All run from the repository root. Use the plain commands day to day; the
+scoped ones exist for CI, where the two halves need different toolchains —
+see *Notes for maintainers*.
 
 ## Changing a token
 
@@ -69,5 +74,10 @@ the light danger red at 2.92:1 on the dark surface.
   which needs an absolute value. `lineHeight` is a unitless multiplier.
 - The generator runs `dart format` on its Dart output so the committed file
   satisfies both the drift check and `dart format --set-exit-if-changed`.
+  This is why the drift check is split across two CI jobs: only the Flutter
+  job has `dart`, so only it can reproduce `tokens.g.dart`. The Node job runs
+  `tokens:check:web`. Running the unscoped check on a machine without `dart`
+  is a hard error, not a fallback — emitting unformatted Dart would report
+  drift that regenerating cannot clear.
 - Generated Dart is analysed, not excluded. Excluding it once hid a real
   compile error.
