@@ -95,6 +95,11 @@ final class LkSemanticColors {
     required this.focusRing,
     required this.danger,
     required this.success,
+    required this.stringLine,
+    required this.marker,
+    required this.markerOn,
+    required this.markerRoot,
+    required this.markerRootOn,
   });
 
   /// The background role.
@@ -142,6 +147,21 @@ final class LkSemanticColors {
   /// The success role.
   final Color success;
 
+  /// The string line role.
+  final Color stringLine;
+
+  /// The marker role.
+  final Color marker;
+
+  /// The marker on role.
+  final Color markerOn;
+
+  /// The marker root role.
+  final Color markerRoot;
+
+  /// The marker root on role.
+  final Color markerRootOn;
+
   /// DESIGN.md §5 — light theme.
   static const LkSemanticColors light = LkSemanticColors(
     background: LkPalette.offWhite,
@@ -159,6 +179,11 @@ final class LkSemanticColors {
     focusRing: LkPalette.black,
     danger: LkPalette.danger,
     success: LkPalette.success,
+    stringLine: LkPalette.black,
+    marker: LkPalette.black,
+    markerOn: LkPalette.white,
+    markerRoot: LkPalette.orange,
+    markerRootOn: LkPalette.black,
   );
 
   /// DESIGN.md §6 — dark theme.
@@ -178,6 +203,11 @@ final class LkSemanticColors {
     focusRing: LkPalette.orange,
     danger: LkPalette.dangerDark,
     success: LkPalette.successDark,
+    stringLine: LkPalette.darkText,
+    marker: LkPalette.darkText,
+    markerOn: LkPalette.darkBackground,
+    markerRoot: LkPalette.orange,
+    markerRootOn: LkPalette.black,
   );
 }
 
@@ -353,6 +383,24 @@ abstract final class LkDimens {
 
   /// 2px — design system --lk-focus-offset.
   static const double focusRingOffset = 2;
+
+  /// 278px — design system components/music/ChordDiagram.jsx default width — the 342px card minus 32px padding either side.
+  static const double chordDiagramWidth = 278;
+
+  /// 256px — design system components/music/ChordDiagram.jsx gridH.
+  static const double chordDiagramGridHeight = 256;
+
+  /// 16px — design system components/music/ChordDiagram.jsx nut bar height.
+  static const double chordNutHeight = 16;
+
+  /// 4px — design system components/music/ChordDiagram.jsx string line width.
+  static const double chordStringWidth = 4;
+
+  /// 2px — design system components/music/ChordDiagram.jsx fret line height.
+  static const double chordFretLineWidth = 2;
+
+  /// 36px — design system components/music/ChordDiagram.jsx finger marker box.
+  static const double chordMarkerSize = 36;
 }
 
 /// Unitless opacity values. Separate from [LkDimens] because these

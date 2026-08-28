@@ -439,6 +439,30 @@ export const tokens = {
     "focusRingOffset": {
       "value": 2,
       "source": "design system --lk-focus-offset"
+    },
+    "chordDiagramWidth": {
+      "value": 278,
+      "source": "design system components/music/ChordDiagram.jsx default width — the 342px card minus 32px padding either side"
+    },
+    "chordDiagramGridHeight": {
+      "value": 256,
+      "source": "design system components/music/ChordDiagram.jsx gridH"
+    },
+    "chordNutHeight": {
+      "value": 16,
+      "source": "design system components/music/ChordDiagram.jsx nut bar height"
+    },
+    "chordStringWidth": {
+      "value": 4,
+      "source": "design system components/music/ChordDiagram.jsx string line width"
+    },
+    "chordFretLineWidth": {
+      "value": 2,
+      "source": "design system components/music/ChordDiagram.jsx fret line height"
+    },
+    "chordMarkerSize": {
+      "value": 36,
+      "source": "design system components/music/ChordDiagram.jsx finger marker box"
     }
   },
   "opacity": {
@@ -467,7 +491,12 @@ export const tokens = {
       "accentOn": "black",
       "focusRing": "black",
       "danger": "danger",
-      "success": "success"
+      "success": "success",
+      "stringLine": "black",
+      "marker": "black",
+      "markerOn": "white",
+      "markerRoot": "orange",
+      "markerRootOn": "black"
     },
     "dark": {
       "background": "darkBackground",
@@ -484,7 +513,12 @@ export const tokens = {
       "accentOn": "black",
       "focusRing": "orange",
       "danger": "dangerDark",
-      "success": "successDark"
+      "success": "successDark",
+      "stringLine": "darkText",
+      "marker": "darkText",
+      "markerOn": "darkBackground",
+      "markerRoot": "orange",
+      "markerRootOn": "black"
     }
   },
   "contrastPairs": {
@@ -574,6 +608,36 @@ export const tokens = {
         "bg": "surface",
         "min": 3,
         "note": "orange is 2.92:1 on the #F0F0F0 ground, so an orange fill NEVER carries a boundary alone — it always takes a border or hard shadow (DESIGN.md §42, no meaning by colour alone)"
+      },
+      {
+        "fg": "markerOn",
+        "bg": "marker",
+        "min": 4.5,
+        "note": "the finger number inside a chord-diagram marker"
+      },
+      {
+        "fg": "markerRootOn",
+        "bg": "markerRoot",
+        "min": 4.5,
+        "note": "the finger number inside a root marker (DESIGN.md §25)"
+      },
+      {
+        "fg": "marker",
+        "bg": "surface",
+        "min": 3,
+        "note": "non-text: the marker dot must read against the diagram card"
+      },
+      {
+        "fg": "markerRoot",
+        "bg": "surface",
+        "min": 3,
+        "note": "the root marker is orange; DESIGN.md §42 forbids colour as the only cue, so the diagram also prints the finger number"
+      },
+      {
+        "fg": "stringLine",
+        "bg": "surface",
+        "min": 3,
+        "note": "non-text: string and fret lines must read against the diagram card"
       }
     ]
   }
