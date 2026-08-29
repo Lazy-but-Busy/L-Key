@@ -21,9 +21,13 @@ chords/
 `Interval`, `Pitch`, `Tuning`) are in `core/music/`, because the scale,
 fretboard and tuner engines need the same four types.
 
+`ChordQuality` moved there in Phase 04 for the same reason: an arpeggio is a
+chord played one note at a time and a CAGED shape is a major triad, so the
+fretboard needs the formulas too (ADR-0011).
+
 ## What exists
 
-- **Eighteen qualities.** PRD.md §11's fourteen, plus `dim7`, `m7b5`, `m6` and
+- **Eighteen qualities**, in `core/music/chord_quality.dart`. PRD.md §11's fourteen, plus `dim7`, `m7b5`, `m6` and
   `7sus4` — guitar notation writes "dim" when it means dim7, and m7b5 is
   unavoidable in a minor key. A nineteenth is a one-entry change to the formula
   table.
