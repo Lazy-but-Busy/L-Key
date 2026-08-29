@@ -135,6 +135,12 @@
   --lk-progress-track-height: 32px;
   --lk-focus-ring-width: 3px;
   --lk-focus-ring-offset: 2px;
+  --lk-chord-diagram-width: 278px;
+  --lk-chord-diagram-grid-height: 256px;
+  --lk-chord-nut-height: 16px;
+  --lk-chord-string-width: 4px;
+  --lk-chord-fret-line-width: 2px;
+  --lk-chord-marker-size: 36px;
 
 
   /* Burmese needs a taller line box than the Latin scale */
@@ -159,6 +165,11 @@
   --lk-focus-ring: var(--lk-color-black);
   --lk-danger: var(--lk-color-danger);
   --lk-success: var(--lk-color-success);
+  --lk-string-line: var(--lk-color-black);
+  --lk-marker: var(--lk-color-black);
+  --lk-marker-on: var(--lk-color-white);
+  --lk-marker-root: var(--lk-color-orange);
+  --lk-marker-root-on: var(--lk-color-black);
   --lk-border-color: var(--lk-border);
 }
 
@@ -182,6 +193,11 @@
     --lk-focus-ring: var(--lk-color-orange);
     --lk-danger: var(--lk-color-danger-dark);
     --lk-success: var(--lk-color-success-dark);
+    --lk-string-line: var(--lk-color-dark-text);
+    --lk-marker: var(--lk-color-dark-text);
+    --lk-marker-on: var(--lk-color-dark-background);
+    --lk-marker-root: var(--lk-color-orange);
+    --lk-marker-root-on: var(--lk-color-black);
     --lk-border-color: var(--lk-border);
   }
 }
@@ -202,6 +218,11 @@
   --lk-focus-ring: var(--lk-color-orange);
   --lk-danger: var(--lk-color-danger-dark);
   --lk-success: var(--lk-color-success-dark);
+  --lk-string-line: var(--lk-color-dark-text);
+  --lk-marker: var(--lk-color-dark-text);
+  --lk-marker-on: var(--lk-color-dark-background);
+  --lk-marker-root: var(--lk-color-orange);
+  --lk-marker-root-on: var(--lk-color-black);
   --lk-border-color: var(--lk-border);
 }
 

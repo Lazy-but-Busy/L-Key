@@ -26,7 +26,7 @@ That is exactly what CI runs.
 ```
 lib/
 ├── app/            root widget, router, shell, theme, localisation
-├── core/           config, errors, audio interfaces, utilities
+├── core/           config, errors, music primitives, audio interfaces, access
 ├── features/       one directory per feature, each with its own README
 └── shared/widgets/ the reusable component library
 ```
@@ -34,6 +34,12 @@ lib/
 `shared/widgets/` holds one visual definition per component. DESIGN.md §67
 asks for the API to be extended rather than forked, so there is no
 `PrimaryButton2`.
+
+`core/music/` holds the primitives every music engine needs — `Note`,
+`Interval`, `Pitch`, `Tuning` — so a feature never imports from a sibling
+feature. Nothing in it, or in any feature's `domain/`, imports Flutter; a test
+asserts that rather than trusting it. See
+[ADR-0009](../docs/adr/0009-music-primitives-and-note-spelling.md).
 
 ## Rules that bite
 

@@ -140,6 +140,32 @@ void main() {
       expect(find.textContaining('SocketException'), findsNothing);
     });
 
+    testWidgets('an error still shows while a retry is pending', (
+      tester,
+    ) async {
+      // Riverpod retries a failed provider on its own, and until it gives up
+      // the state is AsyncLoading *carrying* an error. Taking the loading
+      // branch there would leave the player watching a skeleton forever
+      // instead of being told what went wrong (CLAUDE.md §37). This builds the
+      // situation the way the app meets it rather than synthesising the state.
+      final failing = FutureProvider<List<String>>(
+        (ref) async =>
+            throw const NetworkFailure(technicalDetail: 'SocketException'),
+      );
+
+      await pumpLk(
+        tester,
+        child: Consumer(
+          builder: (context, ref, _) => view(ref.watch(failing)),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text("COULDN'T CONNECT."), findsOneWidget);
+      expect(find.byType(LkSkeletonList), findsNothing);
+      expect(find.textContaining('SocketException'), findsNothing);
+    });
+
     testWidgets('a non-Failure error still shows safe copy', (tester) async {
       await pumpLk(
         tester,

@@ -49,6 +49,42 @@ npm run tokens
 - Feature flags defaulting to off.
 - The foundation screen rendering in both themes, Burmese resolving through a
   Myanmar-capable font, and the press target meeting the 44px minimum.
+- Every screen rendering in light, dark and Burmese without throwing, and the
+  shell restoring the right tab for a deep link — including a chord id.
+
+### The chord engine
+
+The largest body of assertions in the suite, because it is checking data as
+much as code (CLAUDE.md §39).
+
+- Notes, intervals, pitches and tunings: pitch classes, spelled transposition
+  (`C` + minor third is `Eb`, never `D#`), double accidentals, parse and print
+  round trips over all 35 spellings, MIDI numbers and A440 frequencies.
+- Chord spelling for all eighteen qualities, and the cases that only a spelled
+  model gets right: `C#maj7`, `Dbmaj7`, `Ebdim7`, `G#dim7`, `Cm7b5`.
+- Chord symbols round-tripping across every catalogue entry, plus the
+  spellings other people write — `CM7`, `CΔ7`, `C-7`, `C°7`, `Cø`, `C+`.
+- **Every voicing of all 306 root-and-quality combinations**, checked against
+  `ChordEngine.problemWith`: no foreign notes, no missing tones, four frets,
+  four fingers, a consistent barre, and a named bass sounding lowest.
+- The open chords PRD.md §11 names as free, asserted against the fret arrays
+  every chord book prints, and the F barre's computed barre.
+- Search folding accidentals and case, and matching a Myanmar query against an
+  English-named chord.
+- That the audio placeholder reports itself unavailable and never claims to
+  have played (CLAUDE.md §47).
+- That nothing under `core/music/` or `chords/domain/` imports Flutter or a
+  subscription tier — the layer rule asserted rather than trusted.
+
+### The chord screens
+
+- The four states: skeleton, list, empty search, and a failure showing
+  localised copy with no exception text.
+- The diagram's semantics reading out every string, its barre and its base
+  fret.
+- A Premium-labelled chord opening exactly like a free one, because the label
+  authorizes nothing.
+- The play control disabled with its reason visible.
 
 ## Things `verify` does not do yet
 

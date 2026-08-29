@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:l_key/app/theme/app_theme.dart';
+import 'package:l_key/features/chords/presentation/chord_detail_page.dart';
 import 'package:l_key/features/chords/presentation/chords_page.dart';
 import 'package:l_key/features/learning/presentation/learn_page.dart';
 import 'package:l_key/features/metronome/presentation/metronome_page.dart';
@@ -31,6 +32,7 @@ void main() {
     'Tuner': TunerPage.new,
     'Metronome': MetronomePage.new,
     'Chords': ChordsPage.new,
+    'Chord detail': () => const ChordDetailPage(chordId: 'c-major'),
     'Scales': ScalesPage.new,
     'Learn': LearnPage.new,
     'Practice': PracticePage.new,

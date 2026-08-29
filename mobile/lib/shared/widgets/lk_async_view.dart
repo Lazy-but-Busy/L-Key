@@ -13,6 +13,12 @@ import 'package:l_key/shared/widgets/lk_skeleton.dart';
 ///
 /// An error that is not a [Failure] is still shown as an unexpected failure
 /// rather than surfaced raw, so no exception text can reach the screen.
+///
+/// The error branch is checked *before* the loading branch, and deliberately.
+/// Riverpod retries a failed provider on its own, and while a retry is pending
+/// the state is `AsyncLoading` **carrying an error** — so `when` would take the
+/// loading branch and the player would watch a skeleton forever instead of
+/// being told what went wrong (CLAUDE.md §37).
 class LkAsyncView<T> extends StatelessWidget {
   /// Creates a four-state view over [value].
   const LkAsyncView({
@@ -45,6 +51,16 @@ class LkAsyncView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final error = value.error;
+    if (error != null) {
+      return LkErrorState(
+        failure: error is Failure
+            ? error
+            : UnexpectedFailure(technicalDetail: error.toString()),
+        onRetry: onRetry,
+      );
+    }
+
     return value.when(
       skipLoadingOnRefresh: false,
       loading: () => loading?.call(context) ?? const LkSkeletonList(),

@@ -31,6 +31,16 @@ transpose and capo engines are plain Dart (CLAUDE.md §10). This is what makes
 them unit-testable without a widget tree, reusable from the backend, and
 available offline.
 
+The primitives every one of them needs — `Note`, `Interval`, `Pitch`, `Tuning`
+— sit in `core/music/` beside `core/audio/`, not inside a feature, so `scales`
+never has to import from `chords`. A note is a spelled letter and accidental,
+never an integer: see [ADR-0009](adr/0009-music-primitives-and-note-spelling.md).
+
+**Commercial labels stay out of the music domain.** `FeatureTier` lives in
+`core/access/` and is attached in a feature's `data/` layer. A chord's notes do
+not change with a subscription, and the client never decides entitlement
+anyway (CLAUDE.md §23).
+
 **Audio processing is behind an interface.** `core/audio/PitchDetector` is the
 seam. Nothing outside it may depend on a specific DSP implementation
 (CLAUDE.md §14), so the algorithm can be replaced without touching the tuner.

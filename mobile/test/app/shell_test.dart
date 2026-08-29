@@ -8,6 +8,7 @@ import 'package:l_key/app/router/app_router.dart';
 import 'package:l_key/app/theme/app_theme.dart';
 import 'package:l_key/core/config/app_config.dart';
 import 'package:l_key/core/config/environment.dart';
+import 'package:l_key/features/chords/presentation/chord_detail_page.dart';
 import 'package:l_key/features/home/presentation/home_page.dart';
 import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
@@ -205,6 +206,29 @@ void main() {
 
       await pumpApp(tester, locale: const Locale('my'));
 
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a chord deep link restores the Tools tab', (tester) async {
+      // The first path-parameter route in the app (ADR-0007). go_router
+      // matches it inside the Tools branch, so the tab lights up for free.
+      final router = await pumpApp(tester);
+
+      router.go('/tools/chords/c-major');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ChordDetailPage), findsOneWidget);
+      expect(find.byType(LkBottomNavBar), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('an unknown chord id is a screen, not a crash', (tester) async {
+      final router = await pumpApp(tester);
+
+      router.go('/tools/chords/h-flat-wobble');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ChordDetailPage), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
