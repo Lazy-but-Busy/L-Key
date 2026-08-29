@@ -69,6 +69,23 @@ final class Pitch implements Comparable<Pitch> {
         midiNumber ~/ 12 - 1,
       );
 
+  /// The nearest pitch to [frequencyHz], or null where [Pitch.nearestTo]
+  /// would throw.
+  ///
+  /// The house pattern for a value that arrives from outside and may simply
+  /// not be one: a parser returns null rather than throwing (docs/adr/0009).
+  static Pitch? tryNearestTo(
+    double frequencyHz, {
+    double referenceHz = 440,
+    bool preferFlats = false,
+  }) {
+    if (frequencyHz <= 0 || !frequencyHz.isFinite) return null;
+    final exact = 69 + 12 * _log2(frequencyHz / referenceHz);
+    final midi = exact.round();
+    if (midi < 12 || midi > 120) return null;
+    return Pitch.fromMidiNumber(midi, preferFlats: preferFlats);
+  }
+
   /// The spelled note.
   final Note note;
 
