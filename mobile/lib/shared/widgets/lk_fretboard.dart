@@ -177,7 +177,12 @@ class LkFretboard extends StatelessWidget {
   }
 }
 
-/// The string names down the left-hand edge.
+/// The string numbers and names down the left-hand edge.
+///
+/// The number is the guitarist's, counted from the high string down, which is
+/// the opposite of the engine's low-first indexing and the same arithmetic
+/// the spoken description already uses. Without it a six-string neck reads
+/// `E B G D A E` and the two Es are indistinguishable.
 class _StringNames extends StatelessWidget {
   const _StringNames({
     required this.tuning,
@@ -200,14 +205,24 @@ class _StringNames extends StatelessWidget {
           for (final string in rows)
             SizedBox(
               height: rowHeight,
-              child: Align(
-                child: Text(
-                  tuning.openStrings[string].note.displayName,
-                  style: context.lkType.technicalSm.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: colors.textPrimary,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: LkSpacing.s2,
+                children: <Widget>[
+                  Text(
+                    '${tuning.stringCount - string}',
+                    style: context.lkType.technicalSm.copyWith(
+                      color: colors.textTertiary,
+                    ),
                   ),
-                ),
+                  Text(
+                    tuning.openStrings[string].note.displayName,
+                    style: context.lkType.technicalSm.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
             ),
         ],

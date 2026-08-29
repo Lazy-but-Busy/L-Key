@@ -259,6 +259,37 @@ void main() {
             'DESIGN.md §42 — the orange is never the only signal, so the '
             'words have to be there too',
       );
+      expect(
+        find.textContaining('TUNING TO'),
+        findsNothing,
+        reason:
+            'the note sounding is the note being tuned to, so naming the '
+            'destination would only repeat the glyph above it',
+      );
+    });
+
+    testWidgets('a note that is not a string is named, and so is the target', (
+      tester,
+    ) async {
+      // PRD.md §10.1 — note detection, not string detection. F2 is a
+      // semitone above the low E and belongs to no string of standard
+      // tuning, so the screen has to name it and then say what it is
+      // measuring against.
+      final input = _ScriptedAudioInput(frequencyHz: 87.31);
+      await pumpLk(
+        tester,
+        child: const TunerPage(),
+        overrides: await _overrides(input: input),
+      );
+      await tester.tap(find.text('START LISTENING'));
+      await tester.pumpAndSettle();
+
+      input.play();
+      await tester.pumpAndSettle();
+
+      expect(find.text('F'), findsOneWidget);
+      expect(find.text('TUNING TO E2'), findsOneWidget);
+      expect(find.textContaining('CENTS SHARP'), findsOneWidget);
     });
 
     testWidgets('a string a long way off reads its distance in cents', (
@@ -360,6 +391,44 @@ void main() {
 
       expect(_meterSemantics(tester), contains('A2'));
       expect(_meterSemantics(tester), contains('In tune'));
+      handle.dispose();
+    });
+
+    testWidgets('the string list counts the way a guitarist does', (
+      tester,
+    ) async {
+      // The engine indexes lowest-sounding first, so the low E is string 0
+      // internally and string 6 to a player. Announcing it as "String 1" was
+      // the reverse of what anyone would say out loud.
+      final handle = tester.ensureSemantics();
+      await pumpLk(
+        tester,
+        child: const TunerPage(),
+        overrides: await _overrides(),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('String 6, E2'), findsOneWidget);
+      expect(find.bySemanticsLabel('String 1, E4'), findsOneWidget);
+      handle.dispose();
+    });
+
+    testWidgets('the meter announces the note it heard, not the target', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      final input = _ScriptedAudioInput(frequencyHz: 87.31);
+      await pumpLk(
+        tester,
+        child: const TunerPage(),
+        overrides: await _overrides(input: input),
+      );
+      await tester.tap(find.text('START LISTENING'));
+      await tester.pumpAndSettle();
+      input.play();
+      await tester.pumpAndSettle();
+
+      expect(_meterSemantics(tester), contains('F2'));
       handle.dispose();
     });
 

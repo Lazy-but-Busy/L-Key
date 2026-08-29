@@ -233,6 +233,91 @@ void main() {
     });
   });
 
+  group('TuningEngine detected note', () {
+    test('each standard string names itself, its octave and its cents', () {
+      // The six frequencies every tuner is judged on. Written out rather
+      // than derived from the tuning, so a change to Tuning.standard cannot
+      // quietly make this test agree with itself.
+      const strings = <(double, String, int)>[
+        (82.41, 'E', 2),
+        (110.00, 'A', 2),
+        (146.83, 'D', 3),
+        (196.00, 'G', 3),
+        (246.94, 'B', 3),
+        (329.63, 'E', 4),
+      ];
+      for (final (frequency, note, octave) in strings) {
+        final reading = _engineFor(
+          Tuning.standard,
+        ).read(frequencyHz: frequency, confidence: 1);
+        expect(reading, isNotNull, reason: '$frequency Hz read as nothing');
+        expect(reading!.detectedNote.note.name, note);
+        expect(reading.detectedNote.octave, octave);
+        expect(
+          reading.cents,
+          closeTo(0, 1),
+          reason: '$frequency Hz should be $note$octave within a cent',
+        );
+      }
+    });
+
+    test('a note the tuning has no string for is still named', () {
+      // PRD.md §10.1 asks for note detection, not string detection. A player
+      // who fingers an F on the low E must be told it is an F.
+      const notes = <(double, String, int)>[
+        (87.31, 'F', 2),
+        (92.50, 'F#', 2),
+        (103.83, 'G#', 2),
+        (130.81, 'C', 3),
+        (233.08, 'A#', 3),
+      ];
+      for (final (frequency, note, octave) in notes) {
+        final reading = _engineFor(
+          Tuning.standard,
+        ).read(frequencyHz: frequency, confidence: 1);
+        expect(reading!.detectedNote.note.name, note);
+        expect(reading.detectedNote.octave, octave);
+        expect(
+          reading.detectedNote,
+          isNot(reading.targetNote),
+          reason: '$note$octave is not an open string of standard tuning',
+        );
+      }
+    });
+
+    test('the name changes at the halfway point, not before it', () {
+      // Two rules meet here and have to agree: the engine keeps the target's
+      // spelling below fifty cents, and Pitch.nearestTo rounds at the same
+      // boundary. Either one alone would be untested.
+      final e2 = Tuning.standard.openStrings[0];
+      final justUnder = _engineFor(
+        Tuning.standard,
+      ).read(frequencyHz: _offBy(e2, 49), confidence: 1);
+      final justOver = _engineFor(
+        Tuning.standard,
+      ).read(frequencyHz: _offBy(e2, 51), confidence: 1);
+
+      expect(justUnder!.detectedNote.name, 'E2');
+      expect(justOver!.detectedNote.name, 'F2');
+      expect(
+        justOver.targetNote.name,
+        'E2',
+        reason: 'the needle still measures against the string being tuned',
+      );
+    });
+
+    test('a string being tuned reads its own note, not its destination', () {
+      // Half a semitone flat of E2 is still an E to a player turning the peg.
+      final reading = _engineFor(Tuning.standard).read(
+        frequencyHz: _offBy(Tuning.standard.openStrings[0], -30),
+        confidence: 1,
+      );
+      expect(reading!.detectedNote.name, 'E2');
+      expect(reading.cents, closeTo(-30, 0.01));
+      expect(reading.direction, TuningDirection.flat);
+    });
+  });
+
   group('TuningEngine chromatic mode', () {
     test('it names the nearest note and highlights no string', () {
       // PRD.md §10.2. A chromatic tuner belongs to no tuning, so nothing is

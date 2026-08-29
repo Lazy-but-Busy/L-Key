@@ -4,7 +4,8 @@ import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/core/utils/reduced_motion.dart';
 
-/// The tuner's meter: a huge note, a frequency, and a needle.
+/// The tuner's meter: a huge note of whatever is sounding, its frequency,
+/// and a needle showing how far that is from the target.
 ///
 /// DESIGN.md §65 names this component `TunerMeter`; the `Lk` prefix matches
 /// `LkFretboard` and `LkChordDiagram`. Every measurement comes from the design
@@ -32,7 +33,13 @@ class LkTunerMeter extends StatelessWidget {
     this.semanticsLabel,
   });
 
-  /// The note being tuned, typographically spelled. Null draws the rest state.
+  /// The note that is **sounding**, typographically spelled. Null draws the
+  /// rest state.
+  ///
+  /// Not the note being tuned towards. The two diverge as soon as a string is
+  /// more than half a semitone out, and the screen names what it hears
+  /// (PRD.md §10.1). Which note is the destination is said in words by the
+  /// caller, above the footer.
   final String? note;
 
   /// Its octave, shown small beside the note.
