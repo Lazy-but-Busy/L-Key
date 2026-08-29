@@ -86,8 +86,8 @@ void main() {
       // the sign of the cents value is what decides which way it goes.
       const e2 = Pitch(Note(NoteLetter.e), 2);
       expect(e2.centsFrom(82.4069), closeTo(0, 0.1));
-      expect(e2.centsFrom(83.0), greaterThan(0));
-      expect(e2.centsFrom(82.0), lessThan(0));
+      expect(e2.centsFrom(83), greaterThan(0));
+      expect(e2.centsFrom(82), lessThan(0));
     });
 
     test('a hundred cents is a semitone and fifty is the halfway point', () {

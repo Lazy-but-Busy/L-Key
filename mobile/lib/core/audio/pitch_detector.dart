@@ -5,61 +5,84 @@
 /// replaced without touching the tuner engine, its state, or the UI. This file
 /// defines that boundary and nothing else — **no DSP lives here.**
 ///
-/// The intended pipeline (CLAUDE.md §14, README "Audio Architecture"):
+/// The pipeline (CLAUDE.md §14, README "Audio Architecture"):
 ///
 /// ```text
 /// Microphone -> Audio Input -> Audio Processing -> PitchDetector
 ///            -> Tuning Engine -> Tuner State -> UI
 /// ```
+///
+/// Contains no Flutter. See docs/adr/0012.
 library;
 
+import 'package:l_key/core/audio/audio_frame.dart';
+import 'package:meta/meta.dart';
+
 /// A single pitch observation produced by a [PitchDetector].
-///
-/// [confidence] is not optional decoration. CLAUDE.md §16 forbids telling a
-/// user a result is correct when the algorithm is unsure, so every consumer
-/// must branch on it rather than trusting [frequencyHz] blindly.
-class DetectedPitch {
+@immutable
+final class DetectedPitch {
   /// Creates a pitch observation.
   const DetectedPitch({
     required this.frequencyHz,
-    required this.confidence,
+    required this.clarity,
     required this.timestamp,
   }) : assert(
-         confidence >= 0.0 && confidence <= 1.0,
-         'confidence must be within 0.0..1.0',
+         clarity >= 0.0 && clarity <= 1.0,
+         'clarity must be within 0.0..1.0',
        );
 
-  /// A reading in which no pitch could be identified.
-  const DetectedPitch.silent(this.timestamp) : frequencyHz = 0, confidence = 0;
-
-  /// Fundamental frequency in hertz. Zero when nothing was detected.
+  /// Fundamental frequency in hertz.
   final double frequencyHz;
 
-  /// How certain the detector is, from 0.0 to 1.0.
-  final double confidence;
+  /// How periodic the window was, from 0.0 to 1.0.
+  ///
+  /// **Not the tuner's confidence, and deliberately not called that.** This is
+  /// the raw periodicity of the waveform and nothing else; a detector can be
+  /// completely certain about the period of a signal that is far too quiet to
+  /// act on, or that is a fan rather than a string. The tuner combines this
+  /// with level and tonality to get a number it is willing to show, and one
+  /// name for two numbers is the sort of thing that reaches the UI as the
+  /// wrong one (CLAUDE.md §16).
+  final double clarity;
 
   /// When the underlying audio window was captured.
   final Duration timestamp;
 
-  /// Whether a pitch was found at all.
-  bool get hasPitch => frequencyHz > 0;
+  @override
+  bool operator ==(Object other) =>
+      other is DetectedPitch &&
+      other.frequencyHz == frequencyHz &&
+      other.clarity == clarity &&
+      other.timestamp == timestamp;
+
+  @override
+  int get hashCode => Object.hash(frequencyHz, clarity, timestamp);
+
+  @override
+  String toString() =>
+      'DetectedPitch(${frequencyHz.toStringAsFixed(2)} Hz, '
+      'clarity ${clarity.toStringAsFixed(3)})';
 }
 
-/// Detects the fundamental frequency of an incoming audio stream.
+/// Finds the fundamental frequency of one window of audio.
 ///
-/// Implementations own their own audio session and must release the
-/// microphone in [stop] — CLAUDE.md §50 requires audio processing to end when
-/// the tuner closes or the app backgrounds, because it is the single largest
-/// battery cost in the product.
+/// **Pure and synchronous.** It owns no microphone, no stream and no state
+/// between frames: the same window analysed twice gives the same answer, and
+/// two windows in either order give the same two answers. That is what makes
+/// the algorithm testable against a synthetic waveform rather than only
+/// through a fake audio stream, and it is why capture lives behind a separate
+/// `AudioInput` rather than inside here (docs/adr/0012).
 abstract interface class PitchDetector {
-  /// Begins listening and emits observations until [stop] is called.
+  /// Returns the window's fundamental, or null when it has no usable period.
   ///
-  /// Throws a `PermissionFailure` if microphone access is refused.
-  Stream<DetectedPitch> start();
+  /// Null rather than a zero-frequency reading: silence, noise and a signal
+  /// outside the instrument's range all have no answer, and one absent
+  /// representation is easier to handle than a sentinel (CLAUDE.md §37).
+  DetectedPitch? analyze(AudioFrame frame);
 
-  /// Stops listening and releases the microphone and audio session.
-  Future<void> stop();
+  /// The lowest frequency this detector will report.
+  double get minimumHz;
 
-  /// Whether this detector is currently consuming audio.
-  bool get isRunning;
+  /// The highest frequency this detector will report.
+  double get maximumHz;
 }
