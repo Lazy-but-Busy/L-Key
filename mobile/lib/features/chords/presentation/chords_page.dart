@@ -10,6 +10,7 @@ import 'package:l_key/core/access/feature_tier.dart';
 import 'package:l_key/features/chords/data/chord_catalog.dart';
 import 'package:l_key/features/chords/presentation/chords_controller.dart';
 import 'package:l_key/shared/widgets/lk_async_view.dart';
+import 'package:l_key/shared/widgets/lk_button.dart';
 import 'package:l_key/shared/widgets/lk_detail_scaffold.dart';
 import 'package:l_key/shared/widgets/lk_empty_state.dart';
 import 'package:l_key/shared/widgets/lk_premium_badge.dart';
@@ -54,7 +55,18 @@ class _ChordsPageState extends ConsumerState<ChordsPage> {
           title: l10n.toolChords,
           subtitle: l10n.chordsSubtitle,
         ),
-        const SizedBox(height: LkSpacing.s6),
+        const SizedBox(height: LkSpacing.s5),
+
+        // The way in for a player who has a shape under their fingers and
+        // no name for it — the opposite question to the one the search box
+        // answers.
+        LkButton(
+          label: l10n.chordAnalyzerOpen,
+          onPressed: () => context.pushNamed(AppRoutes.chordAnalyzerName),
+          variant: LkButtonVariant.secondary,
+          block: true,
+        ),
+        const SizedBox(height: LkSpacing.s5),
 
         LkTextField(
           label: l10n.chordsSearchLabel,
@@ -121,6 +133,10 @@ class _ChordRow extends StatelessWidget {
     final quality = qualityName(l10n, entry.chord.quality);
 
     return LkPressable(
+      // Identity for a list that is filtered and re-ranked on every
+      // keystroke, so Flutter matches a row to the same chord across a
+      // rebuild rather than to whatever now sits at that index.
+      key: ValueKey<String>('chord-${entry.id}'),
       minHeight: LkDimens.tapTarget,
       padding: const EdgeInsets.symmetric(
         horizontal: LkSpacing.s4,

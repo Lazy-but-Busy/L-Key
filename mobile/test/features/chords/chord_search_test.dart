@@ -110,6 +110,25 @@ void main() {
     });
   });
 
+  group('ChordCatalog route safety', () {
+    test('no catalogue id could be mistaken for a sibling route', () {
+      // '/tools/chords/analyzer' is declared before '/tools/chords/:chordId'
+      // and would shadow a chord called `analyzer`. Every id is
+      // `<root>-<quality>`, so none can collide — asserted rather than
+      // assumed, because a future one-word slug would break a route
+      // silently.
+      const reserved = <String>{'analyzer'};
+      for (final entry in ChordCatalog.entries) {
+        expect(
+          reserved,
+          isNot(contains(entry.id)),
+          reason: '${entry.id} collides with a sibling route',
+        );
+        expect(entry.id, contains('-'));
+      }
+    });
+  });
+
   group('ChordCatalog', () {
     test('ids are URL-safe and unique', () {
       final seen = <String>{};

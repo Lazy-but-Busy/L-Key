@@ -9,8 +9,10 @@
 library;
 
 import 'package:l_key/core/access/feature_tier.dart';
+import 'package:l_key/core/access/tiered_entry.dart';
 import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/core/music/note.dart';
+import 'package:l_key/core/music/tuning.dart';
 import 'package:l_key/features/chords/domain/chord.dart';
 import 'package:l_key/features/chords/domain/chord_voicing.dart';
 import 'package:l_key/features/chords/domain/voicing_library.dart';
@@ -78,6 +80,19 @@ abstract final class ChordCatalog {
   /// The canonical seventeen from `Note.spellings`, shared with the fretboard
   /// so a player who found D♭ in one browser finds it in the other.
   static const List<Note> roots = Note.spellings;
+
+  /// The tunings the chord analyzer offers, standard first.
+  ///
+  /// Labelled the same way the tuner and the fretboard label theirs, so the
+  /// three screens do not disagree about what is Premium. As everywhere else
+  /// the label grants nothing and every entry selects (CLAUDE.md §23, §51).
+  static List<TieredEntry<Tuning>> get tunings => <TieredEntry<Tuning>>[
+    for (final tuning in Tuning.catalogue)
+      TieredEntry<Tuning>(
+        tuning,
+        tuning == Tuning.standard ? FeatureTier.free : FeatureTier.premium,
+      ),
+  ];
 
   /// The chords PRD.md §11 names as available to everyone.
   ///
