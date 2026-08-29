@@ -463,6 +463,42 @@ export const tokens = {
     "chordMarkerSize": {
       "value": 36,
       "source": "design system components/music/ChordDiagram.jsx finger marker box"
+    },
+    "fretboardFretWidth": {
+      "value": 52,
+      "source": "design system components/music/Fretboard.jsx default fretWidth"
+    },
+    "fretboardRowHeight": {
+      "value": 40,
+      "source": "design system components/music/Fretboard.jsx default rowHeight"
+    },
+    "fretboardFretWidthCompact": {
+      "value": 40,
+      "source": "design system ui_kits/mobile_app/ToolsScreens.jsx ScalesScreen fretWidth — the phone-width neck"
+    },
+    "fretboardRowHeightCompact": {
+      "value": 34,
+      "source": "design system ui_kits/mobile_app/ToolsScreens.jsx ScalesScreen rowHeight"
+    },
+    "fretboardMarkerSize": {
+      "value": 26,
+      "source": "design system components/music/Fretboard.jsx marker box"
+    },
+    "fretboardStringWidth": {
+      "value": 2,
+      "source": "design system components/music/Fretboard.jsx string line height"
+    },
+    "fretboardFretLineWidth": {
+      "value": 2,
+      "source": "design system components/music/Fretboard.jsx fret line width"
+    },
+    "fretboardNutWidth": {
+      "value": 4,
+      "source": "design system components/music/Fretboard.jsx first fret line width"
+    },
+    "fretboardLabelColumn": {
+      "value": 20,
+      "source": "design system components/music/Fretboard.jsx string-name column width"
     }
   },
   "opacity": {

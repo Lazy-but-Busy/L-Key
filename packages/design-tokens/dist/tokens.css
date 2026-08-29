@@ -141,6 +141,15 @@
   --lk-chord-string-width: 4px;
   --lk-chord-fret-line-width: 2px;
   --lk-chord-marker-size: 36px;
+  --lk-fretboard-fret-width: 52px;
+  --lk-fretboard-row-height: 40px;
+  --lk-fretboard-fret-width-compact: 40px;
+  --lk-fretboard-row-height-compact: 34px;
+  --lk-fretboard-marker-size: 26px;
+  --lk-fretboard-string-width: 2px;
+  --lk-fretboard-fret-line-width: 2px;
+  --lk-fretboard-nut-width: 4px;
+  --lk-fretboard-label-column: 20px;
 
 
   /* Burmese needs a taller line box than the Latin scale */
