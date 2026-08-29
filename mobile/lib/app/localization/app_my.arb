@@ -200,6 +200,8 @@
   "settingsThemeLight": "အလင်း",
   "settingsThemeDark": "အမှောင်",
   "settingsReferencePitch": "ကိုးကားအသံ",
+  "settingsReferencePitchLower": "ကိုးကားအသံ လျှော့ရန်",
+  "settingsReferencePitchRaise": "ကိုးကားအသံ တိုးရန်",
   "settingsSectionGeneral": "အထွေထွေ",
   "settingsSectionAudio": "အသံ",
 

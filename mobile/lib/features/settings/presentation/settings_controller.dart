@@ -15,6 +15,16 @@ class Settings {
   /// A440 — the tuning reference every tuner defaults to.
   static const double defaultReferencePitchHz = 440;
 
+  /// The lowest reference the tuner offers.
+  ///
+  /// The range covers the references orchestras and period instruments
+  /// actually use — 415 for baroque pitch up to 445 — rather than any number
+  /// a stored preference might hold.
+  static const double minimumReferencePitchHz = 415;
+
+  /// The highest reference the tuner offers.
+  static const double maximumReferencePitchHz = 445;
+
   /// Chosen language, or null to follow the operating system.
   final Locale? locale;
 
@@ -75,8 +85,12 @@ class SettingsController extends Notifier<Settings> {
         (mode) => mode.name == store.getString(_themeKey),
         orElse: () => ThemeMode.system,
       ),
-      referencePitchHz:
-          store.getDouble(_pitchKey) ?? Settings.defaultReferencePitchHz,
+      // Clamped on the way in as well as out: a preference file is not a
+      // trusted input, and a reference of zero would make every frequency
+      // calculation nonsense.
+      referencePitchHz: _clampReference(
+        store.getDouble(_pitchKey) ?? Settings.defaultReferencePitchHz,
+      ),
     );
   }
 
@@ -96,11 +110,17 @@ class SettingsController extends Notifier<Settings> {
     _ignore(_store.setString(_themeKey, mode.name));
   }
 
-  /// Sets the tuning reference in hertz.
+  /// Sets the tuning reference in hertz, clamped to the offered range.
   void setReferencePitch(double hz) {
-    state = state.copyWith(referencePitchHz: hz);
-    _ignore(_store.setDouble(_pitchKey, hz));
+    final clamped = _clampReference(hz);
+    state = state.copyWith(referencePitchHz: clamped);
+    _ignore(_store.setDouble(_pitchKey, clamped));
   }
+
+  static double _clampReference(double hz) => hz.clamp(
+    Settings.minimumReferencePitchHz,
+    Settings.maximumReferencePitchHz,
+  );
 
   /// Preferences are best-effort: a failed write must never surface as an
   /// unhandled error or block the interface.
