@@ -7,9 +7,9 @@ import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 
 /// The frame for a screen pushed above the shell.
 ///
-/// Only `/settings` uses this. A screen pushed *inside* a branch keeps the
-/// bottom bar and takes the full height instead, so it needs no frame of its
-/// own — see [lkFullScreenPadding].
+/// Every screen below the five sections uses this: the tools, a chord, a
+/// practice session and `/settings` (ADR-0014). Only the five section roots
+/// and the developer showcase do not.
 ///
 /// The design system's top bar carries a menu on the left; a screen above the
 /// shell has no bottom bar to return through, so it needs a way back, and the
@@ -25,7 +25,8 @@ class LkDetailScaffold extends StatelessWidget {
   });
 
   /// The screen's name. Announced with the back control rather than painted
-  /// in the bar, which carries the wordmark.
+  /// in the bar, which carries the wordmark — "Back from Tuner" rather than
+  /// nine identical "Back" buttons across the app.
   final String title;
 
   /// Screen content. Scrolling is the caller's responsibility.
@@ -51,7 +52,7 @@ class LkDetailScaffold extends StatelessWidget {
               compact: true,
               leading: LkIconButton(
                 icon: Icons.arrow_back,
-                semanticLabel: l10n.commonBack,
+                semanticLabel: l10n.commonBackFrom(title),
                 variant: LkIconButtonVariant.bare,
                 onPressed: () {
                   if (context.canPop()) {

@@ -26,6 +26,7 @@
   "commonMenu": "မီနူး",
   "commonBack": "နောက်သို့",
   "commonMore": "နောက်ထပ်",
+  "commonBackFrom": "{screen} မှ နောက်သို့",
   "commonPro": "PRO",
   "commonResume": "ဆက်လုပ်ရန်",
   "homeGreetingMorning": "မင်္ဂလာနံနက်ခင်းပါ၊",

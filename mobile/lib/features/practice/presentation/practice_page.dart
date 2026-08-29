@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
+import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
@@ -58,86 +59,90 @@ class _PracticePageState extends State<PracticePage> {
     final l10n = AppLocalizations.of(context);
     final colors = context.lkColors;
 
-    return ListView(
-      padding: lkFullScreenPadding,
-      children: <Widget>[
-        LkScreenHeader(
-          title: l10n.practiceTitle,
-          subtitle: l10n.practiceStreakDays(_mockStreakDays),
-        ),
-        const SizedBox(height: LkSpacing.s6),
+    return LkDetailScaffold(
+      title: l10n.practiceTitle,
+      fallbackRoute: AppRoutes.learn,
+      child: ListView(
+        padding: lkScreenPadding,
+        children: <Widget>[
+          LkScreenHeader(
+            title: l10n.practiceTitle,
+            subtitle: l10n.practiceStreakDays(_mockStreakDays),
+          ),
+          const SizedBox(height: LkSpacing.s6),
 
-        LkCard(
-          variant: LkCardVariant.ring,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+          LkCard(
+            variant: LkCardVariant.ring,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              spacing: LkSpacing.s4,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  spacing: LkSpacing.s2,
+                  children: <Widget>[
+                    Text(
+                      '$_mockElapsedMinutes:00',
+                      style: context.lkType.h1.copyWith(
+                        color: colors.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      '/ $_mockPlannedMinutes:00',
+                      style: context.lkType.technicalSm.copyWith(
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+                LkProgressBar(
+                  value: _mockElapsedMinutes.toDouble(),
+                  max: _mockPlannedMinutes.toDouble(),
+                  semanticLabel: l10n.practiceSession,
+                ),
+                for (final item in _mockPlan) _PlanRow(item: item),
+                LkButton(
+                  label: _isRunning ? l10n.practicePause : l10n.practiceStart,
+                  variant: _isRunning
+                      ? LkButtonVariant.primary
+                      : LkButtonVariant.accent,
+                  block: true,
+                  onPressed: () => setState(() => _isRunning = !_isRunning),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: LkSpacing.s6),
+
+          Row(
             spacing: LkSpacing.s4,
             children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                spacing: LkSpacing.s2,
-                children: <Widget>[
-                  Text(
-                    '$_mockElapsedMinutes:00',
-                    style: context.lkType.h1.copyWith(
-                      color: colors.textPrimary,
-                    ),
-                  ),
-                  Text(
-                    '/ $_mockPlannedMinutes:00',
-                    style: context.lkType.technicalSm.copyWith(
-                      color: colors.textSecondary,
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: LkStatChip(
+                  label: l10n.practiceStatStreak,
+                  value: l10n.practiceStreakDays(_mockStreakDays),
+                ),
               ),
-              LkProgressBar(
-                value: _mockElapsedMinutes.toDouble(),
-                max: _mockPlannedMinutes.toDouble(),
-                semanticLabel: l10n.practiceSession,
+              Expanded(
+                child: LkStatChip(
+                  label: l10n.practiceStatThisWeek,
+                  value: '142',
+                ),
               ),
-              for (final item in _mockPlan) _PlanRow(item: item),
-              LkButton(
-                label: _isRunning ? l10n.practicePause : l10n.practiceStart,
-                variant: _isRunning
-                    ? LkButtonVariant.primary
-                    : LkButtonVariant.accent,
-                block: true,
-                onPressed: () => setState(() => _isRunning = !_isRunning),
+              Expanded(
+                child: LkStatChip(
+                  label: l10n.practiceStatBestBpm,
+                  value: '96',
+                ),
               ),
             ],
           ),
-        ),
-        const SizedBox(height: LkSpacing.s6),
-
-        Row(
-          spacing: LkSpacing.s4,
-          children: <Widget>[
-            Expanded(
-              child: LkStatChip(
-                label: l10n.practiceStatStreak,
-                value: l10n.practiceStreakDays(_mockStreakDays),
-              ),
-            ),
-            Expanded(
-              child: LkStatChip(
-                label: l10n.practiceStatThisWeek,
-                value: '142',
-              ),
-            ),
-            Expanded(
-              child: LkStatChip(
-                label: l10n.practiceStatBestBpm,
-                value: '96',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: LkSpacing.s6),
-        LkPremiumNote(capability: l10n.practiceProNote),
-      ],
+          const SizedBox(height: LkSpacing.s6),
+          LkPremiumNote(capability: l10n.practiceProNote),
+        ],
+      ),
     );
   }
 }

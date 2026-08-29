@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/localization/music_names.dart';
+import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
@@ -39,15 +40,19 @@ class FretboardPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final options = ref.watch(fretboardOptionsProvider);
 
-    return LkAsyncView<FretboardOptions>(
-      value: options,
-      onRetry: () => ref.invalidate(fretboardOptionsProvider),
-      isEmpty: (data) => data.isEmpty,
-      empty: (context) => LkEmptyState(
-        headline: l10n.fretboardEmpty,
-        body: l10n.fretboardEmptyBody,
+    return LkDetailScaffold(
+      title: l10n.toolFretboard,
+      fallbackRoute: AppRoutes.tools,
+      child: LkAsyncView<FretboardOptions>(
+        value: options,
+        onRetry: () => ref.invalidate(fretboardOptionsProvider),
+        isEmpty: (data) => data.isEmpty,
+        empty: (context) => LkEmptyState(
+          headline: l10n.fretboardEmpty,
+          body: l10n.fretboardEmptyBody,
+        ),
+        data: (context, data) => _Fretboard(options: data),
       ),
-      data: (context, data) => _Fretboard(options: data),
     );
   }
 }
@@ -73,7 +78,7 @@ class _Fretboard extends ConsumerWidget {
     };
 
     return ListView(
-      padding: lkFullScreenPadding,
+      padding: lkScreenPadding,
       children: <Widget>[
         LkScreenHeader(title: l10n.toolFretboard, subtitle: title),
         const SizedBox(height: LkSpacing.s6),

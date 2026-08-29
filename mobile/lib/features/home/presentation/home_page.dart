@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
         const SizedBox(height: LkSpacing.s8),
 
         _QuickTuneCard(
-          onOpen: () => context.goNamed(AppRoutes.tunerName),
+          onOpen: () => context.pushNamed(AppRoutes.tunerName),
         ),
         const SizedBox(height: LkSpacing.s4),
 
@@ -68,14 +68,14 @@ class HomePage extends StatelessWidget {
         ]) ...<Widget>[
           _QuickToolRow(
             label: tool.$1,
-            onTap: () => context.goNamed(tool.$2),
+            onTap: () => context.pushNamed(tool.$2),
           ),
           const SizedBox(height: LkSpacing.s4),
         ],
         const SizedBox(height: LkSpacing.s5),
 
         _DailySessionCard(
-          onResume: () => context.goNamed(AppRoutes.practiceName),
+          onResume: () => context.pushNamed(AppRoutes.practiceName),
         ),
         const SizedBox(height: LkSpacing.s8),
 

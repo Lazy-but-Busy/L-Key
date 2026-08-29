@@ -48,74 +48,78 @@ class _ChordsPageState extends ConsumerState<ChordsPage> {
     final browser = ref.watch(chordBrowserProvider);
     final library = ref.watch(chordLibraryProvider);
 
-    return ListView(
-      padding: lkFullScreenPadding,
-      children: <Widget>[
-        LkScreenHeader(
-          title: l10n.toolChords,
-          subtitle: l10n.chordsSubtitle,
-        ),
-        const SizedBox(height: LkSpacing.s5),
+    return LkDetailScaffold(
+      title: l10n.toolChords,
+      fallbackRoute: AppRoutes.tools,
+      child: ListView(
+        padding: lkScreenPadding,
+        children: <Widget>[
+          LkScreenHeader(
+            title: l10n.toolChords,
+            subtitle: l10n.chordsSubtitle,
+          ),
+          const SizedBox(height: LkSpacing.s5),
 
-        // The way in for a player who has a shape under their fingers and
-        // no name for it — the opposite question to the one the search box
-        // answers.
-        LkButton(
-          label: l10n.chordAnalyzerOpen,
-          onPressed: () => context.pushNamed(AppRoutes.chordAnalyzerName),
-          variant: LkButtonVariant.secondary,
-          block: true,
-        ),
-        const SizedBox(height: LkSpacing.s5),
+          // The way in for a player who has a shape under their fingers and
+          // no name for it — the opposite question to the one the search box
+          // answers.
+          LkButton(
+            label: l10n.chordAnalyzerOpen,
+            onPressed: () => context.pushNamed(AppRoutes.chordAnalyzerName),
+            variant: LkButtonVariant.secondary,
+            block: true,
+          ),
+          const SizedBox(height: LkSpacing.s5),
 
-        LkTextField(
-          label: l10n.chordsSearchLabel,
-          hint: l10n.chordsSearchHint,
-          controller: _query,
-          icon: Icons.search,
-          hideLabel: true,
-          onChanged: ref.read(chordBrowserProvider.notifier).search,
-        ),
-        const SizedBox(height: LkSpacing.s4),
+          LkTextField(
+            label: l10n.chordsSearchLabel,
+            hint: l10n.chordsSearchHint,
+            controller: _query,
+            icon: Icons.search,
+            hideLabel: true,
+            onChanged: ref.read(chordBrowserProvider.notifier).search,
+          ),
+          const SizedBox(height: LkSpacing.s4),
 
-        LkSegmentedControl<ChordFilter>(
-          segments: <ChordFilter, String>{
-            ChordFilter.all: l10n.chordsFilterAll,
-            ChordFilter.triads: l10n.chordsFilterTriads,
-            ChordFilter.sevenths: l10n.chordsFilterSevenths,
-            ChordFilter.extended: l10n.chordsFilterExtended,
-          },
-          selected: browser.filter,
-          onChanged: ref.read(chordBrowserProvider.notifier).filterBy,
-        ),
-        const SizedBox(height: LkSpacing.s6),
+          LkSegmentedControl<ChordFilter>(
+            segments: <ChordFilter, String>{
+              ChordFilter.all: l10n.chordsFilterAll,
+              ChordFilter.triads: l10n.chordsFilterTriads,
+              ChordFilter.sevenths: l10n.chordsFilterSevenths,
+              ChordFilter.extended: l10n.chordsFilterExtended,
+            },
+            selected: browser.filter,
+            onChanged: ref.read(chordBrowserProvider.notifier).filterBy,
+          ),
+          const SizedBox(height: LkSpacing.s6),
 
-        LkAsyncView<List<ChordCatalogEntry>>(
-          value: library,
-          onRetry: () => ref.invalidate(chordLibraryProvider),
-          data: (context, entries) {
-            final results = filterChords(
-              entries: entries,
-              state: browser,
-              l10n: l10n,
-            );
-            if (results.isEmpty) {
-              return LkEmptyState(
-                headline: l10n.chordsEmptySearch,
-                body: l10n.chordsEmptySearchBody,
-                centered: false,
+          LkAsyncView<List<ChordCatalogEntry>>(
+            value: library,
+            onRetry: () => ref.invalidate(chordLibraryProvider),
+            data: (context, entries) {
+              final results = filterChords(
+                entries: entries,
+                state: browser,
+                l10n: l10n,
               );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: LkSpacing.s3,
-              children: <Widget>[
-                for (final entry in results) _ChordRow(entry: entry),
-              ],
-            );
-          },
-        ),
-      ],
+              if (results.isEmpty) {
+                return LkEmptyState(
+                  headline: l10n.chordsEmptySearch,
+                  body: l10n.chordsEmptySearchBody,
+                  centered: false,
+                );
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: LkSpacing.s3,
+                children: <Widget>[
+                  for (final entry in results) _ChordRow(entry: entry),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -143,7 +147,7 @@ class _ChordRow extends StatelessWidget {
         vertical: LkSpacing.s3,
       ),
       semanticLabel: '${entry.chord.displaySymbol} $quality',
-      onTap: () => context.goNamed(
+      onTap: () => context.pushNamed(
         AppRoutes.chordDetailName,
         pathParameters: <String, String>{'chordId': entry.id},
       ),

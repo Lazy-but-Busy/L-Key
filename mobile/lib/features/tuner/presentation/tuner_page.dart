@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/localization/music_names.dart';
+import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
@@ -55,51 +56,55 @@ class _TunerPageState extends ConsumerState<TunerPage> {
     final state = ref.watch(tunerProvider);
     final controller = ref.read(tunerProvider.notifier);
 
-    return ListView(
-      padding: lkFullScreenPadding,
-      children: <Widget>[
-        LkScreenHeader(
-          title: l10n.toolTuner,
-          subtitle: _subtitle(l10n, state),
-        ),
-        const SizedBox(height: LkSpacing.s6),
-
-        if (state.status == TunerStatus.permissionRequired ||
-            state.status == TunerStatus.permissionBlocked)
-          TunerPermissionGate(
-            isBlocked: state.status == TunerStatus.permissionBlocked,
-            canOpenSettings: state.canOpenSettings,
-            onAllow: controller.start,
-            onOpenSettings: controller.openSettings,
-          )
-        else ...<Widget>[
-          _Meter(state: state),
-          const SizedBox(height: LkSpacing.s5),
-          TunerStrings(
-            tuning: state.tuning,
-            selectedIndex: _selectedIndex(state),
-            isEnabled: !state.isChromatic,
-            onSelect: controller.selectString,
-            onAuto: controller.selectAuto,
-            isAuto: state.mode is AutoTargetMode,
+    return LkDetailScaffold(
+      title: l10n.toolTuner,
+      fallbackRoute: AppRoutes.tools,
+      child: ListView(
+        padding: lkScreenPadding,
+        children: <Widget>[
+          LkScreenHeader(
+            title: l10n.toolTuner,
+            subtitle: _subtitle(l10n, state),
           ),
-          const SizedBox(height: LkSpacing.s5),
-          _Transport(state: state, controller: controller),
-        ],
-
-        if (state.status == TunerStatus.failed && state.failure != null) ...[
-          const SizedBox(height: LkSpacing.s5),
-          _Failure(failure: state.failure!, onRetry: controller.start),
-        ],
-
-        const SizedBox(height: LkSpacing.s6),
-        _TuningPicker(state: state, controller: controller),
-
-        if (state.diagnostics != null) ...[
           const SizedBox(height: LkSpacing.s6),
-          TunerDiagnosticsCard(diagnostics: state.diagnostics!),
+
+          if (state.status == TunerStatus.permissionRequired ||
+              state.status == TunerStatus.permissionBlocked)
+            TunerPermissionGate(
+              isBlocked: state.status == TunerStatus.permissionBlocked,
+              canOpenSettings: state.canOpenSettings,
+              onAllow: controller.start,
+              onOpenSettings: controller.openSettings,
+            )
+          else ...<Widget>[
+            _Meter(state: state),
+            const SizedBox(height: LkSpacing.s5),
+            TunerStrings(
+              tuning: state.tuning,
+              selectedIndex: _selectedIndex(state),
+              isEnabled: !state.isChromatic,
+              onSelect: controller.selectString,
+              onAuto: controller.selectAuto,
+              isAuto: state.mode is AutoTargetMode,
+            ),
+            const SizedBox(height: LkSpacing.s5),
+            _Transport(state: state, controller: controller),
+          ],
+
+          if (state.status == TunerStatus.failed && state.failure != null) ...[
+            const SizedBox(height: LkSpacing.s5),
+            _Failure(failure: state.failure!, onRetry: controller.start),
+          ],
+
+          const SizedBox(height: LkSpacing.s6),
+          _TuningPicker(state: state, controller: controller),
+
+          if (state.diagnostics != null) ...[
+            const SizedBox(height: LkSpacing.s6),
+            TunerDiagnosticsCard(diagnostics: state.diagnostics!),
+          ],
         ],
-      ],
+      ),
     );
   }
 

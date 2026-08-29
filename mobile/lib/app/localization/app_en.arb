@@ -47,6 +47,8 @@
   "@commonBack": { "description": "Accessible label for the back control on a pushed screen." },
   "commonMore": "More",
   "@commonMore": { "description": "Accessible label for a row's overflow control." },
+  "commonBackFrom": "Back from {screen}",
+  "@commonBackFrom": {"description": "Accessible label for the back control, naming the screen being left. Nine identical \"Back\" buttons tell a screen-reader user nothing about where they are.", "placeholders": {"screen": {"type": "String"}}},
   "commonPro": "PRO",
   "@commonPro": { "description": "Premium badge text. Short by design; kept Latin in both locales because it is the product's mark." },
   "commonResume": "Resume",

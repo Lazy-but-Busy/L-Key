@@ -58,7 +58,7 @@ class LearnPage extends StatelessWidget {
           child: LkButton(
             label: l10n.learnResumeLesson,
             block: true,
-            onPressed: () => context.goNamed(AppRoutes.practiceName),
+            onPressed: () => context.pushNamed(AppRoutes.practiceName),
           ),
         ),
         const SizedBox(height: LkSpacing.s6),

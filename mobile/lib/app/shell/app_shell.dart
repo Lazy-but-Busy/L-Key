@@ -6,8 +6,12 @@ import 'package:l_key/shared/widgets/lk_bottom_nav_bar.dart';
 import 'package:l_key/shared/widgets/lk_icon_button.dart';
 import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 
-/// The five branch roots. Only these carry the top bar; anything pushed above
-/// one of them is a full-screen surface.
+/// The five branch roots.
+///
+/// Every screen below them now pushes on the root navigator (ADR-0014), so in
+/// practice the shell only ever builds one of these. The set stays as the
+/// explicit statement of the rule: a screen added *inside* a branch would not
+/// get the wordmark by accident.
 const Set<String> _branchRoots = <String>{
   AppRoutes.home,
   AppRoutes.tools,
@@ -41,10 +45,9 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    // The wordmark belongs to the five sections. A screen pushed inside a
-    // branch -- a tool, a practice session -- takes the full height instead,
-    // and returns to its section through the bar below or the system back
-    // gesture.
+    // The wordmark belongs to the five sections. A tool or a practice session
+    // sits above the shell entirely and carries its own bar with a back
+    // control (ADR-0014), so the shell is not even built while one is open.
     final isBranchRoot = _branchRoots.contains(
       GoRouterState.of(context).matchedLocation,
     );
