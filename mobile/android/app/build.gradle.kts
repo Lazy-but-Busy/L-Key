@@ -6,7 +6,10 @@ plugins {
 
 android {
     namespace = "com.lkey.l_key"
-    compileSdk = flutter.compileSdkVersion
+    // Pinned above flutter.compileSdkVersion (36 on Flutter 3.47) because
+    // permission_handler_android 14 compiles against 37 and Gradle refuses to
+    // link a library built against a newer SDK than the app.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -19,7 +22,10 @@ android {
         applicationId = "com.lkey.l_key"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Pinned rather than inherited so a Flutter upgrade or downgrade
+        // cannot silently drop below what the audio plugins need:
+        // record_android requires 23, permission_handler_android requires 24.
+        minSdk = 24
         targetSdk = flutter.targetSdkVersion
         // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
         // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)

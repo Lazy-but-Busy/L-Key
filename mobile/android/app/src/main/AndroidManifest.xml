@@ -1,4 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The tuner listens to the guitar (PRD.md §10). Requested at the moment
+         the player starts the tuner, never at launch, and released as soon as
+         the screen closes or the app backgrounds (CLAUDE.md §50). -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <!-- Not required: the chord library, fretboard, scales and metronome all
+         work without a microphone, so a device without one may still install. -->
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false"/>
+
     <application
         android:label="L Key"
         android:name="${applicationName}"
