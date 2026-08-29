@@ -25,6 +25,14 @@ abstract final class FeatureFlags {
   /// Audio recording (PRD.md §32).
   static const bool recording = bool.fromEnvironment('ENABLE_RECORDING');
 
+  /// The tuner's raw measurements, for calibrating thresholds on a real
+  /// device (docs/DEVICE-TESTING.md). Never for players: it shows decibels,
+  /// clarity and spectral flatness, none of which mean anything to a
+  /// guitarist.
+  static const bool tunerDiagnostics = bool.fromEnvironment(
+    'ENABLE_TUNER_DIAGNOSTICS',
+  );
+
   /// Community features (PRD.md §67, V3).
   static const bool community = bool.fromEnvironment('ENABLE_COMMUNITY');
 
@@ -34,6 +42,7 @@ abstract final class FeatureFlags {
     'chordRecognition': chordRecognition,
     'backingTracks': backingTracks,
     'recording': recording,
+    'tunerDiagnostics': tunerDiagnostics,
     'community': community,
   };
 }
