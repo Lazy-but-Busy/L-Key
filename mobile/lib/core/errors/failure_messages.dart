@@ -16,10 +16,14 @@ FailureMessage failureMessage(AppLocalizations l10n, Failure failure) {
       headline: l10n.errorNoConnection,
       body: l10n.errorNoConnectionBody,
     ),
-    ServerFailure() ||
-    DecodingFailure() ||
-    PermissionFailure() ||
-    UnexpectedFailure() => (
+    // A refused permission is not a bug, and telling the player something
+    // went wrong when they declined a prompt is both untrue and useless — it
+    // gives them nothing to do (CLAUDE.md §37).
+    PermissionFailure() => (
+      headline: l10n.errorPermissionDenied,
+      body: l10n.errorPermissionDeniedBody,
+    ),
+    ServerFailure() || DecodingFailure() || UnexpectedFailure() => (
       headline: l10n.errorUnexpected,
       body: l10n.errorUnexpectedBody,
     ),

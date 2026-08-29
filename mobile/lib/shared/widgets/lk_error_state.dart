@@ -12,13 +12,25 @@ import 'package:l_key/shared/widgets/lk_empty_state.dart';
 /// never reach the screen (CLAUDE.md §37).
 class LkErrorState extends StatelessWidget {
   /// Creates an error state for [failure].
-  const LkErrorState({required this.failure, super.key, this.onRetry});
+  const LkErrorState({
+    required this.failure,
+    super.key,
+    this.onRetry,
+    this.action,
+  });
 
   /// What went wrong.
   final Failure failure;
 
   /// Re-runs the failed operation. Omitted when there is nothing to retry.
   final VoidCallback? onRetry;
+
+  /// Replaces the retry button where retrying is not the way forward.
+  ///
+  /// A refused microphone is the case this exists for: pressing retry would
+  /// fail again forever, and the only thing that helps is the system settings
+  /// (CLAUDE.md §37).
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +41,16 @@ class LkErrorState extends StatelessWidget {
     return LkEmptyState(
       headline: message.headline,
       body: message.body,
-      action: retry == null
-          ? null
-          : LkButton(
-              label: l10n.commonRetry,
-              onPressed: retry,
-              size: LkButtonSize.medium,
-              variant: LkButtonVariant.secondary,
-            ),
+      action:
+          action ??
+          (retry == null
+              ? null
+              : LkButton(
+                  label: l10n.commonRetry,
+                  onPressed: retry,
+                  size: LkButtonSize.medium,
+                  variant: LkButtonVariant.secondary,
+                )),
     );
   }
 }

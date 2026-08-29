@@ -9,10 +9,10 @@
 /// Contains no Flutter.
 library;
 
+import 'package:l_key/core/access/tiered_entry.dart';
 import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/core/music/scale.dart';
 import 'package:l_key/core/music/tuning.dart';
-import 'package:l_key/features/fretboard/data/fretboard_catalog.dart';
 import 'package:meta/meta.dart';
 
 /// Everything the fretboard's pickers offer.

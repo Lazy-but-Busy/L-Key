@@ -126,6 +126,14 @@ export const tokens = {
       }
     },
     "scale": {
+      "hero": {
+        "size": 96,
+        "lineHeight": 0.9,
+        "letterSpacing": -0.05,
+        "family": "display",
+        "weight": "bold",
+        "source": "design system tokens/typography.css --lk-size-hero; the tuner note, DESIGN.md §21 \"the detected note should be huge\""
+      },
       "displayXl": {
         "size": 64,
         "lineHeight": 0.95,
@@ -499,6 +507,30 @@ export const tokens = {
     "fretboardLabelColumn": {
       "value": 20,
       "source": "design system components/music/Fretboard.jsx string-name column width"
+    },
+    "tunerMeterHeight": {
+      "value": 48,
+      "source": "design system components/music/TunerMeter.jsx meter track height"
+    },
+    "tunerNeedleWidth": {
+      "value": 4,
+      "source": "design system components/music/TunerMeter.jsx needle width"
+    },
+    "tunerNeedleHeight": {
+      "value": 60,
+      "source": "design system components/music/TunerMeter.jsx needle height, overhanging the track"
+    },
+    "tunerNeedleOverhang": {
+      "value": 6,
+      "source": "design system components/music/TunerMeter.jsx needle top offset"
+    },
+    "tunerCentreLineWidth": {
+      "value": 2,
+      "source": "design system components/music/TunerMeter.jsx centre line"
+    },
+    "tunerCentsRange": {
+      "value": 50,
+      "source": "design system components/music/TunerMeter.jsx needle clamp, +/- cents across the track"
     }
   },
   "opacity": {

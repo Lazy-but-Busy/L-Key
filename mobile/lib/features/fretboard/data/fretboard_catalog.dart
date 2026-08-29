@@ -12,24 +12,11 @@
 library;
 
 import 'package:l_key/core/access/feature_tier.dart';
+import 'package:l_key/core/access/tiered_entry.dart';
 import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/core/music/note.dart';
 import 'package:l_key/core/music/scale.dart';
 import 'package:l_key/core/music/tuning.dart';
-import 'package:meta/meta.dart';
-
-/// A catalogue entry: something the picker offers, and its tier label.
-@immutable
-final class TieredEntry<T> {
-  /// Creates an entry.
-  const TieredEntry(this.value, this.tier);
-
-  /// The thing on offer.
-  final T value;
-
-  /// The tier it is *labelled* with. It authorizes nothing.
-  final FeatureTier tier;
-}
 
 /// The tunings, scales, arpeggios and roots the fretboard offers.
 abstract final class FretboardCatalog {

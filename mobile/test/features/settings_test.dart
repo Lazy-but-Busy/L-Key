@@ -19,6 +19,48 @@ Future<ProviderContainer> _container([
 
 void main() {
   group('SettingsController', () {
+    test(
+      'the reference pitch moves a hertz at a time, in a real range',
+      () async {
+        // PRD.md §10.2 offers a configurable reference. The range is the one
+        // orchestras and period instruments actually use — baroque pitch at
+        // 415 up to 445 — rather than any number a caller might pass.
+        final container = await _container();
+        addTearDown(container.dispose);
+        final controller = container.read(settingsProvider.notifier)
+          ..setReferencePitch(442);
+        expect(container.read(settingsProvider).referencePitchHz, 442);
+
+        controller.setReferencePitch(500);
+        expect(
+          container.read(settingsProvider).referencePitchHz,
+          Settings.maximumReferencePitchHz,
+        );
+
+        controller.setReferencePitch(0);
+        expect(
+          container.read(settingsProvider).referencePitchHz,
+          Settings.minimumReferencePitchHz,
+        );
+      },
+    );
+
+    test(
+      'a stored reference outside the range is clamped on the way in',
+      () async {
+        // A preference file is not a trusted input, and a reference of zero
+        // would make every frequency calculation nonsense.
+        final container = await _container(<String, Object>{
+          'settings.referencePitchHz': 0.0,
+        });
+        addTearDown(container.dispose);
+        expect(
+          container.read(settingsProvider).referencePitchHz,
+          Settings.minimumReferencePitchHz,
+        );
+      },
+    );
+
     test('defaults follow the system and A440', () async {
       final container = await _container();
       addTearDown(container.dispose);

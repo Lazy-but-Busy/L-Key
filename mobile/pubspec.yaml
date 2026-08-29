@@ -29,6 +29,18 @@ dependencies:
   # (docs/adr/0009). Already present transitively; declared because we use it.
   meta: ^1.15.0
 
+  # Microphone permission with a recoverable denied path. `record` can only
+  # answer yes/no; this distinguishes permanently denied from denied and can
+  # open the OS settings page, which is the difference between an error the
+  # player can fix and a dead end (CLAUDE.md §37). See docs/adr/0012.
+  permission_handler: ^13.0.0
+
+  # Raw PCM capture from the microphone. Streams 16-bit frames without writing
+  # a file, which is what the tuner needs and what no Flutter SDK API offers.
+  # BSD-3, all six platforms, actively maintained. The alternative was hand
+  # written platform channels; see docs/adr/0012 (CLAUDE.md §42).
+  record: ^7.1.0
+
   # Settings persistence. The platform offers no Dart-facing key-value store,
   # and this is the Flutter-team-maintained wrapper over NSUserDefaults and
   # SharedPreferences. See docs/adr/0008.

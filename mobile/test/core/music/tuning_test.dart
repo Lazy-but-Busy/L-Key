@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:l_key/core/music/note.dart';
 import 'package:l_key/core/music/pitch.dart';
@@ -46,6 +48,92 @@ void main() {
       expect(
         const Pitch(Note(NoteLetter.a), 4).frequencyHz(referenceHz: 432),
         closeTo(432, 0.001),
+      );
+    });
+
+    test('a frequency resolves to the pitch it is nearest', () {
+      // PRD.md §10 — the tuner's first question. This is the reverse of
+      // frequencyHz, and the two must agree.
+      expect(Pitch.nearestTo(440).name, 'A4');
+      expect(Pitch.nearestTo(82.41).name, 'E2');
+      expect(Pitch.nearestTo(329.63).name, 'E4');
+      expect(Pitch.nearestTo(30.87).name, 'B0');
+    });
+
+    test('every pitch survives the round trip through its own frequency', () {
+      // If nearestTo and frequencyHz disagree anywhere in the instrument's
+      // range, the tuner names the wrong string.
+      final failures = <String>[];
+      for (var midi = 21; midi <= 96; midi++) {
+        final pitch = Pitch.fromMidiNumber(midi);
+        final back = Pitch.nearestTo(pitch.frequencyHz());
+        if (back != pitch) {
+          failures.add('${pitch.name} came back as ${back.name}');
+        }
+      }
+      expect(failures, isEmpty, reason: failures.join('\n'));
+    });
+
+    test('a frequency knows nothing about spelling, so the caller picks', () {
+      // docs/adr/0009 — 277.18 Hz is C#4 and Db4 equally. Neither is more
+      // correct, so nearestTo takes the choice rather than inventing one.
+      expect(Pitch.nearestTo(277.18).name, 'C#4');
+      expect(Pitch.nearestTo(277.18, preferFlats: true).name, 'Db4');
+    });
+
+    test('sharp is positive and flat is negative', () {
+      // DESIGN.md §22 — sharp moves the needle right, flat moves it left, so
+      // the sign of the cents value is what decides which way it goes.
+      const e2 = Pitch(Note(NoteLetter.e), 2);
+      expect(e2.centsFrom(82.4069), closeTo(0, 0.1));
+      expect(e2.centsFrom(83), greaterThan(0));
+      expect(e2.centsFrom(82), lessThan(0));
+    });
+
+    test('a hundred cents is a semitone and fifty is the halfway point', () {
+      const a4 = Pitch(Note(NoteLetter.a), 4);
+      const bFlat4 = Pitch(Note(NoteLetter.b, Accidental.flat), 4);
+      expect(a4.centsFrom(bFlat4.frequencyHz()), closeTo(100, 0.001));
+      expect(bFlat4.centsFrom(a4.frequencyHz()), closeTo(-100, 0.001));
+
+      // The geometric mean of two adjacent semitones sits 50 cents from each.
+      final between = math.sqrt(a4.frequencyHz() * bFlat4.frequencyHz());
+      expect(a4.centsFrom(between), closeTo(50, 0.001));
+      expect(bFlat4.centsFrom(between), closeTo(-50, 0.001));
+    });
+
+    test('the nearest pitch flips at the halfway point, not before', () {
+      // The boundary matters: a string 49 cents sharp is still that string
+      // being sharp, not the next one being flat.
+      const e2 = Pitch(Note(NoteLetter.e), 2);
+      final base = e2.frequencyHz();
+      expect(Pitch.nearestTo(base * _centsRatio(49)).name, 'E2');
+      expect(Pitch.nearestTo(base * _centsRatio(51)).name, 'F2');
+    });
+
+    test('a reference other than A440 moves every target', () {
+      // PRD.md §10.2 offers a configurable reference pitch. Changing it must
+      // move the whole grid, not just A.
+      const a4 = Pitch(Note(NoteLetter.a), 4);
+      expect(a4.frequencyHz(referenceHz: 432), closeTo(432, 0.001));
+      expect(a4.centsFrom(440, referenceHz: 432), closeTo(31.767, 0.01));
+
+      const e2 = Pitch(Note(NoteLetter.e), 2);
+      expect(e2.frequencyHz(referenceHz: 432), closeTo(80.907, 0.01));
+      expect(Pitch.nearestTo(80.907, referenceHz: 432).name, 'E2');
+    });
+
+    test('a frequency nothing could have sounded fails loudly', () {
+      // CLAUDE.md §37 wants a handled outcome. Silence reaches the detector as
+      // an absent reading, never as 0 Hz, so a zero here is a caller bug.
+      expect(() => Pitch.nearestTo(0), throwsArgumentError);
+      expect(() => Pitch.nearestTo(-1), throwsArgumentError);
+      expect(() => Pitch.nearestTo(double.nan), throwsArgumentError);
+      expect(() => Pitch.nearestTo(1), throwsArgumentError);
+      expect(() => Pitch.nearestTo(20000), throwsArgumentError);
+      expect(
+        () => const Pitch(Note(NoteLetter.e), 2).centsFrom(0),
+        throwsArgumentError,
       );
     });
   });
@@ -192,3 +280,7 @@ void main() {
     });
   });
 }
+
+/// The frequency ratio of a [cents] interval, for building a pitch a known
+/// distance from a target.
+double _centsRatio(double cents) => math.pow(2, cents / 1200).toDouble();

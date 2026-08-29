@@ -428,6 +428,24 @@ abstract final class LkDimens {
 
   /// 20px — design system components/music/Fretboard.jsx string-name column width.
   static const double fretboardLabelColumn = 20;
+
+  /// 48px — design system components/music/TunerMeter.jsx meter track height.
+  static const double tunerMeterHeight = 48;
+
+  /// 4px — design system components/music/TunerMeter.jsx needle width.
+  static const double tunerNeedleWidth = 4;
+
+  /// 60px — design system components/music/TunerMeter.jsx needle height, overhanging the track.
+  static const double tunerNeedleHeight = 60;
+
+  /// 6px — design system components/music/TunerMeter.jsx needle top offset.
+  static const double tunerNeedleOverhang = 6;
+
+  /// 2px — design system components/music/TunerMeter.jsx centre line.
+  static const double tunerCentreLineWidth = 2;
+
+  /// 50px — design system components/music/TunerMeter.jsx needle clamp, +/- cents across the track.
+  static const double tunerCentsRange = 50;
 }
 
 /// Unitless opacity values. Separate from [LkDimens] because these
@@ -466,6 +484,16 @@ abstract final class LkFonts {
 /// `letterSpacing` is stored in em in tokens.json and resolved to logical
 /// pixels here, because Flutter expects an absolute value.
 abstract final class LkTypeScale {
+  /// design system tokens/typography.css --lk-size-hero; the tuner note, DESIGN.md §21 "the detected note should be huge"
+  static const TextStyle hero = TextStyle(
+    fontFamily: 'Space Grotesk',
+    fontFamilyFallback: LkFonts.fallback,
+    fontSize: 96,
+    height: 0.9,
+    letterSpacing: -4.8,
+    fontWeight: FontWeight.w700,
+  );
+
   /// DESIGN.md §9 Display XL 48-64, upper bound
   static const TextStyle displayXl = TextStyle(
     fontFamily: 'Space Grotesk',

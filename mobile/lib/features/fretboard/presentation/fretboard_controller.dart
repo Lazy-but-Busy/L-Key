@@ -416,28 +416,6 @@ FretRange _rangeFor(
         state.chosenRange,
 };
 
-/// The localised name of one tuning.
-///
-/// The domain has no access to a localisation file, so this is the bridge —
-/// `Tuning.name` is a stable id, never display copy.
-String tuningName(AppLocalizations l10n, Tuning tuning) =>
-    switch (tuning.name) {
-      'drop-d' => l10n.tuningDropD,
-      'drop-c' => l10n.tuningDropC,
-      'drop-b' => l10n.tuningDropB,
-      'half-step-down' => l10n.tuningHalfStepDown,
-      'full-step-down' => l10n.tuningFullStepDown,
-      'dadgad' => l10n.tuningDadgad,
-      'open-g' => l10n.tuningOpenG,
-      'open-d' => l10n.tuningOpenD,
-      'open-e' => l10n.tuningOpenE,
-      'seven-string' => l10n.tuningSevenString,
-      'eight-string' => l10n.tuningEightString,
-      'bass-four' => l10n.tuningBassFour,
-      'bass-five' => l10n.tuningBassFive,
-      _ => l10n.tuningStandard,
-    };
-
 /// The localised name of one scale.
 String scaleName(AppLocalizations l10n, ScaleType type) => switch (type) {
   ScaleType.major => l10n.scaleMajor,

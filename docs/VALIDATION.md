@@ -128,6 +128,52 @@ much of Phase 04 is arithmetic and the rest is hand-written fret data.
 - The scales screen shows a computed formula and computed notes, and no
   playback control.
 
+### The tuner
+
+Two bodies of assertions, because Phase 05 is half arithmetic and half a state
+machine, and neither can be checked by looking at it.
+
+- The FFT against a naive DFT written out longhand, to 1e-9 — which is what
+  earns the right not to depend on one (docs/adr/0012). Plus impulse, single
+  bin, round trip and Parseval.
+- The frame assembler's overlap and timestamps, and the two bugs that work on
+  one device and fail on another: a chunk ending between a sample's two bytes,
+  and a platform buffer that does not start on an even one.
+- **Every semitone from A0 to E6**, on sine, sawtooth and square: within a cent
+  of the truth on a pure tone, two on a rich one, and never on the wrong
+  octave. Then every open string of all fourteen tunings.
+- The cases that make a time-domain method worth its cost: a tone whose
+  fundamental has been removed entirely, and one where it sits twenty decibels
+  under the second harmonic. A spectral tuner reads both an octave high.
+- Noise at 40, 30, 20 and 10 dB with tightening budgets, and at 6 dB **no
+  accuracy claim at all** — only that the reading arrives carrying its own
+  doubt (CLAUDE.md §16).
+- Stiffness, decay, vibrato, a constant offset, clipping, silence, white noise,
+  and a frequency above the instrument's range.
+- That two constants are load-bearing rather than decorative: loosening the
+  peak threshold makes the octave error appear, and turning off the refinement
+  measurably worsens the worst case at the top of the range.
+- Two limits asserted as failures, so they stay known properties: the harmonic
+  ratio cannot resolve an octave, and an octave double-stop cannot be detected
+  as two notes by any method that only sees which frequencies are present.
+- Every string of every tuning read against its target, spelled the way the
+  tuning writes it — half-step-down reads E♭2 and never D♯2 — and a locked
+  string that stays locked at 2400 cents while still naming what is sounding.
+- The state machine driven entirely by injected timestamps: silence hysteresis,
+  confidence hysteresis, a single octave slip that never reaches the screen,
+  the settle timing to the frame, the lock buzzing exactly once in a hundred
+  in-tune windows, and the guard that stops the target flapping between two
+  strings of an eight-string neck.
+- The four states on the screen, the three permission outcomes with their three
+  different next steps, and that the in-tune state is spelled out in words as
+  well as shown in orange (DESIGN.md §42).
+- That disposing the tuner releases the microphone, asserted rather than
+  trusted (CLAUDE.md §50).
+- That nothing above the seam names a DSP class, nothing in `core/audio/`,
+  `core/permissions/` or `tuner/domain/` imports Flutter or a subscription
+  tier, no clock appears anywhere the state machine can reach, and each of the
+  two platform plugins is imported by exactly one file.
+
 ### The chord screens
 
 - The four states: skeleton, list, empty search, and a failure showing
@@ -140,6 +186,13 @@ much of Phase 04 is arithmetic and the rest is hand-written fret data.
 
 ## Things `verify` does not do yet
 
+- **Audio is not verified by `verify`, and cannot be.** Everything above proves
+  the tuner's algorithm against signals generated in the test. It proves
+  nothing about a real microphone: not the granted sample rate, not a phone's
+  response below 100 Hz, not what the operating system does to the signal, not
+  interruptions, latency, battery or accuracy on an actual guitar.
+  `mobile/CLAUDE.md §15` says simulator-only testing is not sufficient for
+  audio, and it is right. See `docs/DEVICE-TESTING.md`, which has not been run.
 - No database runs locally, so Prisma migrations are not applied. Schema
   correctness is checked with `cd backend && npm run prisma:validate`.
 - `next build` is not in `verify` — it is slow and needs no network-free

@@ -8,6 +8,7 @@ import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
 import 'package:l_key/shared/widgets/lk_card.dart';
 import 'package:l_key/shared/widgets/lk_detail_scaffold.dart';
+import 'package:l_key/shared/widgets/lk_icon_button.dart';
 import 'package:l_key/shared/widgets/lk_screen_header.dart';
 import 'package:l_key/shared/widgets/lk_segmented_control.dart';
 
@@ -86,12 +87,9 @@ class SettingsPage extends ConsumerWidget {
             variant: LkCardVariant.ring,
             child: _Row(
               label: l10n.settingsReferencePitch,
-              control: Text(
-                '${settings.referencePitchHz.round()} Hz',
-                style: context.lkType.technical.copyWith(
-                  color: colors.textPrimary,
-                  fontWeight: FontWeight.w700,
-                ),
+              control: _ReferencePitch(
+                hz: settings.referencePitchHz,
+                onChanged: controller.setReferencePitch,
               ),
             ),
           ),
@@ -124,6 +122,60 @@ class _Row extends StatelessWidget {
           ),
         ),
         control,
+      ],
+    );
+  }
+}
+
+/// A stepper for the tuning reference.
+///
+/// A stepper rather than a slider or a text field: the values that matter are
+/// whole hertz a few either side of 440, and a player nudging to 442 should
+/// not have to aim at a track or open a keyboard. The range is the one
+/// orchestras and period instruments actually use.
+class _ReferencePitch extends StatelessWidget {
+  const _ReferencePitch({required this.hz, required this.onChanged});
+
+  final double hz;
+  final void Function(double hz) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.lkColors;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: LkSpacing.s2,
+      children: <Widget>[
+        LkIconButton(
+          icon: Icons.remove,
+          semanticLabel: l10n.settingsReferencePitchLower,
+          onPressed: hz > Settings.minimumReferencePitchHz
+              ? () => onChanged(hz - 1)
+              : null,
+          variant: LkIconButtonVariant.ring,
+          size: LkDimens.iconBoxSm,
+        ),
+        Semantics(
+          liveRegion: true,
+          child: Text(
+            '${hz.round()} Hz',
+            style: context.lkType.technical.copyWith(
+              color: colors.textPrimary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        LkIconButton(
+          icon: Icons.add,
+          semanticLabel: l10n.settingsReferencePitchRaise,
+          onPressed: hz < Settings.maximumReferencePitchHz
+              ? () => onChanged(hz + 1)
+              : null,
+          variant: LkIconButtonVariant.ring,
+          size: LkDimens.iconBoxSm,
+        ),
       ],
     );
   }
