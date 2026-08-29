@@ -2,30 +2,10 @@
 
 # Guitar Companion — Claude Code Development Instructions
 
-## 1. Role
-
-When working in this repository, act as a:
-
-**Senior Flutter Engineer + Senior Backend Engineer + Senior Next.js Engineer + Product-minded Software Architect.**
-
-Prioritize:
-
-* maintainability
-* correctness
-* testability
-* accessibility
-* performance
-* offline capability
-* clean architecture
-* modularity
-* security
-* small incremental changes
-
-Do not optimize for generating the largest amount of code.
-
-Optimize for producing code that can be maintained for years.
-
----
+> **Where the rest lives.** §11–§16 and §50 are in `mobile/CLAUDE.md`; §25–§26 are in
+> `backend/CLAUDE.md`. They load automatically when working under those directories.
+> Section numbers are permanent and never renumbered, so every `CLAUDE.md §N`
+> citation in the codebase stays valid.
 
 # 2. Source of Truth
 
@@ -35,6 +15,7 @@ Before implementing any feature, read:
 PRD.md
 DESIGN.md
 CLAUDE.md
+docs/ARCHITECTURE.md
 ```
 
 These documents define:
@@ -51,30 +32,6 @@ If a request conflicts with these documents, explain the conflict before making 
 
 ---
 
-# 3. Development Philosophy
-
-Follow:
-
-> **Understand → Plan → Implement → Test → Review**
-
-Do not immediately modify files without first understanding the existing architecture.
-
-Before implementing a significant feature:
-
-1. Inspect related files.
-2. Identify the existing architecture.
-3. Identify reusable components.
-4. Identify existing domain models.
-5. Identify existing services.
-6. Create a short implementation plan.
-7. Implement the smallest coherent change.
-8. Run formatting.
-9. Run static analysis.
-10. Run tests.
-11. Review the diff.
-
----
-
 # 4. Never Rewrite Working Architecture Without Reason
 
 Do not:
@@ -88,72 +45,6 @@ Do not:
 * introduce dependencies without need
 
 Prefer extending existing abstractions.
-
----
-
-# 5. Mobile Technology
-
-Primary mobile framework:
-
-**Flutter**
-
-Target:
-
-* iOS
-* Android
-
-Use Dart null safety.
-
-Prefer stable Flutter/Dart APIs.
-
-Avoid deprecated APIs.
-
----
-
-# 6. Flutter Architecture
-
-Use feature-oriented Clean Architecture.
-
-Recommended:
-
-```text
-lib/
-├── app/
-│   ├── app.dart
-│   ├── router/
-│   ├── theme/
-│   └── localization/
-│
-├── core/
-│   ├── constants/
-│   ├── errors/
-│   ├── extensions/
-│   ├── network/
-│   ├── storage/
-│   ├── audio/
-│   ├── permissions/
-│   └── utils/
-│
-├── features/
-│   ├── home/
-│   ├── tuner/
-│   ├── chords/
-│   ├── fretboard/
-│   ├── scales/
-│   ├── metronome/
-│   ├── songs/
-│   ├── practice/
-│   ├── learning/
-│   ├── recording/
-│   ├── backing_tracks/
-│   ├── ai/
-│   ├── profile/
-│   └── premium/
-│
-└── main.dart
-```
-
-Each feature should be independently understandable.
 
 ---
 
@@ -241,140 +132,6 @@ BPM calculations
 ```
 
 These should be testable without Flutter widgets.
-
----
-
-# 11. Chord Engine
-
-Create a reusable chord domain engine.
-
-It should support:
-
-* chord names
-* notes
-* intervals
-* finger positions
-* string states
-* fret positions
-* voicings
-* transposition
-
-Do not hardcode chord calculations inside widgets.
-
----
-
-# 12. Scale Engine
-
-Scale logic must support:
-
-* formulas
-* intervals
-* notes
-* keys
-* fretboard positions
-
-The scale engine should not depend on Flutter UI.
-
----
-
-# 13. Fretboard Engine
-
-The fretboard engine should calculate:
-
-* strings
-* frets
-* tuning
-* notes
-* intervals
-* highlighted positions
-
-UI should only render the calculated result.
-
----
-
-# 14. Tuner Architecture
-
-Separate:
-
-```text
-Microphone
-   ↓
-Audio Input
-   ↓
-Audio Processing
-   ↓
-Pitch Detection
-   ↓
-Tuning Engine
-   ↓
-Tuner State
-   ↓
-Flutter UI
-```
-
-Do not place audio processing inside widgets.
-
-Tuner implementation must support future replacement of the pitch-detection algorithm.
-
-Use an abstraction such as:
-
-```text
-PitchDetector
-```
-
-The rest of the application should not depend directly on a specific DSP implementation.
-
----
-
-# 15. Audio Rules
-
-Audio features require extra care.
-
-Always consider:
-
-* microphone permissions
-* audio session lifecycle
-* interruption handling
-* background/foreground transitions
-* latency
-* CPU usage
-* battery
-* sample rate
-* device differences
-
-Test on real iOS and Android devices.
-
-Do not consider simulator-only testing sufficient for audio features.
-
----
-
-# 16. Chord Recognition
-
-Real-time chord recognition is an advanced feature.
-
-Do not implement it as a fake keyword/rule system merely to satisfy a UI requirement.
-
-Use a clear architecture:
-
-```text
-Audio
- ↓
-Feature Extraction
- ↓
-Pitch / Frequency Analysis
- ↓
-Note Detection
- ↓
-Chord Classification
- ↓
-Confidence
- ↓
-Practice Result
-```
-
-The algorithm must expose confidence.
-
-Do not tell users a chord is definitely correct when confidence is low.
 
 ---
 
@@ -538,70 +295,6 @@ Never place:
 in Flutter.
 
 Never trust a client-side "payment successful" response as proof of payment.
-
----
-
-# 25. Payment Orders
-
-Every payment should have a unique internal order ID.
-
-Maintain:
-
-```text
-order_id
-user_id
-plan_id
-amount
-currency
-provider
-provider_reference
-status
-created_at
-updated_at
-```
-
-Payment state must be idempotent.
-
-Repeated webhook delivery must not create duplicate Premium entitlements.
-
----
-
-# 26. Database
-
-Primary backend database:
-
-**PostgreSQL**
-
-Suggested conceptual entities:
-
-```text
-User
-UserProfile
-Role
-Song
-SongVersion
-Chord
-ChordVoicing
-Scale
-ScalePosition
-Lesson
-Exercise
-PracticeSession
-PracticeResult
-Guitar
-Recording
-BackingTrack
-PremiumPlan
-Subscription
-PaymentOrder
-PaymentEvent
-Favorite
-Notification
-Announcement
-AIConversation
-```
-
-Do not create every table before the feature needs it.
 
 ---
 
@@ -862,50 +555,6 @@ Do not add packages simply to save a few lines of code.
 
 ---
 
-# 43. File Size
-
-Avoid enormous files.
-
-If a file becomes difficult to understand, split it by responsibility.
-
-Especially avoid:
-
-```text
-home.dart
-```
-
-containing hundreds/thousands of lines.
-
----
-
-# 44. Naming
-
-Use clear names.
-
-Prefer:
-
-```text
-ChordRepository
-TunerEngine
-PracticeSession
-PremiumEntitlement
-SongRepository
-```
-
-Avoid:
-
-```text
-DataManager
-Helper
-Utils2
-CommonManager
-ThingService
-```
-
-unless the abstraction is genuinely generic.
-
----
-
 # 45. Git Discipline
 
 Make focused changes.
@@ -921,57 +570,6 @@ fix(tuner): handle audio interruption
 ```
 
 Avoid giant commits containing unrelated changes.
-
----
-
-# 46. Claude Task Execution
-
-When given a task:
-
-## Step 1
-
-Inspect the repository.
-
-## Step 2
-
-Read relevant documentation.
-
-## Step 3
-
-Identify impacted modules.
-
-## Step 4
-
-Explain the implementation plan briefly.
-
-## Step 5
-
-Implement.
-
-## Step 6
-
-Run:
-
-```text
-dart format
-flutter analyze
-flutter test
-```
-
-when applicable.
-
-## Step 7
-
-Review changed files.
-
-## Step 8
-
-Report:
-
-* what changed
-* files changed
-* tests run
-* remaining limitations
 
 ---
 
@@ -1008,36 +606,6 @@ Do not expose experimental functionality accidentally in production.
 
 ---
 
-# 49. Performance
-
-Avoid unnecessary:
-
-* rebuilds
-* network calls
-* database queries
-* audio processing
-* animations
-
-Use appropriate caching.
-
-Do not optimize prematurely, but do not introduce obviously expensive architecture.
-
----
-
-# 50. Battery
-
-Audio tools must be particularly careful about battery consumption.
-
-Stop microphone/audio processing when:
-
-* tuner closes
-* app goes background
-* user explicitly stops audio feature
-
-Handle lifecycle transitions correctly.
-
----
-
 # 51. Security Principle
 
 Assume:
@@ -1070,24 +638,6 @@ Log important actions:
 * price changes
 * content changes
 * refunds/manual adjustments
-
----
-
-# 53. No Premature Complexity
-
-Do not implement:
-
-* microservices
-* event buses
-* complex CQRS
-* Kubernetes
-* distributed caching
-
-unless scale or requirements justify them.
-
-Start modular.
-
-Scale architecture when necessary.
 
 ---
 
@@ -1131,16 +681,3 @@ A feature is complete when appropriate:
 * offline behavior
 
 have been considered.
-
----
-
-# 56. Final Rule
-
-When uncertain, prefer:
-
-**simple architecture + strong boundaries + testable domain logic + excellent UX**
-
-over:
-
-**large abstractions + excessive dependencies + clever code.**
-
