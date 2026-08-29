@@ -8,9 +8,9 @@
 /// Contains no Flutter. See docs/adr/0009.
 library;
 
+import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/core/music/interval.dart';
 import 'package:l_key/core/music/note.dart';
-import 'package:l_key/features/chords/domain/chord_quality.dart';
 import 'package:meta/meta.dart';
 
 /// A chord, deterministically spelled from its root and quality.

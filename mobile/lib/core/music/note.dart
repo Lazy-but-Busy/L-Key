@@ -143,6 +143,34 @@ final class Note implements Comparable<Note> {
     return preferFlats ? flats[cls] : sharps[cls];
   }
 
+  /// The seventeen spellings the interface offers as a root.
+  ///
+  /// Ascending by pitch, with the sharp before the flat where a sound has
+  /// both. Seventeen rather than twelve because a player looking for D♭
+  /// should not have to know it is filed under C♯ — the engines accept any
+  /// spelling, and this is the list a picker shows. Double accidentals and
+  /// the theoretical spellings (E♯, B♯, C♭, F♭) are left out: they occur
+  /// inside chords and scales, never as the key someone chooses.
+  static const List<Note> spellings = <Note>[
+    Note(NoteLetter.c),
+    Note(NoteLetter.c, Accidental.sharp),
+    Note(NoteLetter.d, Accidental.flat),
+    Note(NoteLetter.d),
+    Note(NoteLetter.d, Accidental.sharp),
+    Note(NoteLetter.e, Accidental.flat),
+    Note(NoteLetter.e),
+    Note(NoteLetter.f),
+    Note(NoteLetter.f, Accidental.sharp),
+    Note(NoteLetter.g, Accidental.flat),
+    Note(NoteLetter.g),
+    Note(NoteLetter.g, Accidental.sharp),
+    Note(NoteLetter.a, Accidental.flat),
+    Note(NoteLetter.a),
+    Note(NoteLetter.a, Accidental.sharp),
+    Note(NoteLetter.b, Accidental.flat),
+    Note(NoteLetter.b),
+  ];
+
   /// The natural letter.
   final NoteLetter letter;
 
@@ -173,6 +201,23 @@ final class Note implements Comparable<Note> {
   /// Throws [ArgumentError] if the result would need more than a double
   /// accidental.
   Note transposeBy(Interval interval) {
+    final result = tryTransposeBy(interval);
+    if (result == null) {
+      throw ArgumentError(
+        'transposing $name by ${interval.degree} needs an accidental beyond '
+        'a double sharp or double flat',
+      );
+    }
+    return result;
+  }
+
+  /// The note [interval] above this one, or null when no spelling exists.
+  ///
+  /// Same arithmetic as [transposeBy], without the throw. Use it when the
+  /// caller is *asking whether* a spelling exists rather than asserting that
+  /// it does — the scale catalogue does exactly that, because A♯ whole tone
+  /// would need an F triple sharp and is written B♭ whole tone instead.
+  Note? tryTransposeBy(Interval interval) {
     final target = letter.transposeSteps(interval.letterSteps);
     final natural = target.naturalPitchClass;
     final wanted = (pitchClass + interval.semitones) % 12;
@@ -183,13 +228,7 @@ final class Note implements Comparable<Note> {
     if (offset > 6) offset -= 12;
 
     final result = Accidental.fromOffset(offset);
-    if (result == null) {
-      throw ArgumentError(
-        'transposing $name by ${interval.degree} needs an accidental beyond '
-        'a double sharp or double flat',
-      );
-    }
-    return Note(target, result);
+    return result == null ? null : Note(target, result);
   }
 
   /// The note [semitones] above this one, respelled chromatically.

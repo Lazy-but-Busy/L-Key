@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/features/chords/data/chord_catalog.dart';
 import 'package:l_key/features/chords/domain/chord.dart';
-import 'package:l_key/features/chords/domain/chord_quality.dart';
 import 'package:l_key/features/chords/domain/chord_search.dart';
 import 'package:l_key/features/chords/domain/chord_symbol.dart';
 

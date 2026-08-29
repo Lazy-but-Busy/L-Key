@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
+import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/features/chords/data/chord_catalog.dart';
 import 'package:l_key/features/chords/data/local_chord_repository.dart';
 import 'package:l_key/features/chords/domain/chord_audio.dart';
-import 'package:l_key/features/chords/domain/chord_quality.dart';
 import 'package:l_key/features/chords/domain/chord_repository.dart';
 import 'package:l_key/features/chords/domain/chord_search.dart';
 

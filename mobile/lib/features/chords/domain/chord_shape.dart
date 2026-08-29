@@ -9,7 +9,7 @@
 /// Contains no Flutter. See docs/adr/0010.
 library;
 
-import 'package:l_key/features/chords/domain/chord_quality.dart';
+import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/features/chords/domain/chord_voicing.dart';
 import 'package:meta/meta.dart';
 
