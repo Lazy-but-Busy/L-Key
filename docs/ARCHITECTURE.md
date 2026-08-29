@@ -44,6 +44,19 @@ anyway (CLAUDE.md §23).
 **Audio processing is behind an interface.** `core/audio/PitchDetector` is the
 seam. Nothing outside it may depend on a specific DSP implementation
 (CLAUDE.md §14), so the algorithm can be replaced without touching the tuner.
+A layer test asserts it: no widget, controller or engine names a DSP class.
+
+The detector is a **pure function of one window** — `DetectedPitch? analyze(AudioFrame)`
+— with no microphone, no stream and no memory between frames. Capture is a
+separate seam, `core/audio/AudioInput`, and the two platform plugins are each
+imported by exactly one file. That split is what lets the algorithm be swept
+across two hundred synthetic signals instead of only through a fake stream:
+see [ADR-0012](adr/0012-audio-pipeline-and-pitch-detection.md).
+
+**The tuner's state machine has no clock.** Time arrives as a frame's
+timestamp, counted from samples rather than read from `DateTime.now()`, so a
+tuning session replays identically on every machine
+([ADR-0013](adr/0013-tuner-behaviour-and-thresholds.md)).
 
 **Widgets lay out and nothing else.** No payment logic, no API authentication,
 no database queries, no music calculation, no entitlement rules (CLAUDE.md §8).
@@ -71,6 +84,10 @@ is the "meaningless abstraction" CLAUDE.md §7 warns against.
 
 Riverpod, everywhere, one approach (CLAUDE.md §9). See
 [ADR-0002](adr/0002-flutter-state-management.md).
+
+Anything holding a hardware resource is auto-disposing, so leaving its screen
+releases it by construction rather than by remembering to — the tuner's
+microphone is the case that matters (CLAUDE.md §50).
 
 Every asynchronous surface models four states — loading, success, empty, error
 — because CLAUDE.md §55 does not consider a feature done until all four exist.

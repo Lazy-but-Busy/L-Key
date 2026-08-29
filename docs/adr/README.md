@@ -16,3 +16,5 @@ rejected — the rejected options are usually what you need to remember later.
 | [0009](0009-music-primitives-and-note-spelling.md) | Spelled notes in `core/music`, not integers in a feature | Accepted |
 | [0010](0010-guitar-voicing-generation.md) | Movable shapes plus a curated open table, checked by an invariant | Accepted |
 | [0011](0011-scale-fretboard-and-caged.md) | The neck is arithmetic; the five CAGED shapes are data with a guard | Accepted |
+| [0012](0012-audio-pipeline-and-pitch-detection.md) | The pitch detector is a pure function, and the FFT is ours | Accepted |
+| [0013](0013-tuner-behaviour-and-thresholds.md) | The tuner's state machine has no clock, and every threshold is one file | Accepted |

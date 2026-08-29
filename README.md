@@ -1205,7 +1205,8 @@ L Key is currently in the **early development / foundation phase**.
 
 ## Phase 3 — Core Guitar Tools
 
-* [ ] Tuner
+* [x] Tuner — microphone, McLeod pitch detection, 14 tunings and chromatic
+  *(accuracy pending device verification — see `docs/DEVICE-TESTING.md`)*
 * [x] Chord Engine — spelled notes, 18 qualities, movable and open voicings
 * [x] Chord UI — browser, search, diagram, voicing selector
 * [x] Fretboard — 6/7/8-string and bass, 14 tunings, CAGED, arpeggios
