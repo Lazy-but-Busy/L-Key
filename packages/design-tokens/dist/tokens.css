@@ -37,6 +37,9 @@
   --lk-weight-medium: 500;
   --lk-weight-semi-bold: 600;
   --lk-weight-bold: 700;
+  --lk-size-hero: 96px;
+  --lk-line-height-hero: 0.9;
+  --lk-tracking-hero: -0.05em;
   --lk-size-display-xl: 64px;
   --lk-line-height-display-xl: 0.95;
   --lk-tracking-display-xl: -0.05em;
@@ -150,6 +153,12 @@
   --lk-fretboard-fret-line-width: 2px;
   --lk-fretboard-nut-width: 4px;
   --lk-fretboard-label-column: 20px;
+  --lk-tuner-meter-height: 48px;
+  --lk-tuner-needle-width: 4px;
+  --lk-tuner-needle-height: 60px;
+  --lk-tuner-needle-overhang: 6px;
+  --lk-tuner-centre-line-width: 2px;
+  --lk-tuner-cents-range: 50px;
 
 
   /* Burmese needs a taller line box than the Latin scale */

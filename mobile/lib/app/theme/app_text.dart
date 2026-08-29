@@ -33,6 +33,9 @@ class LkTypeStyles {
         : style.copyWith(height: LkFonts.myanmarLineHeight);
   }
 
+  /// The single largest step, for the tuner's detected note (DESIGN.md §21).
+  TextStyle get hero => _resolve(LkTypeScale.hero);
+
   /// The largest display step.
   TextStyle get displayXl => _resolve(LkTypeScale.displayXl);
 
