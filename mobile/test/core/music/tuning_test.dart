@@ -77,5 +77,118 @@ void main() {
         throwsArgumentError,
       );
     });
+
+    test('the catalogue covers PRD.md §10.2 and the extended-range necks', () {
+      // Fourteen tunings, every name unique, and nothing shipped twice.
+      expect(Tuning.catalogue.length, 14);
+      expect(Tuning.catalogue.first, Tuning.standard);
+      expect(
+        Tuning.catalogue.map((t) => t.name).toSet().length,
+        Tuning.catalogue.length,
+      );
+      expect(
+        Tuning.catalogue.map((t) => t.stringCount).toSet(),
+        <int>{4, 5, 6, 7, 8},
+      );
+    });
+
+    test(
+      'every catalogue tuning is spelled and ordered lowest string first',
+      () {
+        // Getting the order backwards silently mirrors every diagram, so it is
+        // asserted rather than trusted.
+        final failures = <String>[];
+        for (final tuning in Tuning.catalogue) {
+          if (tuning.openStrings.isEmpty) {
+            failures.add('${tuning.name} is empty');
+          }
+          for (var i = 1; i < tuning.stringCount; i++) {
+            if (tuning.openStrings[i].midiNumber <
+                tuning.openStrings[i - 1].midiNumber) {
+              failures.add(
+                '${tuning.name} string $i sounds below string ${i - 1}',
+              );
+            }
+          }
+        }
+        expect(failures, isEmpty, reason: failures.join('\n'));
+      },
+    );
+
+    test('drop D lowers the sixth string and nothing else', () {
+      expect(
+        Tuning.dropD.openStrings.map((p) => p.name).toList(),
+        <String>['D2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+      );
+      expect(
+        Tuning.dropD.openStrings.sublist(1),
+        Tuning.standard.openStrings.sublist(1),
+      );
+    });
+
+    test('half a step down is written with flats, as players write it', () {
+      expect(
+        Tuning.halfStepDown.openStrings.map((p) => p.name).toList(),
+        <String>['Eb2', 'Ab2', 'Db3', 'Gb3', 'Bb3', 'Eb4'],
+      );
+      for (var i = 0; i < 6; i++) {
+        expect(
+          Tuning.halfStepDown.openStrings[i].midiNumber,
+          Tuning.standard.openStrings[i].midiNumber - 1,
+        );
+      }
+    });
+
+    test('DADGAD and the open tunings sound the chords they are named for', () {
+      expect(
+        Tuning.dadgad.openStrings.map((p) => p.name).toList(),
+        <String>['D2', 'A2', 'D3', 'G3', 'A3', 'D4'],
+      );
+      // Open G, D and E sound a major triad on all six open strings.
+      const expected = <String, List<int>>{
+        'open-g': <int>[7, 11, 2],
+        'open-d': <int>[2, 6, 9],
+        'open-e': <int>[4, 8, 11],
+      };
+      for (final entry in expected.entries) {
+        final tuning = Tuning.catalogue.firstWhere(
+          (t) => t.name == entry.key,
+        );
+        expect(
+          tuning.openStrings.map((p) => p.note.pitchClass).toSet(),
+          entry.value.toSet(),
+          reason: entry.key,
+        );
+      }
+    });
+
+    test('the extended-range necks extend the standard one downward', () {
+      expect(
+        Tuning.sevenString.openStrings.sublist(1),
+        Tuning.standard.openStrings,
+      );
+      expect(
+        Tuning.eightString.openStrings.sublist(1),
+        Tuning.sevenString.openStrings,
+      );
+      expect(Tuning.eightString.openStrings.first.name, 'F#1');
+    });
+
+    test('a bass sounds an octave below the guitar strings it shares', () {
+      expect(
+        Tuning.bassFour.openStrings.map((p) => p.name).toList(),
+        <String>['E1', 'A1', 'D2', 'G2'],
+      );
+      for (var i = 0; i < 4; i++) {
+        expect(
+          Tuning.bassFour.openStrings[i].midiNumber,
+          Tuning.standard.openStrings[i].midiNumber - 12,
+        );
+      }
+      expect(
+        Tuning.bassFive.openStrings.sublist(1),
+        Tuning.bassFour.openStrings,
+      );
+    });
   });
 }
