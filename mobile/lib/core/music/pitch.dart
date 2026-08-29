@@ -24,6 +24,51 @@ final class Pitch implements Comparable<Pitch> {
   /// Creates a pitch from a [note] and a scientific-notation [octave].
   const Pitch(this.note, this.octave);
 
+  /// The pitch whose equal-tempered frequency is closest to [frequencyHz].
+  ///
+  /// The tuner's first question — what note is this? — and the reverse of
+  /// [frequencyHz]. Chord recognition needs the same mapping, which is why it
+  /// lives here rather than in the tuner (docs/adr/0009).
+  ///
+  /// Spelling has to be chosen, because a frequency knows nothing about
+  /// letters: 277.18 Hz is C♯4 and D♭4 equally. [preferFlats] picks, and a
+  /// caller that already knows the key or the tuning should name the pitch
+  /// itself instead of asking here.
+  ///
+  /// Throws [ArgumentError] for a frequency at or below zero, or one outside
+  /// MIDI 12 (C0, 16.35 Hz) to 120 (C9, 8372 Hz) — beyond that the answer
+  /// would be arithmetic rather than music.
+  factory Pitch.nearestTo(
+    double frequencyHz, {
+    double referenceHz = 440,
+    bool preferFlats = false,
+  }) {
+    if (frequencyHz <= 0 || !frequencyHz.isFinite) {
+      throw ArgumentError.value(
+        frequencyHz,
+        'frequencyHz',
+        'must be finite and above zero',
+      );
+    }
+    final exact = 69 + 12 * _log2(frequencyHz / referenceHz);
+    final midi = exact.round();
+    if (midi < 12 || midi > 120) {
+      throw ArgumentError.value(
+        frequencyHz,
+        'frequencyHz',
+        'lies outside C0..C9 at a reference of $referenceHz Hz',
+      );
+    }
+    return Pitch.fromMidiNumber(midi, preferFlats: preferFlats);
+  }
+
+  /// The pitch at [midiNumber], spelled with sharps unless [preferFlats].
+  factory Pitch.fromMidiNumber(int midiNumber, {bool preferFlats = false}) =>
+      Pitch(
+        Note.fromPitchClass(midiNumber % 12, preferFlats: preferFlats),
+        midiNumber ~/ 12 - 1,
+      );
+
   /// The spelled note.
   final Note note;
 
@@ -45,6 +90,28 @@ final class Pitch implements Comparable<Pitch> {
   /// Equal temperament: every semitone is the twelfth root of two.
   double frequencyHz({double referenceHz = 440}) =>
       referenceHz * math.pow(2, (midiNumber - 69) / 12).toDouble();
+
+  /// How far [frequencyHz] lies from this pitch, in cents.
+  ///
+  /// Positive means the sounding note is **above** this pitch and the tuner's
+  /// needle moves right; negative means flat and the needle moves left
+  /// (DESIGN.md §22). A hundred cents is one semitone.
+  ///
+  /// Throws [ArgumentError] for a frequency at or below zero, because the
+  /// honest answer there is negative infinity and no caller wants it.
+  double centsFrom(double frequencyHz, {double referenceHz = 440}) {
+    if (frequencyHz <= 0 || !frequencyHz.isFinite) {
+      throw ArgumentError.value(
+        frequencyHz,
+        'frequencyHz',
+        'must be finite and above zero',
+      );
+    }
+    return 1200 *
+        _log2(frequencyHz / this.frequencyHz(referenceHz: referenceHz));
+  }
+
+  static double _log2(double value) => math.log(value) / math.ln2;
 
   /// How many semitones [other] lies above this pitch. Negative when below.
   int semitonesTo(Pitch other) => other.midiNumber - midiNumber;
