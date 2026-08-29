@@ -76,6 +76,58 @@ much as code (CLAUDE.md §39).
 - That nothing under `core/music/` or `chords/domain/` imports Flutter or a
   subscription tier — the layer rule asserted rather than trusted.
 
+### The scale and fretboard engines
+
+The second body of data-checking assertions, for the same reason as the first:
+much of Phase 04 is arithmetic and the rest is hand-written fret data.
+
+- Eighteen scale formulas: each ascends, starts on the root, names no pitch
+  class twice, and each of the seven modes is the major scale rotated.
+- Spelling over all seventeen roots — a seven-note scale uses each of the seven
+  letters exactly once; Lydian's fourth is a ♯4 and not a ♭5; F♯ major keeps
+  E♯ and G♭ major keeps C♭; the diminished scale spells its B♭♭.
+- The case a spelled model has to admit: A♯ whole tone needs an F triple sharp,
+  so `isSpellable` is false, the catalogue does not offer that root, and B♭
+  whole tone is what the picker shows.
+- Fourteen tunings: string counts, open pitches, ordering lowest-first, drop D
+  lowering one string, the extended-range necks extending the standard one
+  downward, and a bass sounding an octave below the guitar strings it shares.
+- Fretboard positions across every catalogue tuning and every scale: every
+  position sounds a note the selection contains, spelled by the selection
+  rather than by the tuning, ordered by string then fret, inside the range.
+- **A minor pentatonic box 1 is frets 5–8, note for note against the marker
+  data in the design system's ScalesScreen** — and the five boxes come out
+  5–8, 7–10, 9–13, 12–15, 14–17, with box 3 five frets wide because the B
+  string reaches from 10 to 13.
+- Every box on every scale, root and tuning carries at least two notes on every
+  string, which is the property that defines a box.
+- **Every CAGED placement over all twelve roots against
+  `CagedEngine.problemWith`**: no foreign notes, no missing chord tone, four
+  frets, and every note re-read through the tuning rather than trusted. The
+  five shapes tile the neck in a rotation of C-A-G-E-D with no gaps, and the E
+  and A shapes are asserted equal to the corresponding entries in the chord
+  voicing library so the two copies cannot drift.
+- That the guard has teeth: move one fret of the open C shape and it is
+  rejected.
+- That nothing under `core/music/`, `chords/domain/` or `fretboard/domain/`
+  imports Flutter or a subscription tier, and that no feature `domain/` imports
+  a sibling feature.
+
+### The fretboard and scale screens
+
+- The four states on both, with the failure showing localised copy and no
+  exception text.
+- Changing the root, the tuning, the scale, the labels, the position and the
+  fret window each change what the neck actually shows — asserted against the
+  neck's accessible description, which is the same information as the dots.
+- A seven-string tuning grows the neck by a string and removes the CAGED
+  shapes, with the reason on screen.
+- An arpeggio draws exactly the chord's four degrees and not the scale's fifth.
+- A Premium-labelled scale selects exactly like a free one, because the label
+  authorizes nothing.
+- The scales screen shows a computed formula and computed notes, and no
+  playback control.
+
 ### The chord screens
 
 - The four states: skeleton, list, empty search, and a failure showing

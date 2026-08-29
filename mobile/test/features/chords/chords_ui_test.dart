@@ -396,12 +396,7 @@ void main() {
       // CLAUDE.md §10 — a chord's notes do not change with a subscription, so
       // FeatureTier belongs to the data layer and nowhere below it. This is
       // the kind of rule that erodes silently, so it is asserted.
-      final domain = Directory('lib/features/chords/domain')
-          .listSync()
-          .whereType<File>()
-          .followedBy(Directory('lib/core/music').listSync().whereType<File>());
-
-      for (final file in domain) {
+      for (final file in _musicDomain) {
         expect(
           file.readAsStringSync(),
           isNot(contains('feature_tier.dart')),
@@ -413,12 +408,7 @@ void main() {
     test('the music domain never imports Flutter', () {
       // docs/ARCHITECTURE.md — this is what makes the engine testable without
       // a widget tree and reusable from the backend.
-      final domain = Directory('lib/features/chords/domain')
-          .listSync()
-          .whereType<File>()
-          .followedBy(Directory('lib/core/music').listSync().whereType<File>());
-
-      for (final file in domain) {
+      for (final file in _musicDomain) {
         expect(
           file.readAsStringSync(),
           isNot(contains("import 'package:flutter/")),
@@ -426,5 +416,33 @@ void main() {
         );
       }
     });
+
+    test('no feature domain imports a sibling feature', () {
+      // docs/adr/0009 put the shared primitives in core/music so that scales
+      // and the fretboard never have to reach into chords. ChordQuality moved
+      // there in Phase 04 for exactly this reason (docs/adr/0011).
+      const features = <String>['chords', 'fretboard'];
+      for (final feature in features) {
+        final directory = Directory('lib/features/$feature/domain');
+        if (!directory.existsSync()) continue;
+        for (final file in directory.listSync().whereType<File>()) {
+          final source = file.readAsStringSync();
+          for (final other in features.where((f) => f != feature)) {
+            expect(
+              source,
+              isNot(contains('package:l_key/features/$other/')),
+              reason: '${file.path} imports the $other feature',
+            );
+          }
+        }
+      }
+    });
   });
 }
+
+/// Every file that must stay free of Flutter and of a commercial label.
+Iterable<File> get _musicDomain => <String>[
+  'lib/core/music',
+  'lib/features/chords/domain',
+  'lib/features/fretboard/domain',
+].expand((path) => Directory(path).listSync().whereType<File>());

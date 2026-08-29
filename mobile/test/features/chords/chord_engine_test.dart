@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/core/music/note.dart';
 import 'package:l_key/core/music/tuning.dart';
 import 'package:l_key/features/chords/domain/chord.dart';
 import 'package:l_key/features/chords/domain/chord_engine.dart';
-import 'package:l_key/features/chords/domain/chord_quality.dart';
 import 'package:l_key/features/chords/domain/chord_voicing.dart';
 import 'package:l_key/features/chords/domain/voicing_library.dart';
 

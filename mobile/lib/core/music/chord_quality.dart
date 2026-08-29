@@ -1,8 +1,16 @@
 /// The chord qualities the library ships, each as an interval formula.
 ///
 /// Every quality is a list of spelled intervals above the root. Nothing here
-/// is a chord *shape* — that is `chord_shape.dart`'s job. Keeping the formula
-/// separate is what lets a new quality be a data-only change (CLAUDE.md §11).
+/// is a chord *shape* — that is `features/chords/domain/chord_shape.dart`'s
+/// job. Keeping the formula separate is what lets a new quality be a data-only
+/// change (CLAUDE.md §11).
+///
+/// This sits in `core/music/` rather than in `features/chords/` because an
+/// arpeggio is a chord's tones spread across the neck and a CAGED shape is a
+/// major triad anchored to a root: the fretboard needs these formulas as much
+/// as the chord library does. Leaving it under `chords` would have made
+/// `fretboard` import from a sibling feature, which is the tangle
+/// docs/adr/0009 exists to prevent. See docs/adr/0011.
 ///
 /// Contains no Flutter. See docs/adr/0009.
 library;

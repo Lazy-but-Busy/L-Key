@@ -116,5 +116,33 @@ void main() {
       );
       expect(const Note(NoteLetter.c).displayName, 'C');
     });
+
+    test(
+      'the seventeen offered spellings cover the twelve sounds once each',
+      () {
+        // The list both the chord browser and the fretboard's root picker show.
+        // If it ever grows a double accidental or a theoretical spelling, a
+        // picker starts offering a key nobody writes.
+        expect(Note.spellings.length, 17);
+        expect(
+          Note.spellings.map((n) => n.pitchClass).toSet().length,
+          12,
+        );
+        expect(
+          Note.spellings.every(
+            (n) =>
+                n.accidental == Accidental.natural ||
+                n.accidental == Accidental.flat ||
+                n.accidental == Accidental.sharp,
+          ),
+          isTrue,
+        );
+        // Ascending by pitch, sharp before flat where a sound has both.
+        expect(Note.spellings.first.name, 'C');
+        expect(Note.spellings[1].name, 'C#');
+        expect(Note.spellings[2].name, 'Db');
+        expect(Note.spellings.last.name, 'B');
+      },
+    );
   });
 }

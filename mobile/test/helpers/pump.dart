@@ -58,3 +58,21 @@ Future<void> pumpLk(
     ),
   );
 }
+
+/// Opens the test window out to a desktop-sized surface.
+///
+/// The fretboard screens are a tall column of horizontally scrolling pickers
+/// above a neck that is wider than any phone. On the default 800x600 surface
+/// most of that is never built, and a test would be asserting about what the
+/// viewport happened to reach rather than about behaviour. Pair with
+/// [resetTestSurface] in `tearDown`.
+void openWideTestSurface() =>
+    TestWidgetsFlutterBinding.ensureInitialized().platformDispatcher.views.first
+      ..physicalSize = const Size(2400, 4000)
+      ..devicePixelRatio = 1;
+
+/// Puts the test window back, so one suite cannot resize another.
+void resetTestSurface() =>
+    TestWidgetsFlutterBinding.ensureInitialized().platformDispatcher.views.first
+      ..resetPhysicalSize()
+      ..resetDevicePixelRatio();

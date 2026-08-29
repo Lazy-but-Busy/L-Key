@@ -9,9 +9,9 @@
 library;
 
 import 'package:l_key/core/access/feature_tier.dart';
+import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/core/music/note.dart';
 import 'package:l_key/features/chords/domain/chord.dart';
-import 'package:l_key/features/chords/domain/chord_quality.dart';
 import 'package:l_key/features/chords/domain/chord_voicing.dart';
 import 'package:l_key/features/chords/domain/voicing_library.dart';
 import 'package:meta/meta.dart';
@@ -75,28 +75,9 @@ final class ChordDetail {
 abstract final class ChordCatalog {
   /// The root spellings the library browses.
   ///
-  /// Seventeen rather than twelve: a player looking for D♭ should not have to
-  /// know it is filed under C♯. The engine accepts any spelling; this is the
-  /// list the browser shows.
-  static const List<Note> roots = <Note>[
-    Note(NoteLetter.c),
-    Note(NoteLetter.c, Accidental.sharp),
-    Note(NoteLetter.d, Accidental.flat),
-    Note(NoteLetter.d),
-    Note(NoteLetter.d, Accidental.sharp),
-    Note(NoteLetter.e, Accidental.flat),
-    Note(NoteLetter.e),
-    Note(NoteLetter.f),
-    Note(NoteLetter.f, Accidental.sharp),
-    Note(NoteLetter.g, Accidental.flat),
-    Note(NoteLetter.g),
-    Note(NoteLetter.g, Accidental.sharp),
-    Note(NoteLetter.a, Accidental.flat),
-    Note(NoteLetter.a),
-    Note(NoteLetter.a, Accidental.sharp),
-    Note(NoteLetter.b, Accidental.flat),
-    Note(NoteLetter.b),
-  ];
+  /// The canonical seventeen from `Note.spellings`, shared with the fretboard
+  /// so a player who found D♭ in one browser finds it in the other.
+  static const List<Note> roots = Note.spellings;
 
   /// The chords PRD.md §11 names as available to everyone.
   ///

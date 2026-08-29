@@ -401,6 +401,33 @@ abstract final class LkDimens {
 
   /// 36px — design system components/music/ChordDiagram.jsx finger marker box.
   static const double chordMarkerSize = 36;
+
+  /// 52px — design system components/music/Fretboard.jsx default fretWidth.
+  static const double fretboardFretWidth = 52;
+
+  /// 40px — design system components/music/Fretboard.jsx default rowHeight.
+  static const double fretboardRowHeight = 40;
+
+  /// 40px — design system ui_kits/mobile_app/ToolsScreens.jsx ScalesScreen fretWidth — the phone-width neck.
+  static const double fretboardFretWidthCompact = 40;
+
+  /// 34px — design system ui_kits/mobile_app/ToolsScreens.jsx ScalesScreen rowHeight.
+  static const double fretboardRowHeightCompact = 34;
+
+  /// 26px — design system components/music/Fretboard.jsx marker box.
+  static const double fretboardMarkerSize = 26;
+
+  /// 2px — design system components/music/Fretboard.jsx string line height.
+  static const double fretboardStringWidth = 2;
+
+  /// 2px — design system components/music/Fretboard.jsx fret line width.
+  static const double fretboardFretLineWidth = 2;
+
+  /// 4px — design system components/music/Fretboard.jsx first fret line width.
+  static const double fretboardNutWidth = 4;
+
+  /// 20px — design system components/music/Fretboard.jsx string-name column width.
+  static const double fretboardLabelColumn = 20;
 }
 
 /// Unitless opacity values. Separate from [LkDimens] because these

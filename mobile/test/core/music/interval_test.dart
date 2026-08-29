@@ -76,5 +76,40 @@ void main() {
         );
       }
     });
+
+    test('the scale-formula intervals carry their degrees and semitones', () {
+      // Added for the scale engine: Lydian's #4, the minor-family b6, the
+      // half-whole diminished #2 and the chromatic #1 and whole-tone #6.
+      const wanted = <String, int>{
+        '#1': 1,
+        '#2': 3,
+        '#4': 6,
+        'b6': 8,
+        '#6': 10,
+      };
+      final actual = <String, int>{
+        for (final interval in <Interval>[
+          Interval.augmentedUnison,
+          Interval.augmentedSecond,
+          Interval.augmentedFourth,
+          Interval.minorSixth,
+          Interval.augmentedSixth,
+        ])
+          interval.degree: interval.semitones,
+      };
+      expect(actual, wanted);
+    });
+
+    test('a sharp four and a flat five span the same distance and differ', () {
+      // Six semitones either way; only the number tells them apart, which is
+      // the whole reason an interval is not a semitone count.
+      expect(
+        Interval.augmentedFourth.semitones,
+        Interval.diminishedFifth.semitones,
+      );
+      expect(Interval.augmentedFourth == Interval.diminishedFifth, isFalse);
+      expect(Interval.tryParseDegree('#4'), Interval.augmentedFourth);
+      expect(Interval.tryParseDegree('b6'), Interval.minorSixth);
+    });
   });
 }

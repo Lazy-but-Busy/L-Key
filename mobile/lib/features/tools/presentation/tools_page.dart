@@ -39,6 +39,7 @@ class ToolsPage extends StatelessWidget {
       _Tool(label: l10n.toolMetronome, route: AppRoutes.metronomeName),
       _Tool(label: l10n.toolChords, route: AppRoutes.chordsName),
       _Tool(label: l10n.toolScales, route: AppRoutes.scalesName),
+      _Tool(label: l10n.toolFretboard, route: AppRoutes.fretboardName),
       _Tool(label: l10n.toolTransposer),
       _Tool(label: l10n.toolCapo),
       _Tool(label: l10n.toolEarTraining, isPremium: true),

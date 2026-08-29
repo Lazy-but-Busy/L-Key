@@ -12,8 +12,8 @@
 /// Contains no Flutter.
 library;
 
+import 'package:l_key/core/music/chord_quality.dart';
 import 'package:l_key/features/chords/domain/chord.dart';
-import 'package:l_key/features/chords/domain/chord_quality.dart';
 
 /// A chord and how well it matched a query.
 final class ChordMatch<T> {

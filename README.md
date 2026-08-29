@@ -1208,8 +1208,8 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Tuner
 * [x] Chord Engine — spelled notes, 18 qualities, movable and open voicings
 * [x] Chord UI — browser, search, diagram, voicing selector
-* [ ] Fretboard
-* [ ] Scale Engine
+* [x] Fretboard — 6/7/8-string and bass, 14 tunings, CAGED, arpeggios
+* [x] Scale Engine — 18 scales and modes, boxes and 3-notes-per-string patterns
 * [ ] Metronome
 * [ ] Capo
 * [ ] Transposer

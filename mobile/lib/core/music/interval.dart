@@ -60,11 +60,24 @@ final class Interval implements Comparable<Interval> {
   /// Perfect unison — the root itself.
   static final Interval unison = Interval(1, IntervalQuality.perfect);
 
+  /// Augmented unison, one semitone. The ♯1 the chromatic scale spells with.
+  static final Interval augmentedUnison = Interval(
+    1,
+    IntervalQuality.augmented,
+  );
+
   /// Minor second, one semitone. The ♭9.
   static final Interval minorSecond = Interval(2, IntervalQuality.minor);
 
   /// Major second, two semitones. The sus2 tone.
   static final Interval majorSecond = Interval(2, IntervalQuality.major);
+
+  /// Augmented second, three semitones. The ♯2 of the half-whole diminished
+  /// scale, spelled as a second because it sits between the ♭2 and the 3.
+  static final Interval augmentedSecond = Interval(
+    2,
+    IntervalQuality.augmented,
+  );
 
   /// Minor third, three semitones.
   static final Interval minorThird = Interval(3, IntervalQuality.minor);
@@ -74,6 +87,16 @@ final class Interval implements Comparable<Interval> {
 
   /// Perfect fourth, five semitones. The sus4 tone.
   static final Interval perfectFourth = Interval(4, IntervalQuality.perfect);
+
+  /// Augmented fourth, six semitones. The ♯4 that makes Lydian Lydian.
+  ///
+  /// Six semitones is also a diminished fifth, and the difference is the whole
+  /// point: Lydian's fourth degree is a fourth. F Lydian is F G A B C D E, and
+  /// the B is a B — spell it C♭ and the scale has two Cs and no B.
+  static final Interval augmentedFourth = Interval(
+    4,
+    IntervalQuality.augmented,
+  );
 
   /// Diminished fifth, six semitones. The ♭5.
   static final Interval diminishedFifth = Interval(
@@ -87,8 +110,15 @@ final class Interval implements Comparable<Interval> {
   /// Augmented fifth, eight semitones. The ♯5.
   static final Interval augmentedFifth = Interval(5, IntervalQuality.augmented);
 
+  /// Minor sixth, eight semitones. The ♭6 of every minor-family scale.
+  static final Interval minorSixth = Interval(6, IntervalQuality.minor);
+
   /// Major sixth, nine semitones.
   static final Interval majorSixth = Interval(6, IntervalQuality.major);
+
+  /// Augmented sixth, ten semitones. The ♯6 of the whole-tone scale, which
+  /// runs 1 2 3 ♯4 ♯5 ♯6 so that each of its six notes takes its own letter.
+  static final Interval augmentedSixth = Interval(6, IntervalQuality.augmented);
 
   /// Diminished seventh, nine semitones. The ♭♭7 that only dim7 uses.
   static final Interval diminishedSeventh = Interval(
