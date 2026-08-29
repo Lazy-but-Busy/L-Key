@@ -34,7 +34,19 @@ class ChordsPage extends ConsumerStatefulWidget {
 }
 
 class _ChordsPageState extends ConsumerState<ChordsPage> {
-  final TextEditingController _query = TextEditingController();
+  late final TextEditingController _query;
+
+  @override
+  void initState() {
+    super.initState();
+    // Seeded from the state rather than started empty. The field and the
+    // results are then two views of one fact and cannot contradict each
+    // other, whatever the provider's lifetime turns out to be — which is
+    // what the empty-box-over-filtered-list bug actually was.
+    _query = TextEditingController(
+      text: ref.read(chordBrowserProvider).query,
+    );
+  }
 
   @override
   void dispose() {

@@ -196,6 +196,42 @@ void main() {
     });
   });
 
+  group('ChordsPage search state', () {
+    testWidgets('an empty query shows the library, not an empty state', (
+      tester,
+    ) async {
+      await pumpLk(
+        tester,
+        child: const ChordsPage(),
+        overrides: _using(const LocalChordRepository()),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LkEmptyState), findsNothing);
+      expect(_chordRows, findsWidgets);
+    });
+
+    testWidgets('clearing the text brings the whole library back', (
+      tester,
+    ) async {
+      await pumpLk(
+        tester,
+        child: const ChordsPage(),
+        overrides: _using(const LocalChordRepository()),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'C#m7b5');
+      await tester.pumpAndSettle();
+      expect(_chordRows, findsOneWidget);
+
+      await tester.enterText(find.byType(TextField), '');
+      await tester.pumpAndSettle();
+      expect(_chordRows, findsWidgets);
+      expect(find.byType(LkEmptyState), findsNothing);
+    });
+  });
+
   group('ChordsPage premium labelling', () {
     testWidgets('a Premium chord is labelled and still opens', (tester) async {
       // CLAUDE.md §23 — the label is descriptive. Nothing here enforces it,

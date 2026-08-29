@@ -75,9 +75,15 @@ class ChordBrowserController extends Notifier<ChordBrowserState> {
 }
 
 /// The chord browser's query and filter.
+///
+/// Auto-disposing, so the state lives exactly as long as the screen that owns
+/// it. A root-scoped provider outlived every mount of `ChordsPage`, and the
+/// page's `TextEditingController` did not — which is how an empty search box
+/// came to sit above a filtered list. See docs/adr/0014.
 final chordBrowserProvider =
     NotifierProvider<ChordBrowserController, ChordBrowserState>(
       ChordBrowserController.new,
+      isAutoDispose: true,
     );
 
 /// Every chord in the library.

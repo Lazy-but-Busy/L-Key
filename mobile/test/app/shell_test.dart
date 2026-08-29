@@ -20,6 +20,7 @@ import 'package:l_key/features/songs/presentation/songs_page.dart';
 import 'package:l_key/features/tools/presentation/tools_page.dart';
 import 'package:l_key/features/tuner/presentation/tuner_page.dart';
 import 'package:l_key/shared/widgets/lk_bottom_nav_bar.dart';
+import 'package:l_key/shared/widgets/lk_empty_state.dart';
 import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -292,6 +293,69 @@ void main() {
 
       expect(find.byType(ChordDetailPage), findsOneWidget);
       expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a search survives a trip into a chord and back', (
+      tester,
+    ) async {
+      // The page stays mounted under the pushed chord, so the query is still
+      // there — and the box shows it. The requirement is that the two agree,
+      // not that either is empty.
+      await pumpApp(tester);
+      await tester.tap(tab('Tools'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Chords'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'Cmaj7');
+      await tester.pumpAndSettle();
+      // By key, because the search field also renders the text 'Cmaj7'.
+      await tester.tap(find.byKey(const ValueKey<String>('chord-c-maj7')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChordDetailPage), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).controller!.text,
+        'Cmaj7',
+      );
+      expect(find.byType(LkEmptyState), findsNothing);
+    });
+
+    testWidgets('leaving the chord library resets its search', (tester) async {
+      // The reported bug. The query provider used to outlive every mount of
+      // ChordsPage while its text field did not, so the player came back to
+      // an empty search box sitting above a filtered list — and, if the
+      // query had matched nothing, to an empty state with no visible text to
+      // clear.
+      await pumpApp(tester);
+      await tester.tap(tab('Tools'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Chords'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'zzz');
+      await tester.pumpAndSettle();
+      expect(find.byType(LkEmptyState), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+      expect(find.byType(ToolsPage), findsOneWidget);
+
+      await tester.tap(find.text('Chords'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).controller!.text,
+        isEmpty,
+      );
+      expect(
+        find.byType(LkEmptyState),
+        findsNothing,
+        reason: "an empty query must never show a previous search's results",
+      );
     });
 
     testWidgets('the developer showcase is unreachable in production', (
