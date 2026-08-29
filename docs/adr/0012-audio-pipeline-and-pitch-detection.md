@@ -170,10 +170,17 @@ than about arithmetic.
   `permission_handler_android` compiles against it — and `minSdk 24` explicitly
   rather than inheriting, so a Flutter version change cannot silently drop
   below what the plugins need.
-- iOS gains its first `Podfile`. Its `post_install` block defines
-  `PERMISSION_MICROPHONE=1`; without it `permission_handler_apple` compiles
-  every permission it supports into the binary, and App Store review reasonably
-  asks why a guitar tuner declares Contacts.
+- **iOS needs no `Podfile`.** One was written first, carrying the
+  `PERMISSION_MICROPHONE=1` macro that CocoaPods builds of
+  `permission_handler_apple` require — without it the plugin compiles every
+  permission it supports into the binary, and App Store review reasonably asks
+  why a guitar tuner declares Contacts. Then the build said so: on Flutter
+  3.47 both plugins resolve as Swift Packages, and adding CocoaPods alongside
+  broke it outright. Under Swift Package Manager the plugin reads the app's
+  own `Info.plist` and enables only the permissions whose keys are declared, so
+  the macro's whole purpose is served by the one key we declare. Verified on a
+  simulator build: `AVCaptureDevice` is referenced and Contacts, Photos,
+  CoreLocation, EventKit, Speech and CoreBluetooth are not linked at all.
 - **Nothing here is evidence about a real microphone.** The suite proves the
   algorithm on synthetic signals. `docs/DEVICE-TESTING.md` is what would let
   anyone claim the product is accurate, and until it is filled in nobody should.
