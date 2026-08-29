@@ -836,7 +836,7 @@ The Admin Portal is responsible for operating the L Key platform.
 * Total users
 * Active users
 * Premium users
-* Songs
+* Songs **[IMPORTANT]** Bulk songs upload support with chords and lyrics for both Myanmar and English songs to end-users(mobile) via Admin portal.
 * Lessons
 * Revenue
 * Successful payments
@@ -1127,7 +1127,7 @@ Entitlement
 | --- | --- | --- |
 | Flutter | 3.47+ | `flutter doctor` |
 | Node | 20.19+, 22.12+, or 24+ (see `.nvmrc`) | `node --version` |
-| PostgreSQL | 16+ | needed from Phase 06 |
+| PostgreSQL | 16+ | needed from Phase 09 (Backend) |
 
 ## Setup
 
@@ -1182,67 +1182,169 @@ component — see [`packages/design-tokens/README.md`](packages/design-tokens/RE
 
 # 🚧 Development Status
 
-L Key is currently in the **early development / foundation phase**.
+Five phases are complete. **Phase 06 — Rhythm is next.**
 
-## Phase 1 — Foundation ✅
+These numbers are the canonical development sequence. They match the branch
+names in this repository (`phase-01-foundation` through
+`phase-05-audio-tuner`), the phase references in `docs/adr/`, and the feature
+READMEs under `mobile/lib/features/`.
 
-* [x] Repository setup — npm workspaces, shared config, CI
-* [x] Flutter project — feature-oriented architecture, Riverpod
-* [x] Design tokens — single source, generated to Dart and CSS, contrast-gated
+`CLAUDE.md` §54 orders the same features by **product priority** — what matters
+most to a player — which is a different axis from build order. Neither
+overrides the other.
+
+| # | Phase | Status |
+| --- | --- | --- |
+| 01 | Foundation | ✅ Complete |
+| 02 | Flutter Shell | ✅ Complete |
+| 03 | Music Theory Engine | ✅ Complete |
+| 04 | Fretboard | ✅ Complete |
+| 05 | Audio / Tuner | ✅ Complete \* |
+| 05.1 | UX Stabilization | ✅ Complete |
+| 06 | Rhythm | ⏭ **Next** |
+| 07 | Songs | ☐ Not started |
+| 08 | Practice | ☐ Not started |
+| 09 | Backend | ◐ Scaffold only |
+| 10 | Admin Portal | ◐ Scaffold only |
+| 11 | Premium | ☐ Not started |
+| 12 | Payments | ☐ Not started |
+| 13 | Landing Website | ◐ Scaffold only |
+| 14 | AI | ☐ Not started |
+| 15 | Advanced Audio | ☐ Not started |
+
+**\*** The tuner's arithmetic is verified against a couple of hundred synthetic
+signals. It has **not** been verified on real hardware:
+`docs/DEVICE-TESTING.md` is the protocol and it has not been run, so no
+accuracy claim belongs in the product, the store listing or the website yet.
+
+**Scaffold only** means the application builds, its configuration validates and
+its module boundaries are marked — and nothing behind them is implemented.
+
+## Phase 01 — Foundation ✅
+
+* [x] Repository — npm workspaces, shared config, two-job CI
+* [x] Flutter project — feature-oriented architecture, Riverpod (ADR-0002)
+* [x] Design tokens — one source, generated to Dart and CSS, contrast-gated
+  (ADR-0003, ADR-0004)
 * [x] Theme — light and dark from tokens, no hardcoded values
-* [x] Localization — English and Myanmar ARB with enforced key parity
+* [x] Localization — English and Myanmar ARB with enforced key parity (ADR-0006)
 * [x] Navigation — go_router
-* [x] Architecture — documented in `docs/ARCHITECTURE.md` with six ADRs
+* [x] Environment — dart-defines and zod-validated configuration (ADR-0005)
+* [x] Backend scaffold — NestJS, environment schema, role guard, exception
+  filter, credential-redacting logger, Prisma schema (ADR-0001)
+* [x] Admin scaffold — Next.js, tokens reaching the browser, validated config
+* [x] Website scaffold — Next.js landing hero (DESIGN.md §59)
+* [x] Architecture — `docs/ARCHITECTURE.md`, with every structural decision
+  recorded in `docs/adr/`
 
-## Phase 2 — App Shell ✅
+## Phase 02 — Flutter Shell ✅
 
-* [x] Navigation — five-section shell, per-tab stacks, Android back
+* [x] Shell — five-section `StatefulShellRoute`, per-branch stacks, Android
+  back (ADR-0007)
 * [x] Screens — Home, Tools, Learn, Practice, Songs, Profile
-* [x] Tool layouts — tuner, metronome, chords, scales (presentation only)
+* [x] Tool layouts — tuner, metronome, chords, scales (presentation only at
+  this stage)
 * [x] Components — buttons, cards, headers, navigation, empty/error/loading
-* [x] Settings — language, appearance and reference pitch, persisted
+* [x] Settings — language, appearance and reference pitch, persisted (ADR-0008)
 * [x] Accessibility — 44px targets, semantic labels, reduced motion
 
-## Phase 3 — Core Guitar Tools
+## Phase 03 — Music Theory Engine ✅
 
-* [x] Tuner — microphone, McLeod pitch detection, 14 tunings and chromatic
-  *(accuracy pending device verification — see `docs/DEVICE-TESTING.md`)*
-* [x] Chord Engine — spelled notes, 18 qualities, movable and open voicings
-* [x] Chord UI — browser, search, diagram, voicing selector
-* [x] Fretboard — 6/7/8-string and bass, 14 tunings, CAGED, arpeggios
-* [x] Scale Engine — 18 scales and modes, boxes and 3-notes-per-string patterns
-* [ ] Metronome
-* [ ] Capo
-* [ ] Transposer
+* [x] Primitives — spelled notes, intervals, pitches and tunings in
+  `core/music`, never integers (ADR-0009)
+* [x] Chord qualities — 18 interval formulas
+* [x] Chord engine — voicings, finger positions, barres and transposition,
+  every shape checked by an invariant (ADR-0010)
+* [x] Scale engine — 18 scales and modes
+* [x] Chord library — browser, search in English and Myanmar, diagram,
+  voicing selector
+* [x] Chord analyzer engine — a shape in, the names it could go by out
+  (ADR-0015) *(built during Phase 05.1)*
 
-## Phase 4 — Songs & Learning
+## Phase 04 — Fretboard ✅
 
-* [ ] Song model
-* [ ] Song API
+* [x] Fretboard engine — positions from a tuning, a root and a degree list
+* [x] Tunings — 14, across 6-string, 7-string, 8-string and bass necks
+* [x] CAGED — five shapes with a guard (ADR-0011)
+* [x] Scale patterns — boxes and three-notes-per-string, searched rather than
+  tabulated
+* [x] Arpeggios — the chord formulas laid across the neck
+* [x] Screens — fretboard and scales, over one shared neck component
+
+## Phase 05 — Audio / Tuner ✅
+
+* [x] Capture — microphone behind an `AudioInput` seam, permission as a
+  four-state seam
+* [x] DSP — hand-written FFT, high-pass filter, frequency analyzer and McLeod
+  pitch detection (ADR-0012)
+* [x] Tuning engine — detected note, octave, cents, frequency, confidence and
+  in-tune, as PRD.md §10 requires
+* [x] Session — a state machine with no clock, every threshold in one file
+  (ADR-0013)
+* [x] Tunings — 14 plus chromatic, with an adjustable reference pitch
+* [ ] Device verification — `docs/DEVICE-TESTING.md` has not been run
+
+## Phase 05.1 — UX Stabilization ✅
+
+A stabilization pass over Phases 03–05 rather than new product surface: it
+corrected what those phases shipped and did not add a feature area.
+
+* [x] Tuner names the note it hears — note, octave, cents and frequency
+* [x] Strings as a numbered list, first string on top, on the tuner and the neck
+* [x] Chord analyzer UX — shape editor, notes, intervals, ranked names, clear
+* [x] Full-screen tool navigation — a back control and no bottom bar on every
+  screen below the five sections (ADR-0014)
+* [x] Chord search state no longer outlives its screen
+* [x] Regression tests across all four
+
+## Phase 06 — Rhythm ⏭ Next
+
+* [ ] Tempo engine
+* [ ] Beat generation and an audible click
+* [ ] Metronome — the screen exists from Phase 02 and its tempo is editable;
+  nothing sounds yet
+* [ ] Time signatures and subdivisions
+* [ ] Rhythm visualization
+* [ ] Rhythm Trainer (PRD.md §17)
+* [ ] Strumming Trainer (PRD.md §18)
+
+## Phase 07 — Songs
+
+Phase 02 built the song and learning screens against placeholder content.
+
+* [ ] Song model and content
 * [ ] Song viewer
 * [ ] Search
 * [ ] Favorites
+* [ ] Transposer (PRD.md §21)
+* [ ] Capo Assistant (PRD.md §22)
 * [ ] Lessons
-* [ ] Exercises
 
-## Phase 5 — Practice
+## Phase 08 — Practice
+
+Phase 02 built the practice screen; the timer does not run.
 
 * [ ] Practice sessions
+* [ ] Exercises
 * [ ] Practice history
 * [ ] Streaks
 * [ ] Progress
 * [ ] Basic analytics
 
-## Phase 6 — Backend
+## Phase 09 — Backend ◐
 
+* [x] Scaffold — configuration validation, role guard, exception filter,
+  redacting logger and the Prisma schema *(delivered in Phase 01)*
 * [ ] Authentication
 * [ ] User profiles
 * [ ] Content API
 * [ ] Synchronization
 * [ ] Notifications
 
-## Phase 7 — Admin Portal
+## Phase 10 — Admin Portal ◐
 
+* [x] Scaffold — Next.js application with validated public configuration
+  *(delivered in Phase 01)*
 * [ ] Admin authentication
 * [ ] Dashboard
 * [ ] User management
@@ -1251,42 +1353,74 @@ L Key is currently in the **early development / foundation phase**.
 * [ ] Scale CMS
 * [ ] Lesson CMS
 * [ ] Exercise CMS
+* [ ] Backing Track CMS
 * [ ] Premium management
 * [ ] Payment management
 * [ ] Analytics
 
-## Phase 8 — Premium
+## Phase 11 — Premium
+
+`FeatureTier` labels catalogue entries in the client today. It grants nothing,
+and every labelled row still opens — entitlement is the server's decision
+(CLAUDE.md §23, §51).
 
 * [ ] Premium plans
-* [ ] Entitlements
-* [ ] Premium UI
+* [ ] Entitlements, server-authoritative
+* [ ] Capability system
+* [ ] Premium UX
+
+## Phase 12 — Payments
+
+`PaymentOrder`, `PaymentEvent` and `Entitlement` are modelled in the Prisma
+schema. Nothing reads or writes them yet.
+
 * [ ] MyanMyanPay integration
-* [ ] MMQR
+* [ ] MMQR flow
 * [ ] Payment verification
+* [ ] Payment records
 * [ ] Webhooks
 
-## Phase 9 — Advanced Tools
+## Phase 13 — Landing Website ◐
 
-* [ ] Rhythm trainer
-* [ ] Strumming trainer
-* [ ] Ear training
-* [ ] Backing tracks
-* [ ] Recording
-* [ ] CAGED system
-* [ ] Advanced fretboard
+Specified by PRD.md §60 and DESIGN.md §59–60.
 
-## Phase 10 — AI
+* [x] Scaffold — landing hero built from the shared tokens *(Phase 01)*
+* [ ] Product pages
+* [ ] SEO routes
+* [ ] Documentation and help content
+* [ ] Download and install links
+
+## Phase 14 — AI
 
 * [ ] AI Guitar Assistant
 * [ ] AI Practice Coach
 * [ ] AI songwriting assistance
 
-## Phase 11 — Advanced Audio
+## Phase 15 — Advanced Audio
 
 * [ ] Chord recognition
 * [ ] Advanced pitch analysis
 * [ ] Practice audio analysis
 * [ ] Advanced guitar recognition
+
+## Unscheduled
+
+Promised by `PRD.md` and not yet assigned to a phase. Listed so the roadmap
+does not quietly lose them.
+
+* [ ] Chord Trainer — PRD.md §12
+* [ ] BPM Detector — PRD.md §23
+* [ ] Guitar Collection — PRD.md §27
+* [ ] Ear Training — PRD.md §28
+* [ ] Music Theory reference — PRD.md §29
+* [ ] Circle of Fifths — PRD.md §30
+* [ ] Backing Tracks — PRD.md §31
+* [ ] Recording — PRD.md §32
+* [ ] Songwriting — PRD.md §33
+* [ ] Chord Progression Generator — PRD.md §34
+* [ ] Guitar Maintenance — PRD.md §38
+* [ ] Scale Trainer — PRD.md §43
+* [ ] Analytics Events — PRD.md §61
 
 ---
 

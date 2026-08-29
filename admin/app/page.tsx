@@ -5,7 +5,7 @@ import { env } from '@/lib/env';
  *
  * Phase 01 proves the token pipeline reaches the browser and that public
  * configuration validates. Authentication and the operations surfaces are
- * Phase 06 work; nothing here queries the API.
+ * Phase 10 work; nothing here queries the API.
  */
 export default function AdminHomePage() {
   return (
