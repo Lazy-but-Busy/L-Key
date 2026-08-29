@@ -45,6 +45,12 @@ abstract final class AppRoutes {
   /// Name for named navigation to [chordDetail].
   static const String chordDetailName = 'chordDetail';
 
+  /// Interactive fretboard, owned by Tools.
+  static const String fretboard = '/tools/fretboard';
+
+  /// Name for named navigation to [fretboard].
+  static const String fretboardName = 'fretboard';
+
   /// Scales, owned by Tools.
   static const String scales = '/tools/scales';
 

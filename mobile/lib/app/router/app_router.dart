@@ -6,6 +6,7 @@ import 'package:l_key/core/config/environment.dart';
 import 'package:l_key/features/chords/presentation/chord_detail_page.dart';
 import 'package:l_key/features/chords/presentation/chords_page.dart';
 import 'package:l_key/features/foundation/presentation/foundation_page.dart';
+import 'package:l_key/features/fretboard/presentation/fretboard_page.dart';
 import 'package:l_key/features/home/presentation/home_page.dart';
 import 'package:l_key/features/learning/presentation/learn_page.dart';
 import 'package:l_key/features/metronome/presentation/metronome_page.dart';
@@ -78,6 +79,11 @@ GoRouter createRouter({Environment environment = Environment.local}) {
                         ),
                       ),
                     ],
+                  ),
+                  GoRoute(
+                    path: 'fretboard',
+                    name: AppRoutes.fretboardName,
+                    builder: (context, state) => const FretboardPage(),
                   ),
                   GoRoute(
                     path: 'scales',
