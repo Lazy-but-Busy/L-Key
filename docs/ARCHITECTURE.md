@@ -58,11 +58,26 @@ timestamp, counted from samples rather than read from `DateTime.now()`, so a
 tuning session replays identically on every machine
 ([ADR-0013](adr/0013-tuner-behaviour-and-thresholds.md)).
 
+**Every detail screen is a full-screen tool.** The five sections carry the
+wordmark and the bottom bar; everything below them — the tuner, the chord
+library, a chord, the analyzer, the fretboard, the scales, the metronome, a
+practice session and settings — pushes on the root navigator with a back
+control and no bottom bar. The paths stay nested under the section that owns
+them, so a deep link still builds that section underneath
+([ADR-0014](adr/0014-full-screen-tool-navigation.md)).
+
 **Widgets lay out and nothing else.** No payment logic, no API authentication,
 no database queries, no music calculation, no entitlement rules (CLAUDE.md §8).
 
 **Design values come from tokens.** A literal colour, size, radius or duration
 in a widget is a bug. See `packages/design-tokens/README.md`.
+
+**Chord theory has one engine, and it runs both ways.** `ChordEngine` turns a
+named chord into fingerings and `ChordAnalyzer` turns a fingering back into
+names, over the same eighteen formulas in `core/music/chord_quality.dart`. The
+analyzer refuses to name a shape no supported formula accounts for rather than
+inventing one, and a test feeds every voicing the engine draws back through it
+([ADR-0015](adr/0015-chord-analysis.md)).
 
 **The client is untrusted.** Premium state, prices and payment outcomes are
 decided by the backend (CLAUDE.md §23, §51). The client may cache entitlement

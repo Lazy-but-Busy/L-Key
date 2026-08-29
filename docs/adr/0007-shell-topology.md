@@ -1,6 +1,12 @@
 # 0007 — One shell, five branches, and where detail screens live
 
-**Date:** 2026-08-28 · **Status:** Accepted
+**Date:** 2026-08-28 · **Status:** Accepted, superseded in part by
+[ADR-0014](0014-full-screen-tool-navigation.md)
+
+> **What changed.** The five-branch shell, the branch-per-section navigators
+> and the nested paths below all stand. The chrome table does not: every
+> detail screen now pushes above the shell with a back control and no bottom
+> bar, which is what ADR-0014 decided and why.
 
 ## Context
 

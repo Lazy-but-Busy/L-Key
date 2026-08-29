@@ -505,8 +505,8 @@ export const tokens = {
       "source": "design system components/music/Fretboard.jsx first fret line width"
     },
     "fretboardLabelColumn": {
-      "value": 20,
-      "source": "design system components/music/Fretboard.jsx string-name column width"
+      "value": 40,
+      "source": "design system components/music/Fretboard.jsx string-name column width, widened to carry the guitarist string number beside the note (DESIGN.md §25)"
     },
     "tunerMeterHeight": {
       "value": 48,

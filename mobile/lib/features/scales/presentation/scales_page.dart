@@ -39,15 +39,19 @@ class ScalesPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final options = ref.watch(fretboardOptionsProvider);
 
-    return LkAsyncView<FretboardOptions>(
-      value: options,
-      onRetry: () => ref.invalidate(fretboardOptionsProvider),
-      isEmpty: (data) => data.scales.isEmpty,
-      empty: (context) => LkEmptyState(
-        headline: l10n.fretboardEmpty,
-        body: l10n.fretboardEmptyBody,
+    return LkDetailScaffold(
+      title: l10n.toolScales,
+      fallbackRoute: AppRoutes.tools,
+      child: LkAsyncView<FretboardOptions>(
+        value: options,
+        onRetry: () => ref.invalidate(fretboardOptionsProvider),
+        isEmpty: (data) => data.scales.isEmpty,
+        empty: (context) => LkEmptyState(
+          headline: l10n.fretboardEmpty,
+          body: l10n.fretboardEmptyBody,
+        ),
+        data: (context, data) => _Scales(options: data),
       ),
-      data: (context, data) => _Scales(options: data),
     );
   }
 }
@@ -76,7 +80,7 @@ class _Scales extends ConsumerWidget {
         : null;
 
     return ListView(
-      padding: lkFullScreenPadding,
+      padding: lkScreenPadding,
       children: <Widget>[
         LkScreenHeader(
           title: '${scale.root.displayName} ${scaleName(l10n, scale.type)}',
@@ -180,7 +184,7 @@ class _Scales extends ConsumerWidget {
         LkButton(
           label: l10n.scalesOpenFretboard,
           variant: LkButtonVariant.accent,
-          onPressed: () => context.goNamed(AppRoutes.fretboardName),
+          onPressed: () => context.pushNamed(AppRoutes.fretboardName),
         ),
         const SizedBox(height: LkSpacing.s4),
 

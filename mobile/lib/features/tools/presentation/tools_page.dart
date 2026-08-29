@@ -79,7 +79,7 @@ class _ToolRow extends StatelessWidget {
         : tool.label;
 
     return LkPressable(
-      onTap: available ? () => context.goNamed(route) : null,
+      onTap: available ? () => context.pushNamed(route) : null,
       enabled: available,
       padding: const EdgeInsets.symmetric(horizontal: LkSpacing.s4),
       semanticLabel: semantics,

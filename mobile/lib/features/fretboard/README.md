@@ -22,6 +22,13 @@ screen needs them too and a feature must not import a sibling's domain
 (ADR-0009, ADR-0011). `domain/` imports no Flutter; `@immutable` comes from
 `package:meta`.
 
+## String numbering
+
+The neck's left column carries the guitarist's string number beside the note —
+`6 E` — counted from the highest-sounding string down, which is the opposite
+of the engine's low-first indexing. The spoken description already counted
+that way; the picture now agrees with it (DESIGN.md §25).
+
 ## What exists
 
 - **The neck, calculated.** No table of note positions anywhere. A tuning knows

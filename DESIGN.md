@@ -571,6 +571,37 @@ STANDARD
 
 The detected note should be huge.
 
+It is the note the microphone is **hearing**, not the string being tuned
+towards. When the two differ — a string more than half a semitone out, or a
+note that is not one of the six at all — the destination is named in words
+beneath the meter rather than by a second cents figure:
+
+```text
+        F
+
+      87.31 Hz
+
+   ───────────●
+
+     +100 cents
+
+   TUNING TO E2
+```
+
+Beneath the meter, the tuning's strings are a list rather than a row, first
+string on top, each carrying its number as well as its note:
+
+```text
+STRINGS
+
+ 1  E4
+ 2  B3
+ 3  G3
+ 4  D3
+ 5  A2
+ 6  E2      HEARING
+```
+
 Use:
 
 **Space Grotesk**
@@ -650,6 +681,21 @@ D ─────●─────────
 A ───●───────────
 E ───●──────●────
 ```
+
+Each string carries its number as well as its note, counted the way a
+guitarist counts — the first string is the highest-sounding:
+
+```text
+1 E ───●──────●────
+2 B ─────●─────────
+3 G ───●──────●────
+4 D ─────●─────────
+5 A ───●───────────
+6 E ───●──────●────
+```
+
+Without it a six-string neck reads `E B G D A E` and the two Es are
+indistinguishable.
 
 Root notes should use Guitar Orange.
 

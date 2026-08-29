@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/shell/app_shell.dart';
 import 'package:l_key/core/config/environment.dart';
+import 'package:l_key/features/chords/presentation/chord_analyzer_page.dart';
 import 'package:l_key/features/chords/presentation/chord_detail_page.dart';
 import 'package:l_key/features/chords/presentation/chords_page.dart';
 import 'package:l_key/features/foundation/presentation/foundation_page.dart';
@@ -25,10 +26,11 @@ import 'package:l_key/features/tuner/presentation/tuner_page.dart';
 /// route tree would make two live routers collide — which shows up only in
 /// tests, never in the running app.
 ///
-/// Detail screens sit under the section that owns them so a deep link
-/// restores the right tab. `/settings` is the exception: it is reachable from
-/// every section's top bar, so it is a sibling of the shell and pushes above
-/// it. See ADR-0007.
+/// Every detail screen pushes on the **root** navigator, so it takes the whole
+/// screen with a back control and no bottom bar. Their paths still sit under
+/// the section that owns them, which is what makes a deep link to
+/// `/tools/tuner` build Tools underneath the tuner and land there on back.
+/// See ADR-0014, which supersedes ADR-0007's chrome table.
 GoRouter createRouter({Environment environment = Environment.local}) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -59,21 +61,33 @@ GoRouter createRouter({Environment environment = Environment.local}) {
                   GoRoute(
                     path: 'tuner',
                     name: AppRoutes.tunerName,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const TunerPage(),
                   ),
                   GoRoute(
                     path: 'metronome',
                     name: AppRoutes.metronomeName,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const MetronomePage(),
                   ),
                   GoRoute(
                     path: 'chords',
                     name: AppRoutes.chordsName,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const ChordsPage(),
                     routes: <RouteBase>[
+                      // Declared before ':chordId', which would otherwise
+                      // swallow it.
+                      GoRoute(
+                        path: 'analyzer',
+                        name: AppRoutes.chordAnalyzerName,
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) => const ChordAnalyzerPage(),
+                      ),
                       GoRoute(
                         path: ':chordId',
                         name: AppRoutes.chordDetailName,
+                        parentNavigatorKey: rootNavigatorKey,
                         builder: (context, state) => ChordDetailPage(
                           chordId: state.pathParameters['chordId'] ?? '',
                         ),
@@ -83,11 +97,13 @@ GoRouter createRouter({Environment environment = Environment.local}) {
                   GoRoute(
                     path: 'fretboard',
                     name: AppRoutes.fretboardName,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const FretboardPage(),
                   ),
                   GoRoute(
                     path: 'scales',
                     name: AppRoutes.scalesName,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const ScalesPage(),
                   ),
                 ],
@@ -104,6 +120,7 @@ GoRouter createRouter({Environment environment = Environment.local}) {
                   GoRoute(
                     path: 'practice',
                     name: AppRoutes.practiceName,
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const PracticePage(),
                   ),
                 ],

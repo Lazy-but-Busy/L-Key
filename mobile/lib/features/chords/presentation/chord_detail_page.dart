@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
+import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
@@ -41,24 +42,28 @@ class _ChordDetailPageState extends ConsumerState<ChordDetailPage> {
     final l10n = AppLocalizations.of(context);
     final detail = ref.watch(chordDetailProvider(widget.chordId));
 
-    return ListView(
-      padding: lkFullScreenPadding,
-      children: <Widget>[
-        LkAsyncView<ChordDetail?>(
-          value: detail,
-          onRetry: () => ref.invalidate(chordDetailProvider(widget.chordId)),
-          isEmpty: (data) => data == null,
-          empty: (context) => LkEmptyState(
-            headline: l10n.chordsNotFound,
-            body: l10n.chordsNotFoundBody,
+    return LkDetailScaffold(
+      title: l10n.toolChords,
+      fallbackRoute: AppRoutes.chords,
+      child: ListView(
+        padding: lkScreenPadding,
+        children: <Widget>[
+          LkAsyncView<ChordDetail?>(
+            value: detail,
+            onRetry: () => ref.invalidate(chordDetailProvider(widget.chordId)),
+            isEmpty: (data) => data == null,
+            empty: (context) => LkEmptyState(
+              headline: l10n.chordsNotFound,
+              body: l10n.chordsNotFoundBody,
+            ),
+            data: (context, data) => _ChordDetail(
+              detail: data!,
+              selected: _voicing,
+              onSelect: (index) => setState(() => _voicing = index),
+            ),
           ),
-          data: (context, data) => _ChordDetail(
-            detail: data!,
-            selected: _voicing,
-            onSelect: (index) => setState(() => _voicing = index),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

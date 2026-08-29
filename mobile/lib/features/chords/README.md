@@ -5,7 +5,8 @@ notes, intervals, voicings, finger positions, string states and transposition
 (CLAUDE.md §11).
 
 **Specification:** PRD.md §11–12 · DESIGN.md §23–24 ·
-[ADR-0010](../../../../docs/adr/0010-guitar-voicing-generation.md)
+[ADR-0010](../../../../docs/adr/0010-guitar-voicing-generation.md) ·
+[ADR-0015](../../../../docs/adr/0015-chord-analysis.md)
 
 ## Structure
 
@@ -44,6 +45,10 @@ fretboard needs the formulas too (ADR-0011).
 - **The browser, the detail screen and the diagram**, including a barre bar and
   a base-fret label the design system does not draw, and a semantics node that
   reads the shape out string by string.
+- **The analyzer**, which is the engine run backwards: build a shape on the
+  neck and it reports the notes, the bass, the degrees and the names the shape
+  could go by. Same eighteen formulas, same omission rule, root and bass kept
+  apart so `C/E` is a C chord. Free, and reached from the library screen.
 
 ## What does not exist
 
@@ -54,6 +59,11 @@ fretboard needs the formulas too (ADR-0011).
   nothing. Every chord opens. Enforcement is server-authoritative and belongs
   to the entitlement system (CLAUDE.md §23, §51).
 - **No chord trainer** (PRD.md §12) and no chord recognition (CLAUDE.md §16).
+  The analyzer is not recognition: the player types the shape in, and nothing
+  listens.
+- **The analyzer names nothing it cannot spell.** No altered or added tone
+  beyond the eighteen qualities, and no `(no5)` suffix yet — `C E` comes back
+  empty, and a test says so, so the day that changes is visible.
 - **No custom tunings.** The engine takes a `Tuning` everywhere and defaults to
   standard; nothing in the interface offers another one yet.
 - **`C/D` has no shape.** A slash chord with no curated voicing shows the empty

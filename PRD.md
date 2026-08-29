@@ -306,13 +306,22 @@ Authentication providers can be introduced incrementally.
 * Standard tuning
 * E A D G B E
 * microphone input
-* note detection
+* note detection — the note actually sounding, with its octave
 * cents deviation
+* frequency display
 * visual tuning indicator
+
+Note detection means the note the microphone hears, whatever it is, not the
+nearest of the six open strings. A beginner has to be able to see that they
+are playing an F when they meant an E, and a tuner that renamed it E would be
+faking accuracy (CLAUDE.md §47). Frequency display moved here from §10.2 for
+the same reason: it is the number the note is derived from, and hiding it
+while showing the note it produced is arbitrary.
 
 ## 10.2 Premium Features
 
-* Chromatic tuning
+* Chromatic tuning mode — tuning *towards* any note rather than towards a
+  string of the selected tuning
 * Drop D
 * Drop C
 * Drop B
@@ -330,7 +339,6 @@ Authentication providers can be introduced incrementally.
 * reference pitch
 * tuning presets
 * tuning history
-* frequency display
 
 ## Technical Requirement
 
@@ -409,6 +417,33 @@ Each chord can display:
 * audio playback
 * alternative voicings
 * favorite
+
+---
+
+## Chord Analyzer
+
+Free.
+
+The chord library answers "what does Cmaj7 look like?". The analyzer answers
+the opposite question, for a player who has a shape under their fingers and no
+name for it.
+
+The player builds a shape on a fretboard — a fret per string, or a muted
+string — and L Key reports:
+
+```text
+the notes sounding
+the bass note
+the interval each string plays
+the chord names the shape could go by, best first
+```
+
+Deterministic, from the same chord formulas the library draws from. It names
+nothing it cannot spell from those formulas: a shape no supported quality
+accounts for gets an honest "no chord matches this shape" rather than an
+invented one.
+
+Root and bass are separate, so a C major triad with an E lowest is `C/E`.
 
 ---
 
@@ -1220,7 +1255,7 @@ Display:
 * total users
 * active users
 * Premium users
-* songs
+* songs **[IMPORTANT]** Bulk songs upload support with chords and lyrics for both Myanmar and English songs to end-users(mobile) via Admin portal.
 * lessons
 * exercises
 * revenue

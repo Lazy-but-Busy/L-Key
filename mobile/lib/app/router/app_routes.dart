@@ -45,6 +45,16 @@ abstract final class AppRoutes {
   /// Name for named navigation to [chordDetail].
   static const String chordDetailName = 'chordDetail';
 
+  /// The chord analyzer, owned by the chord library.
+  ///
+  /// A sibling of [chordDetail] and declared before it, because `analyzer`
+  /// would otherwise be matched as a `:chordId`. No catalogue id is a bare
+  /// word, and a test asserts it.
+  static const String chordAnalyzer = '/tools/chords/analyzer';
+
+  /// Name for named navigation to [chordAnalyzer].
+  static const String chordAnalyzerName = 'chordAnalyzer';
+
   /// Interactive fretboard, owned by Tools.
   static const String fretboard = '/tools/fretboard';
 

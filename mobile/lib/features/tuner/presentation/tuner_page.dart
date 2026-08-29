@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/localization/music_names.dart';
+import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
@@ -55,51 +56,55 @@ class _TunerPageState extends ConsumerState<TunerPage> {
     final state = ref.watch(tunerProvider);
     final controller = ref.read(tunerProvider.notifier);
 
-    return ListView(
-      padding: lkFullScreenPadding,
-      children: <Widget>[
-        LkScreenHeader(
-          title: l10n.toolTuner,
-          subtitle: _subtitle(l10n, state),
-        ),
-        const SizedBox(height: LkSpacing.s6),
-
-        if (state.status == TunerStatus.permissionRequired ||
-            state.status == TunerStatus.permissionBlocked)
-          TunerPermissionGate(
-            isBlocked: state.status == TunerStatus.permissionBlocked,
-            canOpenSettings: state.canOpenSettings,
-            onAllow: controller.start,
-            onOpenSettings: controller.openSettings,
-          )
-        else ...<Widget>[
-          _Meter(state: state),
-          const SizedBox(height: LkSpacing.s5),
-          TunerStrings(
-            tuning: state.tuning,
-            selectedIndex: _selectedIndex(state),
-            isEnabled: !state.isChromatic,
-            onSelect: controller.selectString,
-            onAuto: controller.selectAuto,
-            isAuto: state.mode is AutoTargetMode,
+    return LkDetailScaffold(
+      title: l10n.toolTuner,
+      fallbackRoute: AppRoutes.tools,
+      child: ListView(
+        padding: lkScreenPadding,
+        children: <Widget>[
+          LkScreenHeader(
+            title: l10n.toolTuner,
+            subtitle: _subtitle(l10n, state),
           ),
-          const SizedBox(height: LkSpacing.s5),
-          _Transport(state: state, controller: controller),
-        ],
-
-        if (state.status == TunerStatus.failed && state.failure != null) ...[
-          const SizedBox(height: LkSpacing.s5),
-          _Failure(failure: state.failure!, onRetry: controller.start),
-        ],
-
-        const SizedBox(height: LkSpacing.s6),
-        _TuningPicker(state: state, controller: controller),
-
-        if (state.diagnostics != null) ...[
           const SizedBox(height: LkSpacing.s6),
-          TunerDiagnosticsCard(diagnostics: state.diagnostics!),
+
+          if (state.status == TunerStatus.permissionRequired ||
+              state.status == TunerStatus.permissionBlocked)
+            TunerPermissionGate(
+              isBlocked: state.status == TunerStatus.permissionBlocked,
+              canOpenSettings: state.canOpenSettings,
+              onAllow: controller.start,
+              onOpenSettings: controller.openSettings,
+            )
+          else ...<Widget>[
+            _Meter(state: state),
+            const SizedBox(height: LkSpacing.s5),
+            TunerStrings(
+              tuning: state.tuning,
+              selectedIndex: _selectedIndex(state),
+              isEnabled: !state.isChromatic,
+              onSelect: controller.selectString,
+              onAuto: controller.selectAuto,
+              isAuto: state.mode is AutoTargetMode,
+            ),
+            const SizedBox(height: LkSpacing.s5),
+            _Transport(state: state, controller: controller),
+          ],
+
+          if (state.status == TunerStatus.failed && state.failure != null) ...[
+            const SizedBox(height: LkSpacing.s5),
+            _Failure(failure: state.failure!, onRetry: controller.start),
+          ],
+
+          const SizedBox(height: LkSpacing.s6),
+          _TuningPicker(state: state, controller: controller),
+
+          if (state.diagnostics != null) ...[
+            const SizedBox(height: LkSpacing.s6),
+            TunerDiagnosticsCard(diagnostics: state.diagnostics!),
+          ],
         ],
-      ],
+      ),
     );
   }
 
@@ -128,8 +133,12 @@ class _Meter extends StatelessWidget {
       spacing: LkSpacing.s3,
       children: <Widget>[
         LkTunerMeter(
-          note: reading?.targetNote.note.displayName,
-          octave: reading?.targetNote.octave,
+          // The note the microphone is hearing, not the one being tuned
+          // towards. They diverge as soon as the string is more than half a
+          // semitone out, and the player needs to know which note is
+          // actually sounding (PRD.md §10.1, DESIGN.md §21).
+          note: reading?.detectedNote.note.displayName,
+          octave: reading?.detectedNote.octave,
           frequencyHz: reading?.frequencyHz,
           cents: reading?.cents,
           isInTune: reading?.isInTune ?? false,
@@ -141,10 +150,19 @@ class _Meter extends StatelessWidget {
           ),
           statusLabel: label,
           semanticsLabel: l10n.tunerMeterSemantics(
-            reading == null ? '—' : reading.targetNote.name,
+            reading == null ? '—' : reading.detectedNote.name,
             label,
           ),
         ),
+        if (_targetLine(l10n, state) case final target?)
+          Text(
+            target,
+            textAlign: TextAlign.center,
+            style: context.lkType.technicalSm.copyWith(
+              color: context.lkColors.textSecondary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         if (_guidance(l10n, state) case final guidance?)
           Text(
             guidance,
@@ -177,6 +195,20 @@ class _Meter extends StatelessWidget {
       // repeating the button underneath it.
       _ => '—',
     };
+  }
+
+  /// Names the note being tuned towards, when it is not the note sounding.
+  ///
+  /// The needle and the cents figure always measure against the target, so
+  /// once the string is more than half a semitone out the hero glyph and the
+  /// number would otherwise appear to contradict one another. Naming the
+  /// destination is what reconciles them, and it says nothing at all while
+  /// the two agree.
+  String? _targetLine(AppLocalizations l10n, TunerState state) {
+    final reading = state.reading;
+    if (reading == null) return null;
+    if (reading.detectedNote == reading.targetNote) return null;
+    return l10n.tunerTuningTo(reading.targetNote.name).toUpperCase();
   }
 
   String? _guidance(AppLocalizations l10n, TunerState state) {

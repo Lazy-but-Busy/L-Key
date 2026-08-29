@@ -2,7 +2,7 @@
 
 Microphone pitch detection and tuning guidance. The highest-priority MVP tool (CLAUDE.md §54). Audio processing lives behind `core/audio/PitchDetector` and never inside a widget (CLAUDE.md §14).
 
-**Specification:** PRD.md §10 · DESIGN.md §21–22 · docs/adr/0012 · docs/adr/0013
+**Specification:** PRD.md §10 · DESIGN.md §21–22 · docs/adr/0012 · docs/adr/0013 · docs/adr/0014
 
 ## Structure
 
@@ -30,6 +30,19 @@ Microphone → AudioInput → AudioFrameAssembler → FrequencyAnalyzer
 Everything left of the controller is plain Dart. The two platform plugins,
 `record` and `permission_handler`, are each imported by exactly one file, and a
 layer test asserts it.
+
+## What the screen says
+
+The hero glyph is `TunerReading.detectedNote` — **the note being heard**, not
+the string being tuned towards. The needle and the cents figure measure
+against the target, because that is what tuning means, so when the two notes
+differ the screen names the destination in words ("TUNING TO E2") rather than
+printing a second cents number that could disagree with the first.
+
+The strings are a list, first string on top, each carrying its guitarist
+number as well as its note (DESIGN.md §21, §25). The engine indexes
+lowest-sounding first; the number is `stringCount - index`, and the accessible
+label says the same thing the picture does.
 
 ## What is verified, and what is not
 

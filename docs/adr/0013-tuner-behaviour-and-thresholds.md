@@ -140,6 +140,14 @@ behave beautifully and would hide a genuinely octave-off string. §47.
   a player could look at and not change.
 - `tuningName` moved to `app/localization/music_names.dart`, since the tuner
   and the fretboard both need it and neither should import the other.
+- **The meter names the note that is sounding, not the target.** It was
+  wired to `targetNote` and should always have been `detectedNote`, which the
+  reading has carried since this ADR was written. There is still exactly one
+  cents figure and it still measures against the target, because that is what
+  tuning means and two of them is how the two come to disagree — the same
+  reasoning as flat/sharp not being statuses. When the two notes differ the
+  screen names the destination in words instead ("TUNING TO E2"), which is
+  what keeps "F♯3" over "+112 cents" readable.
 - **Nothing here has been verified on a device.** Every threshold above is an
   engineering estimate against typical behaviour. The tuner ships implemented
   and unverified, and no accuracy claim belongs anywhere in the product until

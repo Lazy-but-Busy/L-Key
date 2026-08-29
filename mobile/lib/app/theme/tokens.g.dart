@@ -426,8 +426,8 @@ abstract final class LkDimens {
   /// 4px — design system components/music/Fretboard.jsx first fret line width.
   static const double fretboardNutWidth = 4;
 
-  /// 20px — design system components/music/Fretboard.jsx string-name column width.
-  static const double fretboardLabelColumn = 20;
+  /// 40px — design system components/music/Fretboard.jsx string-name column width, widened to carry the guitarist string number beside the note (DESIGN.md §25).
+  static const double fretboardLabelColumn = 40;
 
   /// 48px — design system components/music/TunerMeter.jsx meter track height.
   static const double tunerMeterHeight = 48;
