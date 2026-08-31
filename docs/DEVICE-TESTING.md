@@ -1,5 +1,12 @@
 # Device testing — audio
 
+Two parts. **Part A** is the tuner and the microphone; **Part B** is the
+metronome and the speaker. Neither has been run.
+
+---
+
+# Part A — the tuner
+
 `npm run verify` proves the tuner's arithmetic. It proves nothing at all about
 a microphone.
 
@@ -224,7 +231,7 @@ this work.
 
 ---
 
-## Reporting
+## Reporting Part A
 
 Paste the filled tables into the pull request. Where a threshold had to change,
 say which and why — `tuner_thresholds.dart` exists as one object precisely so
@@ -232,3 +239,203 @@ that this is a small, reviewable diff.
 
 Then, and only then, `README.md`'s tuner entry can say the accuracy has been
 verified, and on what.
+
+---
+
+# Part B — the metronome
+
+`npm run verify` proves the metronome's arithmetic. It proves nothing at all
+about a speaker.
+
+The automated suite places a hundred thousand pulses and checks every one lands
+within half a sample of ideal; it renders the same range in 37-, 512- and
+4096-sample blocks and checks the audio is byte-identical. That is genuine
+evidence about the schedule. It is not evidence about a phone's audio path, its
+buffer behaviour under load, whether a foreground service survives Doze, or
+what the operating system does between our samples and the air.
+
+`mobile/CLAUDE.md §15` is explicit: **do not consider simulator-only testing
+sufficient for audio features.** This is what has to happen before anyone says
+the metronome keeps time.
+
+> **Status: not yet run.** No result table below has been filled in. Until one
+> has, the metronome is *implemented and unverified*, and no timing claim
+> belongs in the app, the store listing or the marketing site (`CLAUDE.md §47`).
+
+## What you need
+
+- An **iPhone**, iOS 15 or later.
+- **Two Android phones** if possible: one on API 24–26, one on API 34 or later.
+  Cheap and old is the point — the low end is where the audio path is worst.
+- An **external audio recorder**, or a second device with a recording app whose
+  own clock you trust. A laptop with a microphone is fine.
+- A **reference metronome** you trust — a hardware one, or a DAW's click.
+- **Wired headphones** and a **Bluetooth** pair.
+
+## Setup
+
+```sh
+cd mobile
+flutter run --release \
+  --dart-define=ENABLE_METRONOME_DIAGNOSTICS=true \
+  -d <device>
+```
+
+Release, not debug: debug builds run Dart without ahead-of-time compilation and
+the buffer behaviour means nothing.
+
+---
+
+## 11. Session facts
+
+Open the metronome, press start, and read the diagnostics panel.
+
+| | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| requested / granted rate | | | |
+| block frames | | | |
+| buffered frames, steady state | | | |
+| dropouts in 10 minutes | | | |
+
+**Expected:** 44100 Hz, 512-frame blocks, roughly 3072 frames buffered, and
+zero dropouts on a phone doing nothing else.
+
+## 12. Timing accuracy — the section that licenses a claim
+
+Record the phone's output on the external recorder for **60 seconds** at a
+fixed tempo. In an audio editor, read the sample position of the first and the
+last click, then:
+
+```text
+measured BPM = 60 × (clicks − 1) × recorder_rate / (last_sample − first_sample)
+```
+
+| Tempo | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| 30 | | | |
+| 60 | | | |
+| 120 | | | |
+| 200 | | | |
+| 240 | | | |
+| 120, sixteenths | | | |
+
+**Pass: within 0.05 %** — about 30 ms of accumulated error over a minute at
+120 BPM. This is the only measurement that entitles anyone to say the metronome
+keeps time. If a device is consistently *proportionally* wrong at every tempo,
+it granted a different sample rate than it was asked for; note it, because the
+plugin gives us no way to read the granted rate back.
+
+## 13. Start latency
+
+Screen-record with audio, and count frames from the START tap to the first
+click.
+
+| | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| ms to first click | | | |
+
+**Expected:** under 120 ms.
+
+## 14. Beat indicator against the click
+
+Watch the dot and listen. The indicator may lag the click slightly; it must
+**never lead it**.
+
+| | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| dot lags / leads / together | | | |
+| still true at 240 BPM | | | |
+
+## 15. Background and lifecycle
+
+Ten minutes each, at 120 BPM, checking the tempo against the reference at the
+end of each.
+
+| | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| screen off | | | |
+| app backgrounded | | | |
+| another app in front | | | |
+| incoming call | | | |
+| alarm fires | | | |
+| headphones unplugged mid-session | | | |
+| Bluetooth connected mid-session | | | |
+
+An interruption must stop the click and leave the screen on its idle state with
+**no error**. Bluetooth latency is large and is the transport's, not ours —
+note the offset but do not treat it as drift unless the *tempo* changes.
+
+## 16. The notification (Android)
+
+| | Android (old) | Android (new) |
+| --- | --- | --- |
+| notification appears | | |
+| it is silent, and does not vibrate | | |
+| its Stop action really stops the click | | |
+| tapping it opens the metronome | | |
+| refusing POST_NOTIFICATIONS still plays | | |
+
+The last row is the important one: a refused notification permission must hide
+the notification and **not** stop the audio.
+
+## 17. Performance and battery
+
+Twenty minutes of continuous clicking at 120 BPM in 4/4.
+
+| | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| fps while the screen is on | | | |
+| dropouts over 20 minutes | | | |
+| battery %, screen on | | | |
+| battery %, screen off | | | |
+
+If the screen-off row shows the click stopping or stuttering on Android, that
+is the row that would justify a `WAKE_LOCK` — which is deliberately **not**
+requested today, because asking for a battery-relevant permission against an
+unproven need is backwards.
+
+## 18. Haptics
+
+Turn the beat haptic on.
+
+| | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| the buzz lands with the click | | | |
+| nothing buzzes on subdivisions | | | |
+| nothing buzzes while backgrounded | | | |
+| battery cost over 20 minutes | | | |
+
+## 19. The tuner and the metronome together
+
+Start the tuner, then start the metronome. The metronome asks for the
+`playback` audio-session category; the tuner is recording.
+
+| | iPhone | Android (old) | Android (new) |
+| --- | --- | --- | --- |
+| what happens to the tuner | | | |
+| what happens to the click | | | |
+| recovery after stopping one | | | |
+
+**Record what actually happens.** If the record session dies, the fix is
+`playAndRecord` — chosen on this evidence, not guessed at beforehand.
+
+## 20. Struggling devices
+
+Start the metronome, then load the phone: open a dozen apps, start a download,
+scroll something heavy.
+
+| | Android (old) | Android (new) |
+| --- | --- | --- |
+| dropouts counted | | |
+| does the "struggling" line appear | | |
+| does the tempo survive the hiccup | | |
+
+A dropout must be a gap, not a tempo change: the clicks after it must still
+land on the original grid.
+
+## Reporting Part B
+
+Paste the tables into the pull request. Where a threshold in
+`metronome_thresholds.dart` or a buffer size in `AudioOutputConfig` had to move,
+say which and why — they are gathered into one object each precisely so that is
+a small diff.
