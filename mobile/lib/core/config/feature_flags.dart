@@ -43,6 +43,11 @@ abstract final class FeatureFlags {
   /// Community features (PRD.md §67, V3).
   static const bool community = bool.fromEnvironment('ENABLE_COMMUNITY');
 
+  /// AdMob advertising (docs/adr/0018). Off until a platform implementation
+  /// of `AdProvider` exists — enabling this today would still show nothing,
+  /// since `UnavailableAdProvider` is the only implementation.
+  static const bool ads = bool.fromEnvironment('ENABLE_ADS');
+
   /// All flags keyed by name, for diagnostics and tests.
   static const Map<String, bool> all = <String, bool>{
     'aiAssistant': aiAssistant,
@@ -52,5 +57,6 @@ abstract final class FeatureFlags {
     'tunerDiagnostics': tunerDiagnostics,
     'metronomeDiagnostics': metronomeDiagnostics,
     'community': community,
+    'ads': ads,
   };
 }
