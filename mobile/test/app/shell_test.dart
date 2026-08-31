@@ -16,6 +16,7 @@ import 'package:l_key/features/metronome/presentation/metronome_page.dart';
 import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
 import 'package:l_key/features/settings/presentation/settings_page.dart';
+import 'package:l_key/features/songs/presentation/song_detail_page.dart';
 import 'package:l_key/features/songs/presentation/songs_page.dart';
 import 'package:l_key/features/tools/presentation/tools_page.dart';
 import 'package:l_key/features/tuner/presentation/tuner_page.dart';
@@ -286,6 +287,34 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(ChordDetailPage), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a song deep link builds its way back to Songs', (
+      tester,
+    ) async {
+      final router = await pumpApp(tester);
+
+      router.go('/songs/amazing-grace');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SongDetailPage), findsOneWidget);
+      expect(find.byType(LkBottomNavBar), findsNothing);
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+      expect(find.byType(SongsPage), findsOneWidget);
+      expect(find.byType(LkBottomNavBar), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('an unknown song id is a screen, not a crash', (tester) async {
+      final router = await pumpApp(tester);
+
+      router.go('/songs/not-a-real-song');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SongDetailPage), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 

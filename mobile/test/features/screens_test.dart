@@ -10,6 +10,7 @@ import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/scales/presentation/scales_page.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
 import 'package:l_key/features/settings/presentation/settings_page.dart';
+import 'package:l_key/features/songs/presentation/song_detail_page.dart';
 import 'package:l_key/features/songs/presentation/songs_page.dart';
 import 'package:l_key/features/tools/presentation/tools_page.dart';
 import 'package:l_key/features/tuner/presentation/tuner_page.dart';
@@ -35,6 +36,7 @@ void main() {
     'Scales': ScalesPage.new,
     'Fretboard': FretboardPage.new,
     'Songs': SongsPage.new,
+    'Song detail': () => const SongDetailPage(songId: 'amazing-grace'),
     'Profile': ProfilePage.new,
     'Settings': SettingsPage.new,
   };
@@ -99,6 +101,60 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('NO FAVORITES YET.'), findsOneWidget);
+    });
+  });
+
+  group('SongDetailPage', () {
+    testWidgets('an unknown song shows the empty state, not a crash', (
+      tester,
+    ) async {
+      await pumpLk(
+        tester,
+        child: const SongDetailPage(songId: 'not-a-real-song'),
+        overrides: await _overrides(),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LkEmptyState), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('transposing up moves the offset and the displayed key', (
+      tester,
+    ) async {
+      await pumpLk(
+        tester,
+        child: const SongDetailPage(songId: 'amazing-grace'),
+        overrides: await _overrides(),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('0 st'), findsOneWidget);
+
+      // The transpose row's control is the first `+`; font size's is second.
+      await tester.tap(find.byIcon(Icons.add).first);
+      await tester.pumpAndSettle();
+
+      expect(find.text('1 st'), findsOneWidget);
+      expect(find.text('G♯'), findsWidgets);
+      expect(find.text('G'), findsNothing);
+    });
+
+    testWidgets('favoriting toggles the icon', (tester) async {
+      await pumpLk(
+        tester,
+        child: const SongDetailPage(songId: 'amazing-grace'),
+        overrides: await _overrides(),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.favorite_border));
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.favorite), findsOneWidget);
+      expect(find.byIcon(Icons.favorite_border), findsNothing);
     });
   });
 
