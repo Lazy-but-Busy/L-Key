@@ -28,6 +28,51 @@ double _gainDb(Biquad filter, double frequencyHz, int sampleRate) {
 }
 
 void main() {
+  group('Biquad.bandPass', () {
+    test('it passes its centre frequency and rejects either side', () {
+      // The metronome shapes noise with one of these to give a click a pitch
+      // without giving it a tone (docs/adr/0016).
+      final filter = Biquad.bandPass(sampleRate: 44100, centreHz: 2000);
+      expect(
+        _gainDb(filter, 2000, 44100),
+        closeTo(0, 0.5),
+        reason: 'the constant-peak-gain form is unity at the centre',
+      );
+
+      filter.reset();
+      expect(_gainDb(filter, 250, 44100), lessThan(-12));
+      filter.reset();
+      expect(_gainDb(filter, 16000, 44100), lessThan(-12));
+    });
+
+    test('a higher Q is a narrower click', () {
+      // Q is centre over bandwidth, so it is what separates a woodblock from
+      // a bell. An octave off centre is the test point.
+      final wide = Biquad.bandPass(sampleRate: 44100, centreHz: 2000, q: 0.7);
+      final narrow = Biquad.bandPass(sampleRate: 44100, centreHz: 2000, q: 6);
+
+      expect(
+        _gainDb(narrow, 1000, 44100),
+        lessThan(_gainDb(wide, 1000, 44100)),
+      );
+    });
+
+    test('it refuses a centre frequency nothing could resolve', () {
+      expect(
+        () => Biquad.bandPass(sampleRate: 44100, centreHz: 0),
+        throwsArgumentError,
+      );
+      expect(
+        () => Biquad.bandPass(sampleRate: 44100, centreHz: 22050),
+        throwsArgumentError,
+      );
+      expect(
+        () => Biquad.bandPass(sampleRate: 44100, centreHz: 1000, q: 0),
+        throwsArgumentError,
+      );
+    });
+  });
+
   group('Biquad.highPass', () {
     test('it passes the lowest note the app can tune, near untouched', () {
       // A five-string bass's low B is 30.87 Hz. The cutoff sits below it on

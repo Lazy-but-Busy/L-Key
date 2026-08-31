@@ -57,6 +57,51 @@ final class Biquad {
     );
   }
 
+  /// A band-pass at [centreHz], from the Audio EQ Cookbook.
+  ///
+  /// The constant-peak-gain form: unity at the centre frequency, falling away
+  /// either side. The metronome shapes noise with one to give a click a pitch
+  /// without giving it a tone (docs/adr/0016).
+  ///
+  /// [q] is the ratio of centre frequency to bandwidth, so a higher value is a
+  /// narrower, more pitched click. The default of 1 is about an octave wide,
+  /// which is a woodblock rather than a bell.
+  ///
+  /// Unlike [Biquad.highPass], the metronome's use of this is **not** stateful
+  /// across frames: a click is rendered once into its own buffer, from
+  /// silence, so there is no discontinuity for the filter's memory to carry.
+  factory Biquad.bandPass({
+    required double sampleRate,
+    required double centreHz,
+    double q = 1,
+  }) {
+    if (sampleRate <= 0) {
+      throw ArgumentError.value(sampleRate, 'sampleRate', 'must be positive');
+    }
+    if (centreHz <= 0 || centreHz >= sampleRate / 2) {
+      throw ArgumentError.value(
+        centreHz,
+        'centreHz',
+        'must sit between zero and the Nyquist frequency',
+      );
+    }
+    if (q <= 0) {
+      throw ArgumentError.value(q, 'q', 'must be positive');
+    }
+
+    final w0 = 2 * math.pi * centreHz / sampleRate;
+    final alpha = math.sin(w0) / (2 * q);
+
+    final a0 = 1 + alpha;
+    return Biquad._(
+      b0: alpha / a0,
+      b1: 0,
+      b2: -alpha / a0,
+      a1: -2 * math.cos(w0) / a0,
+      a2: (1 - alpha) / a0,
+    );
+  }
+
   Biquad._({
     required this._b0,
     required this._b1,

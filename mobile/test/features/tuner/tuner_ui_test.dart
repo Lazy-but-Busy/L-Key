@@ -575,6 +575,7 @@ void main() {
           'package:permission_handler/',
           'permission_handler_microphone_permission.dart',
         ),
+        ('package:flutter_pcm_sound/', 'pcm_sound_audio_output.dart'),
       ]) {
         for (final file in _allSources) {
           if (file.readAsStringSync().contains("import '$package") &&

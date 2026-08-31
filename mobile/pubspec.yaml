@@ -12,6 +12,16 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # Raw PCM playback. The mirror of `record` on the output side: it hands the
+  # platform signed 16-bit frames and asks for more when its buffer runs low,
+  # which is what lets the metronome place every click at an exact sample
+  # offset and let the audio device's own clock keep the tempo. No Flutter SDK
+  # API plays raw PCM, and a file-playback package (just_audio, audioplayers)
+  # schedules from the Dart event loop, which is the drifting UI timer this
+  # phase exists to avoid. Unlicense, no native dependencies of its own,
+  # iOS/Android/macOS. See docs/adr/0016 (CLAUDE.md §42).
+  flutter_pcm_sound: ^3.3.3
+
   # State management. One approach across the whole app (CLAUDE.md §9);
   # providers are testable without a widget tree, which is what keeps the
   # music engines Flutter-free (CLAUDE.md §10). See docs/adr/0002.
