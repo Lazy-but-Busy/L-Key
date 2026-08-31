@@ -1,9 +1,9 @@
 /// Placeholder content for the Home screen.
 ///
-/// This stands in for data the song and practice APIs will supply from Phase
-/// 05 onward. It is deliberately isolated in one file so it is trivial to
-/// delete: nothing here is localised, because song and course titles are
-/// content rather than interface copy.
+/// This stands in for data the song API will supply once Phase 09 lands. It
+/// is deliberately isolated in one file so it is trivial to delete: nothing
+/// here is localised, because song titles are content rather than interface
+/// copy.
 library;
 
 /// A song as the Home and Songs screens render it.
@@ -44,12 +44,3 @@ const List<MockSong> mockRecentSongs = <MockSong>[
     bpm: 85,
   ),
 ];
-
-/// The focus of today's practice session.
-const String mockSessionFocus = 'FOCUS: PENTATONIC SPEED';
-
-/// Minutes completed in today's session.
-const int mockSessionElapsedMinutes = 30;
-
-/// Minutes planned for today's session.
-const int mockSessionTotalMinutes = 60;
