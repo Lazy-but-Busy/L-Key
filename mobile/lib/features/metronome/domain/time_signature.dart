@@ -97,6 +97,18 @@ final class TimeSignature {
 
   const TimeSignature._(this.beats, this.unit);
 
+  /// Creates a signature, or null when the meter is one no notation uses.
+  ///
+  /// For values arriving from outside the app — a preferences file, a stored
+  /// exercise — where being wrong is expected and throwing would be the wrong
+  /// answer.
+  static TimeSignature? tryOf(int beats, int unit) =>
+      beats < minimumBeats ||
+          beats > maximumBeats ||
+          !allowedUnits.contains(unit)
+      ? null
+      : TimeSignature._(beats, unit);
+
   /// The fewest beats a bar may have.
   static const int minimumBeats = 1;
 

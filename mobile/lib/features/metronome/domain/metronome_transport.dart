@@ -52,8 +52,14 @@ final class MetronomeTransport {
   /// What is asked of the platform when playback starts.
   final AudioOutputConfig config;
 
+  // Synchronous, unlike the tuner's. A tuner's state arrives from the
+  // microphone and nobody is waiting on a particular frame; a metronome's
+  // transport button is pressed by a finger, and the label must change on the
+  // next frame rather than whenever the platform finishes releasing the
+  // speaker. The listener only assigns state and fires a haptic, so there is
+  // nothing here for re-entrancy to break.
   final StreamController<MetronomeState> _states =
-      StreamController<MetronomeState>.broadcast();
+      StreamController<MetronomeState>.broadcast(sync: true);
 
   MetronomeSettings _settings;
   late MetronomeState _state;
@@ -174,7 +180,9 @@ final class MetronomeTransport {
 
   /// Stops keeping time and releases the speaker.
   Future<void> stop() async {
-    await _release();
+    // Published before the speaker is released, not after. Stopping cannot
+    // meaningfully fail, and a transport button that waited for the platform
+    // would sit on STOP after the player had already pressed it.
     _publish(
       _state.copyWith(
         status: MetronomeStatus.idle,
@@ -184,6 +192,7 @@ final class MetronomeTransport {
         failure: null,
       ),
     );
+    await _release();
   }
 
   /// Changes what is played.
