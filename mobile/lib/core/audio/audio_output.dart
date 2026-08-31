@@ -123,6 +123,13 @@ typedef AudioOutputFeed = void Function(int remainingFrames);
 /// playing behind a closed screen is the battery cost `CLAUDE.md §50` is
 /// about.
 abstract interface class AudioOutput {
+  /// Whether this device can actually play audio.
+  ///
+  /// Asked rather than discovered by catching: an implementation that cannot
+  /// play says so, following `ChordAudioPlayer.isAvailable`. Callers must
+  /// check it before [start], which throws when it is false.
+  bool get isAvailable;
+
   /// Opens the speaker and begins asking [onFeed] for samples.
   ///
   /// [onFeed] is called once per low-buffer or drained event, and must respond
@@ -165,6 +172,9 @@ abstract interface class AudioOutput {
 final class UnavailableAudioOutput implements AudioOutput {
   /// Creates the unavailable output.
   const UnavailableAudioOutput();
+
+  @override
+  bool get isAvailable => false;
 
   @override
   AudioOutputFormat? get format => null;

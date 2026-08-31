@@ -26,6 +26,9 @@ final class PcmSoundAudioOutput implements AudioOutput {
   bool _running = false;
 
   @override
+  bool get isAvailable => true;
+
+  @override
   AudioOutputFormat? get format => _format;
 
   @override
