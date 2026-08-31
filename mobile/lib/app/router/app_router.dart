@@ -13,6 +13,7 @@ import 'package:l_key/features/metronome/presentation/metronome_page.dart';
 import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/scales/presentation/scales_page.dart';
 import 'package:l_key/features/settings/presentation/settings_page.dart';
+import 'package:l_key/features/songs/presentation/song_detail_page.dart';
 import 'package:l_key/features/songs/presentation/songs_page.dart';
 import 'package:l_key/features/tools/presentation/tools_page.dart';
 import 'package:l_key/features/tuner/presentation/tuner_page.dart';
@@ -114,6 +115,16 @@ GoRouter createRouter({Environment environment = Environment.local}) {
                 path: AppRoutes.songs,
                 name: AppRoutes.songsName,
                 builder: (context, state) => const SongsPage(),
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: ':songId',
+                    name: AppRoutes.songDetailName,
+                    parentNavigatorKey: rootNavigatorKey,
+                    builder: (context, state) => SongDetailPage(
+                      songId: state.pathParameters['songId'] ?? '',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

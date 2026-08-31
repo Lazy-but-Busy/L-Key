@@ -74,6 +74,16 @@ abstract final class AppRoutes {
   /// Name for named navigation to [songs].
   static const String songsName = 'songs';
 
+  /// A single song, owned by the song library.
+  ///
+  /// `:songId` is a catalogue id such as `amazing-grace`, mirroring
+  /// [chordDetail]'s reasoning: spelled out rather than symbolic, so it
+  /// survives a URL unescaped.
+  static const String songDetail = '/songs/:songId';
+
+  /// Name for named navigation to [songDetail].
+  static const String songDetailName = 'songDetail';
+
   /// Profile.
   static const String profile = '/profile';
 
