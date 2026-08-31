@@ -20,3 +20,4 @@ rejected — the rejected options are usually what you need to remember later.
 | [0013](0013-tuner-behaviour-and-thresholds.md) | The tuner's state machine has no clock, and every threshold is one file | Accepted |
 | [0014](0014-full-screen-tool-navigation.md) | Every detail screen is a tool, above the shell | Accepted |
 | [0015](0015-chord-analysis.md) | The chord engine, run backwards, and what it refuses to name | Accepted |
+| [0016](0016-metronome-timing-and-click-synthesis.md) | The metronome's clock is the sample counter, and the click is ours | Accepted |

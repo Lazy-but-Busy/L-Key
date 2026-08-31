@@ -44,6 +44,14 @@ android {
     }
 }
 
+dependencies {
+    // NotificationCompat, for the metronome's foreground-service notification.
+    // AndroidX only, no third-party package: `audio_service` would be a large
+    // dependency for a notification that is forty lines of Kotlin
+    // (CLAUDE.md §42). See docs/adr/0016.
+    implementation("androidx.core:core-ktx:1.13.1")
+}
+
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17

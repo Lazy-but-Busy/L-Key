@@ -33,6 +33,13 @@ abstract final class FeatureFlags {
     'ENABLE_TUNER_DIAGNOSTICS',
   );
 
+  /// The metronome's buffer and timing measurements, for confirming its
+  /// behaviour on a real device (docs/DEVICE-TESTING.md Part B). Never for
+  /// players: fed frames and dropout counts mean nothing to a guitarist.
+  static const bool metronomeDiagnostics = bool.fromEnvironment(
+    'ENABLE_METRONOME_DIAGNOSTICS',
+  );
+
   /// Community features (PRD.md §67, V3).
   static const bool community = bool.fromEnvironment('ENABLE_COMMUNITY');
 
@@ -43,6 +50,7 @@ abstract final class FeatureFlags {
     'backingTracks': backingTracks,
     'recording': recording,
     'tunerDiagnostics': tunerDiagnostics,
+    'metronomeDiagnostics': metronomeDiagnostics,
     'community': community,
   };
 }

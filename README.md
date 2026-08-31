@@ -1182,11 +1182,11 @@ component — see [`packages/design-tokens/README.md`](packages/design-tokens/RE
 
 # 🚧 Development Status
 
-Five phases are complete. **Phase 06 — Rhythm is next.**
+Six phases are complete. **Phase 07 — Songs is next.**
 
 These numbers are the canonical development sequence. They match the branch
 names in this repository (`phase-01-foundation` through
-`phase-05-audio-tuner`), the phase references in `docs/adr/`, and the feature
+`phase-06-rhythm`), the phase references in `docs/adr/`, and the feature
 READMEs under `mobile/lib/features/`.
 
 `CLAUDE.md` §54 orders the same features by **product priority** — what matters
@@ -1201,8 +1201,9 @@ overrides the other.
 | 04 | Fretboard | ✅ Complete |
 | 05 | Audio / Tuner | ✅ Complete \* |
 | 05.1 | UX Stabilization | ✅ Complete |
-| 06 | Rhythm | ⏭ **Next** |
-| 07 | Songs | ☐ Not started |
+| 06 | Rhythm | ✅ Complete \* |
+| 06.1 | Rhythm Training | ☐ Not started |
+| 07 | Songs | ⏭ **Next** |
 | 08 | Practice | ☐ Not started |
 | 09 | Backend | ◐ Scaffold only |
 | 10 | Admin Portal | ◐ Scaffold only |
@@ -1212,10 +1213,12 @@ overrides the other.
 | 14 | AI | ☐ Not started |
 | 15 | Advanced Audio | ☐ Not started |
 
-**\*** The tuner's arithmetic is verified against a couple of hundred synthetic
-signals. It has **not** been verified on real hardware:
-`docs/DEVICE-TESTING.md` is the protocol and it has not been run, so no
-accuracy claim belongs in the product, the store listing or the website yet.
+**\*** The tuner's and the metronome's arithmetic are verified against
+synthetic signals and buffers — a couple of hundred waveforms for the one, a
+hundred thousand pulses for the other. Neither has been verified on real
+hardware: `docs/DEVICE-TESTING.md` is the protocol, neither part has been run,
+and so no accuracy or timing claim belongs in the product, the store listing or
+the website yet.
 
 **Scaffold only** means the application builds, its configuration validates and
 its module boundaries are marked — and nothing behind them is implemented.
@@ -1297,14 +1300,24 @@ corrected what those phases shipped and did not add a feature area.
 * [x] Chord search state no longer outlives its screen
 * [x] Regression tests across all four
 
-## Phase 06 — Rhythm ⏭ Next
+## Phase 06 — Rhythm ✅ Complete \*
 
-* [ ] Tempo engine
-* [ ] Beat generation and an audible click
-* [ ] Metronome — the screen exists from Phase 02 and its tempo is editable;
-  nothing sounds yet
-* [ ] Time signatures and subdivisions
-* [ ] Rhythm visualization
+* [x] Tempo engine — meters, subdivisions, accents and tap tempo, all clockless
+* [x] Beat generation and an audible click — synthesised, placed in samples
+  (ADR-0016)
+* [x] Metronome — it sounds, it keeps time, and it survives backgrounding
+* [x] Time signatures and subdivisions — including compound and irregular
+  meters, with count-in and selectable voices
+* [x] Rhythm visualization — a beat indicator driven by the audio playhead
+* [ ] Device verification — docs/DEVICE-TESTING.md Part B has not been run
+
+## Phase 06.1 — Rhythm training
+
+Both need practice-session persistence to score against, and both are V2 in
+PRD.md §66. The accent model was built to receive them: a strumming pattern is
+a per-pulse list of emphasis levels, which the schedule and renderer already
+take.
+
 * [ ] Rhythm Trainer (PRD.md §17)
 * [ ] Strumming Trainer (PRD.md §18)
 
