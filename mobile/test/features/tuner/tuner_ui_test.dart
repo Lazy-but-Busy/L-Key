@@ -594,6 +594,7 @@ Iterable<File> get _audioDomain => <String>[
   'lib/core/audio',
   'lib/core/permissions',
   'lib/features/tuner/domain',
+  'lib/features/metronome/domain',
 ].expand((path) => Directory(path).listSync().whereType<File>());
 
 /// The tuner's widgets and controller.
