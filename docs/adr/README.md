@@ -11,7 +11,7 @@ rejected — the rejected options are usually what you need to remember later.
 | [0004](0004-token-distribution.md) | One token source, generated per platform | Accepted |
 | [0005](0005-environment-and-configuration.md) | dart-defines and zod-validated env | Accepted |
 | [0006](0006-myanmar-font-fallback.md) | Bundle Noto Sans Myanmar as the Burmese fallback | Accepted |
-| [0007](0007-shell-topology.md) | One shell, five branches, and where detail screens live | Superseded in part by 0014 |
+| [0007](0007-shell-topology.md) | One shell, five branches, and where detail screens live | Superseded in part by 0014 and 0017 |
 | [0008](0008-settings-persistence.md) | shared_preferences for settings | Accepted |
 | [0009](0009-music-primitives-and-note-spelling.md) | Spelled notes in `core/music`, not integers in a feature | Accepted |
 | [0010](0010-guitar-voicing-generation.md) | Movable shapes plus a curated open table, checked by an invariant | Accepted |
@@ -21,3 +21,4 @@ rejected — the rejected options are usually what you need to remember later.
 | [0014](0014-full-screen-tool-navigation.md) | Every detail screen is a tool, above the shell | Accepted |
 | [0015](0015-chord-analysis.md) | The chord engine, run backwards, and what it refuses to name | Accepted |
 | [0016](0016-metronome-timing-and-click-synthesis.md) | The metronome's clock is the sample counter, and the click is ours | Accepted |
+| [0017](0017-four-branches-not-five.md) | Learn and Practice are cut; the shell drops to four branches | Accepted |

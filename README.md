@@ -1202,9 +1202,8 @@ overrides the other.
 | 05 | Audio / Tuner | ✅ Complete \* |
 | 05.1 | UX Stabilization | ✅ Complete |
 | 06 | Rhythm | ✅ Complete \* |
-| 06.1 | Rhythm Training | ☐ Not started |
+| 06.1 | Rhythm Training | ✂ Cut |
 | 07 | Songs | ⏭ **Next** |
-| 08 | Practice | ☐ Not started |
 | 09 | Backend | ◐ Scaffold only |
 | 10 | Admin Portal | ◐ Scaffold only |
 | 11 | Premium | ☐ Not started |
@@ -1222,6 +1221,9 @@ the website yet.
 
 **Scaffold only** means the application builds, its configuration validates and
 its module boundaries are marked — and nothing behind them is implemented.
+
+**Cut** means the phase is removed from scope, not silently deleted from this
+table — see the phase's own section below for why.
 
 ## Phase 01 — Foundation ✅
 
@@ -1243,8 +1245,9 @@ its module boundaries are marked — and nothing behind them is implemented.
 ## Phase 02 — Flutter Shell ✅
 
 * [x] Shell — five-section `StatefulShellRoute`, per-branch stacks, Android
-  back (ADR-0007)
-* [x] Screens — Home, Tools, Learn, Practice, Songs, Profile
+  back (ADR-0007) *(Learn and Practice later cut — ADR-0017)*
+* [x] Screens — Home, Tools, Learn, Practice, Songs, Profile *(Learn and
+  Practice later removed — ADR-0017)*
 * [x] Tool layouts — tuner, metronome, chords, scales (presentation only at
   this stage)
 * [x] Components — buttons, cards, headers, navigation, empty/error/loading
@@ -1311,19 +1314,20 @@ corrected what those phases shipped and did not add a feature area.
 * [x] Rhythm visualization — a beat indicator driven by the audio playhead
 * [ ] Device verification — docs/DEVICE-TESTING.md Part B has not been run
 
-## Phase 06.1 — Rhythm training
+## Phase 06.1 — Rhythm training ✂ Cut
 
-Both need practice-session persistence to score against, and both are V2 in
+Both needed practice-session persistence to score against, and both were V2 in
 PRD.md §66. The accent model was built to receive them: a strumming pattern is
 a per-pulse list of emphasis levels, which the schedule and renderer already
-take.
+take. **Cut** — Practice is no longer part of the product (ADR-0017), and
+neither trainer has anywhere left to record a session against.
 
-* [ ] Rhythm Trainer (PRD.md §17)
-* [ ] Strumming Trainer (PRD.md §18)
+* [ ] ~~Rhythm Trainer (PRD.md §17)~~
+* [ ] ~~Strumming Trainer (PRD.md §18)~~
 
 ## Phase 07 — Songs
 
-Phase 02 built the song and learning screens against placeholder content.
+Phase 02 built the song screen against placeholder content.
 
 * [ ] Song model and content
 * [ ] Song viewer
@@ -1331,18 +1335,6 @@ Phase 02 built the song and learning screens against placeholder content.
 * [ ] Favorites
 * [ ] Transposer (PRD.md §21)
 * [ ] Capo Assistant (PRD.md §22)
-* [ ] Lessons
-
-## Phase 08 — Practice
-
-Phase 02 built the practice screen; the timer does not run.
-
-* [ ] Practice sessions
-* [ ] Exercises
-* [ ] Practice history
-* [ ] Streaks
-* [ ] Progress
-* [ ] Basic analytics
 
 ## Phase 09 — Backend ◐
 
@@ -1406,7 +1398,7 @@ Specified by PRD.md §60 and DESIGN.md §59–60.
 ## Phase 14 — AI
 
 * [ ] AI Guitar Assistant
-* [ ] AI Practice Coach
+* [ ] ~~AI Practice Coach~~ ✂ Cut — no Practice feature left to coach (ADR-0017)
 * [ ] AI songwriting assistance
 
 ## Phase 15 — Advanced Audio
