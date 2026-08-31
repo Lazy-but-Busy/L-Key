@@ -22,3 +22,4 @@ rejected — the rejected options are usually what you need to remember later.
 | [0015](0015-chord-analysis.md) | The chord engine, run backwards, and what it refuses to name | Accepted |
 | [0016](0016-metronome-timing-and-click-synthesis.md) | The metronome's clock is the sample counter, and the click is ours | Accepted |
 | [0017](0017-four-branches-not-five.md) | Learn and Practice are cut; the shell drops to four branches | Accepted |
+| [0018](0018-ad-provider-seam-and-consent.md) | The ad provider is a seam, and no plugin sits behind it yet | Accepted |

@@ -1369,10 +1369,23 @@ Phase 02 built the song screen against placeholder content.
 and every labelled row still opens — entitlement is the server's decision
 (CLAUDE.md §23, §51).
 
+`EntitlementProvider` (`core/access/entitlement.dart`) and `LkCapabilityGate`
+are the mobile-only capability-gating seam, wired to an honest
+`UnavailableEntitlementProvider` that always answers not-entitled for Premium
+— server entitlement is still Phase 09/11 backend work, not yet started.
+
+An AdMob seam (`core/ads/`, ADR-0018) exists for the same reason: an
+`AdProvider`/`ConsentManager` interface and their `Unavailable*` defaults,
+with no plugin behind them yet — see the ADR for exactly what's deferred and
+why.
+
 * [ ] Premium plans
 * [ ] Entitlements, server-authoritative
-* [ ] Capability system
+* [x] Capability system — mobile-only seam (`EntitlementProvider`,
+  `LkCapabilityGate`), honestly stubbed pending server entitlement
 * [ ] Premium UX
+* [ ] AdMob integration — seam exists (ADR-0018); dependency, platform
+  wrapper and native manifest configuration are not yet added
 
 ## Phase 12 — Payments
 
