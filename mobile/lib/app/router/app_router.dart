@@ -9,9 +9,7 @@ import 'package:l_key/features/chords/presentation/chords_page.dart';
 import 'package:l_key/features/foundation/presentation/foundation_page.dart';
 import 'package:l_key/features/fretboard/presentation/fretboard_page.dart';
 import 'package:l_key/features/home/presentation/home_page.dart';
-import 'package:l_key/features/learning/presentation/learn_page.dart';
 import 'package:l_key/features/metronome/presentation/metronome_page.dart';
-import 'package:l_key/features/practice/presentation/practice_page.dart';
 import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/scales/presentation/scales_page.dart';
 import 'package:l_key/features/settings/presentation/settings_page.dart';
@@ -105,23 +103,6 @@ GoRouter createRouter({Environment environment = Environment.local}) {
                     name: AppRoutes.scalesName,
                     parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const ScalesPage(),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: <RouteBase>[
-              GoRoute(
-                path: AppRoutes.learn,
-                name: AppRoutes.learnName,
-                builder: (context, state) => const LearnPage(),
-                routes: <RouteBase>[
-                  GoRoute(
-                    path: 'practice',
-                    name: AppRoutes.practiceName,
-                    parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const PracticePage(),
                   ),
                 ],
               ),

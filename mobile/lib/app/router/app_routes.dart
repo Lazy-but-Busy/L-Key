@@ -1,9 +1,10 @@
 /// Route paths and names, in one place so no widget hardcodes a string.
 ///
-/// The five branch roots are the primary sections from PRD.md §7. Detail
-/// screens sit under the section that owns them, so a deep link restores the
-/// right tab. `/settings` is the exception: it is reachable from the top bar
-/// of every screen, so no section owns it and it pushes above the shell.
+/// The four branch roots are the primary sections (ADR-0017 cut Learn from
+/// PRD.md §7's original five). Detail screens sit under the section that owns
+/// them, so a deep link restores the right tab. `/settings` is the exception:
+/// it is reachable from the top bar of every screen, so no section owns it
+/// and it pushes above the shell.
 abstract final class AppRoutes {
   /// Home — the first branch and the app's entry point.
   static const String home = '/';
@@ -66,19 +67,6 @@ abstract final class AppRoutes {
 
   /// Name for named navigation to [scales].
   static const String scalesName = 'scales';
-
-  /// Learn.
-  static const String learn = '/learn';
-
-  /// Name for named navigation to [learn].
-  static const String learnName = 'learn';
-
-  /// Practice session, owned by Learn. Reached from Home as well, which is
-  /// why it keeps the Learn tab lit rather than pushing above the shell.
-  static const String practice = '/learn/practice';
-
-  /// Name for named navigation to [practice].
-  static const String practiceName = 'practice';
 
   /// Song library.
   static const String songs = '/songs';
