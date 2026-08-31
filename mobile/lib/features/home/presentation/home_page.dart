@@ -5,7 +5,8 @@ import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
-import 'package:l_key/features/home/presentation/home_mock_data.dart';
+import 'package:l_key/features/songs/data/song_catalog.dart';
+import 'package:l_key/features/songs/domain/song.dart';
 import 'package:l_key/shared/widgets/lk_icon_button.dart';
 import 'package:l_key/shared/widgets/lk_pressable.dart';
 import 'package:l_key/shared/widgets/lk_section_header.dart';
@@ -77,12 +78,17 @@ class HomePage extends StatelessWidget {
           onAction: () => context.goNamed(AppRoutes.songsName),
         ),
         const SizedBox(height: LkSpacing.s4),
-        for (final song in mockRecentSongs) ...<Widget>[
+        // Sample content standing in for the song API (PRD.md §19, §50) —
+        // see features/songs/data/song_catalog.dart for why these are
+        // public-domain traditionals rather than real catalogue content.
+        for (final entry in SongCatalog.entries.take(2)) ...<Widget>[
           LkSongCard(
-            title: song.title,
-            artist: song.artist,
-            tag: song.tag,
-            bpm: song.bpm,
+            title: entry.song.title,
+            artist: entry.song.artist,
+            tag: entry.song.language == SongLanguage.myanmar
+                ? l10n.songsFilterMyanmar.toUpperCase()
+                : l10n.songsFilterEnglish.toUpperCase(),
+            bpm: entry.song.bpm,
             onTap: () => context.goNamed(AppRoutes.songsName),
           ),
           const SizedBox(height: LkSpacing.s4),
