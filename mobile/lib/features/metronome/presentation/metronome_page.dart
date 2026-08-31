@@ -6,6 +6,7 @@ import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
 import 'package:l_key/core/access/feature_tier.dart';
+import 'package:l_key/core/audio/background_audio_service.dart';
 import 'package:l_key/features/metronome/domain/click_sound.dart';
 import 'package:l_key/features/metronome/domain/metronome_state.dart';
 import 'package:l_key/features/metronome/domain/time_signature.dart';
@@ -25,7 +26,7 @@ import 'package:l_key/shared/widgets/lk_segmented_control.dart';
 /// bar and how much emphasis it carries all arrive already decided from
 /// `metronome/domain`, and the speaker's lifetime belongs to the controller
 /// (CLAUDE.md §8, §14).
-class MetronomePage extends ConsumerWidget {
+class MetronomePage extends ConsumerStatefulWidget {
   /// Creates the metronome screen.
   const MetronomePage({super.key});
 
@@ -37,7 +38,33 @@ class MetronomePage extends ConsumerWidget {
   static const int bpmStep = 1;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MetronomePage> createState() => _MetronomePageState();
+}
+
+class _MetronomePageState extends ConsumerState<MetronomePage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // The Android notification's text comes from here, because this is where
+    // localisations live and it re-runs when the locale changes. Nothing on
+    // the platform side hardcodes a string (DESIGN.md §36).
+    final l10n = AppLocalizations.of(context);
+    ref
+        .read(metronomeProvider.notifier)
+        .describeNotificationWith(
+          (settings) => BackgroundAudioNotification(
+            title: l10n.toolMetronome,
+            body: l10n.metronomeNotificationBody(
+              settings.bpm,
+              settings.signature.label,
+            ),
+            stopLabel: l10n.metronomeStop,
+          ),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(metronomeProvider);
     final controller = ref.read(metronomeProvider.notifier);

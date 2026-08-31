@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/core/access/tiered_entry.dart';
 import 'package:l_key/core/audio/audio_output.dart';
+import 'package:l_key/core/audio/background_audio_service.dart';
 import 'package:l_key/features/metronome/data/metronome_catalog.dart';
 import 'package:l_key/features/metronome/data/metronome_settings_store.dart';
 import 'package:l_key/features/metronome/domain/click_sound.dart';
@@ -22,6 +23,16 @@ import 'package:l_key/features/settings/presentation/settings_controller.dart';
 /// platform plugin. The real one is installed in `main`.
 final audioOutputProvider = Provider<AudioOutput>(
   (ref) => const UnavailableAudioOutput(),
+);
+
+/// Supplies the thing that keeps audio alive when the app is not in front.
+///
+/// Defaults to the implementation that holds nothing, which is the truth on
+/// iOS — the background mode and the audio-session category do the whole job
+/// there — and the right answer in every test. The Android service is
+/// installed in `main`.
+final backgroundAudioServiceProvider = Provider<BackgroundAudioService>(
+  (ref) => const NoBackgroundAudioService(),
 );
 
 /// Fires the short buzz that marks a beat (DESIGN.md §40).
@@ -138,6 +149,7 @@ class MetronomeController extends Notifier<MetronomeState> {
 
     final transport = MetronomeTransport(
       output: ref.read(audioOutputProvider),
+      background: ref.read(backgroundAudioServiceProvider),
       settings: store.read(),
     );
     _transport = transport;
@@ -230,8 +242,28 @@ class MetronomeController extends Notifier<MetronomeState> {
   }
 
   void _apply(MetronomeSettings settings) {
+    // The notification names the tempo, so it has to follow it. The builder
+    // comes from the screen, which is where localisations live.
+    final describe = _describeNotification;
+    if (describe != null) _transport?.notification = describe(settings);
     _transport?.apply(settings);
     _store?.write(settings);
+  }
+
+  /// Builds the background notification's copy for a given settings value.
+  ///
+  /// Set by a screen, because that is where localisations live: the platform
+  /// side hardcodes no user-facing text, and Burmese is a first-class
+  /// language (DESIGN.md §36).
+  BackgroundAudioNotification Function(MetronomeSettings)?
+  _describeNotification;
+
+  /// Installs the builder, and applies it to the current settings.
+  void describeNotificationWith(
+    BackgroundAudioNotification Function(MetronomeSettings) builder,
+  ) {
+    _describeNotification = builder;
+    _transport?.notification = builder(state.settings);
   }
 
   void _onState(MetronomeState next) {

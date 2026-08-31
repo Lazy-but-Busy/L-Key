@@ -1,0 +1,22 @@
+<!-- Notification icons are masked to a single colour on API 21+, so this is a
+     silhouette rather than the launcher mark: four beats, the first taller,
+     which is the same idea DESIGN.md §27 draws on the screen. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFFFF">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M3,4h3v16h-3z"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M9,9h3v11h-3z"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M15,9h3v11h-3z"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M21,9h2v11h-2z"/>
+</vector>

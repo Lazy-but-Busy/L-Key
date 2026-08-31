@@ -8,6 +8,7 @@ import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:l_key/core/audio/audio_output.dart';
+import 'package:l_key/core/audio/background_audio_service.dart';
 import 'package:l_key/core/errors/failure.dart';
 import 'package:l_key/features/metronome/domain/click_schedule.dart';
 import 'package:l_key/features/metronome/domain/click_synth.dart';
@@ -37,14 +38,26 @@ final class MetronomeTransport {
   MetronomeTransport({
     required AudioOutput output,
     MetronomeSettings? settings,
+    BackgroundAudioService background = const NoBackgroundAudioService(),
     this.thresholds = MetronomeThresholds.defaults,
-    this.config = const AudioOutputConfig(),
+    // Background audio is asked for by default: a metronome is expected to
+    // keep time while the player looks at a chart or locks the phone, which
+    // is the one audio feature in this app where carrying on is correct.
+    this.config = const AudioOutputConfig(allowBackgroundAudio: true),
   }) : _settings = settings ?? MetronomeSettings() {
     _output = output;
+    _background = background;
     _state = MetronomeState(settings: _settings);
   }
 
   late final AudioOutput _output;
+  late final BackgroundAudioService _background;
+
+  /// What the background notification should say, when there is one.
+  ///
+  /// Supplied by the controller from a context that has localisations,
+  /// because the platform side hardcodes no user-facing text.
+  BackgroundAudioNotification? notification;
 
   /// The numbers this transport's behaviour turns on.
   final MetronomeThresholds thresholds;
@@ -69,6 +82,7 @@ final class MetronomeTransport {
   ClickSchedule? _schedule;
   Int16List? _block;
   StreamSubscription<AudioOutputStop>? _stops;
+  StreamSubscription<void>? _backgroundStops;
 
   /// Frames handed to the device.
   int _fedFrames = 0;
@@ -144,7 +158,13 @@ final class MetronomeTransport {
       _recentDropouts.clear();
 
       _stops = _output.interruptions.listen(_onInterrupted);
+      // Pressing Stop in the notification shade must release the audio, not
+      // merely dismiss a notification over a click that carries on.
+      _backgroundStops = _background.stopRequests.listen(
+        (_) => unawaited(stop()),
+      );
       await _output.start(config, onFeed: _onFeed);
+      await _startBackground();
 
       _publish(
         _state.copyWith(
@@ -210,13 +230,29 @@ final class MetronomeTransport {
     }
     _pendingSettings = next;
     _publish(_state.copyWith(settings: next));
+    unawaited(_updateBackground());
   }
 
   /// Releases the speaker and closes the state stream for good.
   Future<void> dispose() async {
     await _release();
+    await _background.dispose();
     await _output.dispose();
     await _states.close();
+  }
+
+  Future<void> _startBackground() async {
+    final copy = notification;
+    if (!_background.isSupported || copy == null) return;
+    // A refused notification permission hides the notification; it does not
+    // stop the click, and it must not be allowed to (docs/adr/0016).
+    await _background.start(copy);
+  }
+
+  Future<void> _updateBackground() async {
+    final copy = notification;
+    if (!_background.isSupported || copy == null || !_output.isRunning) return;
+    await _background.update(copy);
   }
 
   /// The device wants more samples.
@@ -345,6 +381,9 @@ final class MetronomeTransport {
   Future<void> _release() async {
     await _stops?.cancel();
     _stops = null;
+    await _backgroundStops?.cancel();
+    _backgroundStops = null;
+    await _background.stop();
     _schedule = null;
     _renderer = null;
     _synth = null;

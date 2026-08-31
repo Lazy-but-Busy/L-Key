@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:l_key/core/audio/audio_output.dart';
+import 'package:l_key/core/audio/background_audio_service.dart';
 import 'package:l_key/features/metronome/domain/metronome_settings.dart';
 import 'package:l_key/features/metronome/domain/metronome_state.dart';
 import 'package:l_key/features/metronome/domain/metronome_transport.dart';
@@ -93,12 +94,59 @@ class _FakeAudioOutput implements AudioOutput {
   void interrupt() => _stops.add(AudioOutputStop.interrupted);
 }
 
-const _config = AudioOutputConfig();
+/// A background holder that records what it was asked to do.
+class _FakeBackground implements BackgroundAudioService {
+  final StreamController<void> _requests = StreamController<void>.broadcast();
+  int startCount = 0;
+  int updateCount = 0;
+  int stopCount = 0;
+  BackgroundAudioNotification? last;
+
+  @override
+  bool isSupported = true;
+
+  @override
+  Stream<void> get stopRequests => _requests.stream;
+
+  @override
+  Future<void> start(BackgroundAudioNotification notification) async {
+    startCount++;
+    last = notification;
+  }
+
+  @override
+  Future<void> update(BackgroundAudioNotification notification) async {
+    updateCount++;
+    last = notification;
+  }
+
+  @override
+  Future<void> stop() async => stopCount++;
+
+  @override
+  Future<void> dispose() async => _requests.close();
+
+  /// The player pressed Stop in the notification shade.
+  void requestStop() => _requests.add(null);
+}
+
+const _config = AudioOutputConfig(allowBackgroundAudio: true);
 
 MetronomeTransport _transport(
   _FakeAudioOutput output, {
   MetronomeSettings? settings,
-}) => MetronomeTransport(output: output, settings: settings);
+  BackgroundAudioService background = const NoBackgroundAudioService(),
+}) => MetronomeTransport(
+  output: output,
+  settings: settings,
+  background: background,
+);
+
+const _copy = BackgroundAudioNotification(
+  title: 'Metronome',
+  body: '120 BPM',
+  stopLabel: 'Stop',
+);
 
 void main() {
   group('MetronomeTransport playback', () {
@@ -404,6 +452,70 @@ void main() {
       }
 
       expect(transport.state.isStruggling, isTrue);
+    });
+  });
+
+  group('MetronomeTransport background', () {
+    test('it asks to keep playing, and lets go on every path out', () async {
+      // CLAUDE.md §50 — audio that outlives its reason is the battery cost.
+      // The service is what Android requires to keep a click alive behind a
+      // locked screen, and it must be released exactly as the speaker is.
+      final background = _FakeBackground();
+      final output = _FakeAudioOutput();
+      final transport = _transport(output, background: background)
+        ..notification = _copy;
+      addTearDown(transport.dispose);
+
+      await transport.start();
+      expect(background.startCount, 1);
+      expect(background.last, _copy);
+
+      await transport.stop();
+      expect(background.stopCount, greaterThanOrEqualTo(1));
+    });
+
+    test('a platform that needs no holder is not asked for one', () async {
+      // iOS keeps playing on the background audio mode alone, and saying so
+      // is more honest than a no-op that pretends to hold something.
+      final background = _FakeBackground()..isSupported = false;
+      final output = _FakeAudioOutput();
+      final transport = _transport(output, background: background)
+        ..notification = _copy;
+      addTearDown(transport.dispose);
+
+      await transport.start();
+      expect(background.startCount, 0);
+    });
+
+    test('stopping from the shade really releases the speaker', () async {
+      // A notification whose Stop button only dismissed the notification,
+      // over a click that carried on, would be worse than none.
+      final background = _FakeBackground();
+      final output = _FakeAudioOutput();
+      final transport = _transport(output, background: background)
+        ..notification = _copy;
+      addTearDown(transport.dispose);
+
+      await transport.start();
+      background.requestStop();
+      await Future<void>.delayed(Duration.zero);
+
+      expect(transport.state.status, MetronomeStatus.idle);
+      expect(output.stopCount, 1);
+    });
+
+    test('the notification follows the tempo', () async {
+      final background = _FakeBackground();
+      final output = _FakeAudioOutput();
+      final transport = _transport(output, background: background)
+        ..notification = _copy;
+      addTearDown(transport.dispose);
+
+      await transport.start();
+      transport.apply(transport.settings.withBpm(90));
+      await Future<void>.delayed(Duration.zero);
+
+      expect(background.updateCount, greaterThanOrEqualTo(1));
     });
   });
 

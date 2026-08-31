@@ -1,7 +1,11 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:l_key/app/app.dart';
+import 'package:l_key/core/audio/background_audio_service.dart';
+import 'package:l_key/core/audio/platform/method_channel_background_audio.dart';
 import 'package:l_key/core/audio/platform/pcm_sound_audio_output.dart';
 import 'package:l_key/core/audio/platform/record_audio_input.dart';
 import 'package:l_key/core/config/app_config.dart';
@@ -40,6 +44,15 @@ Future<void> main() async {
           final output = PcmSoundAudioOutput();
           ref.onDispose(output.dispose);
           return output;
+        }),
+        // Android is the only platform that needs one: iOS keeps playing on
+        // the background audio mode and the playback session category alone.
+        // `dart:io` lives here so nothing below main has to know about it.
+        backgroundAudioServiceProvider.overrideWith((ref) {
+          if (!Platform.isAndroid) return const NoBackgroundAudioService();
+          final service = MethodChannelBackgroundAudio();
+          ref.onDispose(service.dispose);
+          return service;
         }),
       ],
       child: const LKeyApp(),
