@@ -1660,3 +1660,70 @@ The application should always answer one question:
 
 If not, it should not be added merely for feature count.
 
+---
+
+# 69. Advertising & Monetization Analytics
+
+This section did not exist in earlier drafts of this document. It is added
+alongside the mobile-only groundwork described in `docs/adr/0018` — the
+backend and Admin Portal work it depends on (Phase 09, Phase 10) has not
+started, and nothing here should be read as already built. See
+`README.md`'s Development Status for what actually exists today.
+
+## 69.1 Placements
+
+* Banner
+* Native, where a placement fits the surrounding layout without competing
+  with a musical control (DESIGN.md §18 — icons and ads alike must not
+  compete with typography or with the tools a guitarist is using)
+* Rewarded, offered as an alternative path to a capability rather than
+  forced on the player
+
+Free users see ads. A `remove_ads` purchase, and Premium itself, both
+suppress them — enforcement is server-authoritative, per §46 and §51,
+exactly like every other entitlement.
+
+## 69.2 `remove_ads` Capability
+
+A purchasable capability, independent of a full Premium subscription, that
+suppresses ad placements. Modeled the same way other entitlements are (§46):
+a status a signed-in account carries, verified server-side, never decided by
+the client.
+
+## 69.3 Consent
+
+A consent flow (Google UMP or an equivalent) must resolve before any ad SDK
+initializes or requests an ad — not after, and not in parallel. A player who
+declines personalized ads must still be served non-personalized ones where
+the consent framework and applicable regulation permit it, never no ads at
+all as an unintended side effect of a technical ordering mistake.
+
+## 69.4 Monetization Analytics
+
+Pulled from the ad network's own reporting and impression-level revenue
+APIs. No benchmark value (an assumed Myanmar eCPM, an expected fill rate, or
+similar) may be hardcoded anywhere in the client, the backend, or the Admin
+Portal — every figure below is a number the ad network or the payment
+processor reports, not one this codebase invents.
+
+* Ad requests
+* Ad impressions
+* Match rate
+* Show rate
+* eCPM
+* Estimated ad revenue
+* Revenue per active user
+* Rewarded impressions
+* Rewarded completions
+* Rewarded revenue
+* Premium conversion
+* Premium revenue
+* Combined ARPU (advertising and Premium revenue together)
+
+## 69.5 Admin Controls
+
+Ad placement configuration and ad frequency configuration are admin-editable,
+versioned settings (§29's draft/published discipline applies), not values
+hardcoded in the mobile client. Rate-limited and audit-logged like every
+other admin change to monetization or Premium configuration (§52, §62).
+
