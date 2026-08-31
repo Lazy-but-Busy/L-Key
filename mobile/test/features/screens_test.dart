@@ -5,9 +5,7 @@ import 'package:l_key/app/theme/app_theme.dart';
 import 'package:l_key/features/chords/presentation/chord_detail_page.dart';
 import 'package:l_key/features/chords/presentation/chords_page.dart';
 import 'package:l_key/features/fretboard/presentation/fretboard_page.dart';
-import 'package:l_key/features/learning/presentation/learn_page.dart';
 import 'package:l_key/features/metronome/presentation/metronome_page.dart';
-import 'package:l_key/features/practice/presentation/practice_page.dart';
 import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/scales/presentation/scales_page.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
@@ -36,8 +34,6 @@ void main() {
     'Chord detail': () => const ChordDetailPage(chordId: 'c-major'),
     'Scales': ScalesPage.new,
     'Fretboard': FretboardPage.new,
-    'Learn': LearnPage.new,
-    'Practice': PracticePage.new,
     'Songs': SongsPage.new,
     'Profile': ProfilePage.new,
     'Settings': SettingsPage.new,

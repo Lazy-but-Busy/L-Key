@@ -75,17 +75,11 @@ Finder tab(String label) => find.descendant(
 
 void main() {
   group('AppShell', () {
-    testWidgets('starts on Home and offers the five sections', (tester) async {
+    testWidgets('starts on Home and offers the four sections', (tester) async {
       await pumpApp(tester);
 
       expect(find.byType(HomePage), findsOneWidget);
-      for (final label in <String>[
-        'Home',
-        'Tools',
-        'Learn',
-        'Songs',
-        'Profile',
-      ]) {
+      for (final label in <String>['Home', 'Tools', 'Songs', 'Profile']) {
         expect(tab(label), findsOneWidget, reason: '$label tab missing');
       }
     });
@@ -205,13 +199,13 @@ void main() {
       expect(find.byType(SongsPage), findsNothing);
     });
 
-    testWidgets('the wordmark bar appears only on the five sections', (
+    testWidgets('the wordmark bar appears only on the four sections', (
       tester,
     ) async {
       await pumpApp(tester);
       expect(find.byType(LkTopAppBar), findsOneWidget);
 
-      for (final section in <String>['Tools', 'Learn', 'Songs', 'Profile']) {
+      for (final section in <String>['Tools', 'Songs', 'Profile']) {
         await tester.tap(tab(section));
         await tester.pumpAndSettle();
         expect(
@@ -223,11 +217,11 @@ void main() {
     });
 
     testWidgets('every section root keeps both bars', (tester) async {
-      // The counterpart to the tool tests: the five sections are the only
+      // The counterpart to the tool tests: the four sections are the only
       // surfaces that carry the wordmark and the bottom bar (ADR-0014).
       await pumpApp(tester);
 
-      for (final section in <String>['Home', 'Tools', 'Learn', 'Songs']) {
+      for (final section in <String>['Home', 'Tools', 'Songs']) {
         await tester.tap(tab(section));
         await tester.pumpAndSettle();
         expect(find.byType(LkTopAppBar), findsOneWidget, reason: section);
