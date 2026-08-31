@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/app/localization/generated/app_localizations.dart';
 import 'package:l_key/app/router/app_routes.dart';
 import 'package:l_key/app/theme/app_colors.dart';
 import 'package:l_key/app/theme/app_text.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
+import 'package:l_key/features/metronome/presentation/metronome_controller.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
 import 'package:l_key/shared/widgets/lk_card.dart';
 import 'package:l_key/shared/widgets/lk_chip.dart';
@@ -43,15 +45,15 @@ const int _mockPlannedMinutes = 30;
 /// link restores the right tab. The timer does not run: session tracking and
 /// its persistence are a later phase, so the figures are a static plan rather
 /// than an invented measurement (CLAUDE.md §47).
-class PracticePage extends StatefulWidget {
+class PracticePage extends ConsumerStatefulWidget {
   /// Creates the practice screen.
   const PracticePage({super.key});
 
   @override
-  State<PracticePage> createState() => _PracticePageState();
+  ConsumerState<PracticePage> createState() => _PracticePageState();
 }
 
-class _PracticePageState extends State<PracticePage> {
+class _PracticePageState extends ConsumerState<PracticePage> {
   bool _isRunning = false;
 
   @override
@@ -140,7 +142,72 @@ class _PracticePageState extends State<PracticePage> {
             ],
           ),
           const SizedBox(height: LkSpacing.s6),
+
+          const _TempoRow(),
+          const SizedBox(height: LkSpacing.s6),
+
           LkPremiumNote(capability: l10n.practiceProNote),
+        ],
+      ),
+    );
+  }
+}
+
+/// The metronome's tempo, and a way to start it without leaving the screen.
+///
+/// **This is the whole of the practice/metronome integration, on purpose.**
+/// The session timer, its persistence and every statistic on this screen still
+/// belong to a later phase, and a tempo row that implied otherwise would be
+/// the invented measurement CLAUDE.md §47 rules out. It watches
+/// [metronomeTempoProvider] rather than the whole state, so a running
+/// metronome does not rebuild this screen on every beat.
+class _TempoRow extends ConsumerWidget {
+  const _TempoRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.lkColors;
+    final tempo = ref.watch(metronomeTempoProvider);
+
+    return Container(
+      padding: const EdgeInsets.all(LkSpacing.s4),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border.all(color: colors.border, width: LkBorders.regular),
+      ),
+      child: Row(
+        spacing: LkSpacing.s4,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                '${tempo.bpm}',
+                style: context.lkType.h2.copyWith(color: colors.textPrimary),
+              ),
+              Text(
+                l10n.metronomeBpm,
+                style: context.lkType.label.copyWith(
+                  color: colors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Text(
+              '${l10n.toolMetronome} · ${tempo.signature.label}',
+              style: context.lkType.technical.copyWith(
+                color: colors.textSecondary,
+              ),
+            ),
+          ),
+          LkButton(
+            label: tempo.isRunning ? l10n.metronomeStop : l10n.metronomeStart,
+            variant: LkButtonVariant.secondary,
+            onPressed: ref.read(metronomeProvider.notifier).toggle,
+          ),
         ],
       ),
     );
