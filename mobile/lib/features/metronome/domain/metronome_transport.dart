@@ -39,6 +39,7 @@ final class MetronomeTransport {
     required AudioOutput output,
     MetronomeSettings? settings,
     BackgroundAudioService background = const NoBackgroundAudioService(),
+    this.collectDiagnostics = false,
     this.thresholds = MetronomeThresholds.defaults,
     // Background audio is asked for by default: a metronome is expected to
     // keep time while the player looks at a chart or locks the phone, which
@@ -58,6 +59,9 @@ final class MetronomeTransport {
   /// Supplied by the controller from a context that has localisations,
   /// because the platform side hardcodes no user-facing text.
   BackgroundAudioNotification? notification;
+
+  /// Whether to gather the measurements docs/DEVICE-TESTING.md Part B reads.
+  final bool collectDiagnostics;
 
   /// The numbers this transport's behaviour turns on.
   final MetronomeThresholds thresholds;
@@ -210,6 +214,7 @@ final class MetronomeTransport {
         beat: 0,
         countInBeatsRemaining: 0,
         failure: null,
+        diagnostics: null,
       ),
     );
     await _release();
@@ -283,6 +288,29 @@ final class MetronomeTransport {
     // click sits on sample zero and is only queued by the loop above, so
     // without this the downbeat would wait a block to appear on screen.
     _advanceTo(_playedFrames);
+
+    if (collectDiagnostics) _publish(_state.copyWith(diagnostics: _measure()));
+  }
+
+  /// A snapshot of what the audio path is actually doing.
+  ///
+  /// The next click comes from the schedule rather than the queue of rendered
+  /// ones, because the queue is usually empty: the beat after the playhead is
+  /// often further out than the block that has been rendered, and a field that
+  /// read "—" most of the time would be no use to anyone with a recorder.
+  MetronomeDiagnostics _measure() {
+    final schedule = _schedule;
+    return MetronomeDiagnostics(
+      sampleRate: _output.format?.sampleRate ?? config.sampleRate,
+      blockFrames: config.blockFrames,
+      targetBufferFrames: config.targetBufferFrames,
+      fedFrames: _fedFrames,
+      playedFrames: _playedFrames,
+      dropouts: _state.dropouts,
+      nextClickSample: schedule?.sampleOf(
+        schedule.firstPulseAtOrAfter(_playedFrames + 1),
+      ),
+    );
   }
 
   /// Publishes every beat the device has now reached.

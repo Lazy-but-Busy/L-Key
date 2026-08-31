@@ -455,6 +455,64 @@ void main() {
     });
   });
 
+  group('MetronomeTransport diagnostics', () {
+    test('the measurements are off unless asked for', () async {
+      // A player never sees these, so they are not gathered by default.
+      final output = _FakeAudioOutput();
+      final transport = _transport(output);
+      addTearDown(transport.dispose);
+
+      await transport.start();
+      output.demand();
+      expect(transport.state.diagnostics, isNull);
+    });
+
+    test('they report what the audio path is actually doing', () async {
+      // docs/DEVICE-TESTING.md Part B reads these; they must be measurements,
+      // not restatements of the settings.
+      final output = _FakeAudioOutput();
+      final transport = MetronomeTransport(
+        output: output,
+        collectDiagnostics: true,
+      );
+      addTearDown(transport.dispose);
+
+      await transport.start();
+      output.demand();
+
+      final diagnostics = transport.state.diagnostics!;
+      expect(diagnostics.sampleRate, 44100);
+      expect(diagnostics.blockFrames, _config.blockFrames);
+      expect(diagnostics.fedFrames, output.fedFrames);
+      expect(diagnostics.playedFrames, 0);
+      expect(
+        diagnostics.bufferedFrames,
+        greaterThanOrEqualTo(_config.targetBufferFrames),
+      );
+      expect(
+        diagnostics.nextClickInMs,
+        closeTo(500, 1),
+        reason: 'the second beat at 120 BPM is half a second out',
+      );
+    });
+
+    test('stopping leaves no stale numbers behind', () async {
+      final output = _FakeAudioOutput();
+      final transport = MetronomeTransport(
+        output: output,
+        collectDiagnostics: true,
+      );
+      addTearDown(transport.dispose);
+
+      await transport.start();
+      output.demand();
+      expect(transport.state.diagnostics, isNotNull);
+
+      await transport.stop();
+      expect(transport.state.diagnostics, isNull);
+    });
+  });
+
   group('MetronomeTransport background', () {
     test('it asks to keep playing, and lets go on every path out', () async {
       // CLAUDE.md §50 — audio that outlives its reason is the battery cost.

@@ -12,6 +12,7 @@ import 'package:l_key/features/metronome/domain/metronome_state.dart';
 import 'package:l_key/features/metronome/domain/time_signature.dart';
 import 'package:l_key/features/metronome/presentation/metronome_controller.dart';
 import 'package:l_key/features/metronome/presentation/widgets/metronome_beat_indicator.dart';
+import 'package:l_key/features/metronome/presentation/widgets/metronome_diagnostics_card.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
 import 'package:l_key/shared/widgets/lk_detail_scaffold.dart';
 import 'package:l_key/shared/widgets/lk_premium_badge.dart';
@@ -140,6 +141,11 @@ class _MetronomePageState extends ConsumerState<MetronomePage> {
           const SizedBox(height: LkSpacing.s6),
 
           LkPremiumNote(capability: l10n.metronomeProNote),
+
+          if (state.diagnostics != null) ...<Widget>[
+            const SizedBox(height: LkSpacing.s6),
+            MetronomeDiagnosticsCard(diagnostics: state.diagnostics!),
+          ],
         ],
       ),
     );

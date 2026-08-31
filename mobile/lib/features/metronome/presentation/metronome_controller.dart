@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l_key/core/access/tiered_entry.dart';
 import 'package:l_key/core/audio/audio_output.dart';
 import 'package:l_key/core/audio/background_audio_service.dart';
+import 'package:l_key/core/config/feature_flags.dart';
 import 'package:l_key/features/metronome/data/metronome_catalog.dart';
 import 'package:l_key/features/metronome/data/metronome_settings_store.dart';
 import 'package:l_key/features/metronome/domain/click_sound.dart';
@@ -151,6 +152,12 @@ class MetronomeController extends Notifier<MetronomeState> {
       output: ref.read(audioOutputProvider),
       background: ref.read(backgroundAudioServiceProvider),
       settings: store.read(),
+      // The flag is a compile-time constant, so in a default build the
+      // analyzer sees this as passing `false` to a parameter that already
+      // defaults to it. It is not redundant: with the dart-define set, this
+      // is what turns the measurements on.
+      // ignore: avoid_redundant_argument_values
+      collectDiagnostics: FeatureFlags.metronomeDiagnostics,
     );
     _transport = transport;
     _states = transport.states.listen(_onState);
