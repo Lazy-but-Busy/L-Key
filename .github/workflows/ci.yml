@@ -38,6 +38,17 @@ jobs:
 
       - run: npm ci
 
+      # `@prisma/client`'s generated types (models, enums) don't exist until
+      # this runs — required before typecheck/build, not just before the
+      # database is actually touched. `prisma generate` doesn't connect to
+      # the database, but `prisma.config.ts` resolves DATABASE_URL eagerly
+      # just to load, so it still needs a syntactically valid value here.
+      - name: Generate Prisma Client
+        working-directory: backend
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://lkey:lkey@localhost:5432/lkey
+
       # Fails if a generated token file drifts from tokens.json, and re-runs
       # the WCAG contrast gate. tokens.g.dart is committed in `dart format`
       # shape and so is checked by the Flutter job below — this runner has no
