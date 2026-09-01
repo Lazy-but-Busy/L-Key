@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { loadDotenv } from './load-dotenv';
+
 /**
  * Environment contract for the L Key backend.
  *
@@ -44,6 +46,12 @@ export type Env = z.infer<typeof envSchema>;
  * Throws with every problem listed at once, rather than one at a time.
  */
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
+  // Populate process.env from backend/.env in local dev before validating
+  // it — a no-op wherever the real environment already supplies these
+  // variables (CI, production), and skipped entirely when a test passes an
+  // explicit `source` rather than validating the real process environment.
+  if (source === process.env) loadDotenv();
+
   const parsed = envSchema.safeParse(source);
   if (!parsed.success) {
     const detail = parsed.error.issues

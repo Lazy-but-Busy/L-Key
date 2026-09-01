@@ -1,32 +1,13 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-
-import { AppModule } from './app.module';
 import { loadEnv } from './config/env.schema';
 
-async function bootstrap(): Promise<void> {
-  // Validate before Nest starts, so a bad environment fails in one clear line.
-  const env = loadEnv();
+// Validate — and, in local dev, load backend/.env into process.env — before
+// anything else runs. This must happen before `AppModule` is imported: its
+// `ConfigModule.forRoot()` call reads process.env synchronously the moment
+// the module is loaded, via its own dotenv parsing (which mishandles a
+// secret containing `$`, unlike this project's own loader). A static
+// `import './bootstrap'` would be hoisted above this line by TypeScript
+// regardless of source order, so the module is loaded dynamically instead,
+// deferring it until this line has actually run.
+loadEnv();
 
-  const app = await NestFactory.create(AppModule);
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true, // strip unknown properties
-      forbidNonWhitelisted: true, // reject them loudly
-      transform: true,
-    }),
-  );
-
-  app.enableCors({
-    origin: env.CORS_ORIGINS.split(',').map((o) => o.trim()),
-    credentials: true,
-  });
-
-  await app.listen(env.PORT);
-  new Logger('Bootstrap').log(
-    `L Key backend listening on :${env.PORT} (${env.APP_ENV})`,
-  );
-}
-
-void bootstrap();
+void import('./bootstrap').then(({ bootstrap }) => bootstrap());
