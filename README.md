@@ -1204,7 +1204,7 @@ overrides the other.
 | 06 | Rhythm | ✅ Complete \* |
 | 06.1 | Rhythm Training | ✂ Cut |
 | 07 | Songs | ⏭ **Next** |
-| 09 | Backend | ◐ Scaffold only |
+| 09 | Backend | ✅ Complete |
 | 10 | Admin Portal | ◐ Scaffold only |
 | 11 | Premium | ☐ Not started |
 | 12 | Payments | ☐ Not started |
@@ -1336,15 +1336,24 @@ Phase 02 built the song screen against placeholder content.
 * [ ] Transposer (PRD.md §21)
 * [ ] Capo Assistant (PRD.md §22)
 
-## Phase 09 — Backend ◐
+## Phase 09 — Backend ✅
 
 * [x] Scaffold — configuration validation, role guard, exception filter,
   redacting logger and the Prisma schema *(delivered in Phase 01)*
-* [ ] Authentication
-* [ ] User profiles
-* [ ] Content API
-* [ ] Synchronization
-* [ ] Notifications
+* [x] Authentication — email/password registration and login, argon2 password
+  hashing, stateless access JWTs with DB-backed rotating/revocable refresh
+  tokens (theft detection via family revocation)
+* [x] User profiles — display name/avatar, backed by `UserProfile`
+* [x] Content API — Songs, Chords, Scales: public read (published content
+  only, non-editors 404 on drafts rather than exposing their existence),
+  `EDITOR`+ role-gated CRUD and draft/review/published/unpublished/archived
+  status transitions, never a hard delete
+* [x] Synchronization — favorites (idempotent add/remove) and preferences
+  (locale/theme/reference pitch, mirroring mobile's local `Settings`) as a
+  whole-row sync, not a general sync engine
+* [x] Notifications — a real in-app inbox (list/mark-read), with the
+  external delivery channel an honest stub (`UnavailableNotificationDispatcher`)
+  pending a production push/email provider
 
 ## Phase 10 — Admin Portal ◐
 

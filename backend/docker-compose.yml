@@ -1,0 +1,21 @@
+# Local PostgreSQL for development and integration tests (README.md's Phase
+# 09 prerequisite: "PostgreSQL 16+"). Credentials match .env.example.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: lkey
+      POSTGRES_PASSWORD: lkey
+      POSTGRES_DB: lkey
+    ports:
+      - '5432:5432'
+    volumes:
+      - lkey-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U lkey']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  lkey-postgres-data:

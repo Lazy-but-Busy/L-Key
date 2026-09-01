@@ -29,6 +29,21 @@ Validated by `src/config/env.schema.ts` (zod). Copy `.env.example` to start.
 The Prisma CLI reads `DATABASE_URL` through `prisma.config.ts`. Prisma 7 no
 longer accepts `url` in the schema's datasource block.
 
+### Local PostgreSQL
+
+`backend/docker-compose.yml` provisions a `postgres:16` container matching
+`.env.example`'s credentials:
+
+```sh
+cd backend
+npm run db:up             # starts Postgres on :5432
+npm run prisma:migrate    # applies migrations, generating the client
+```
+
+`npm run prisma:migrate:deploy` applies migrations without prompting or
+generating a new one (used in CI and production). `npm run db:down` stops
+the container.
+
 ## Admin and Website — `.env.local`
 
 Only `NEXT_PUBLIC_*` values, validated by each app's `lib/env.ts`.
