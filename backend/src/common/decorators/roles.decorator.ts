@@ -1,12 +1,13 @@
 import { SetMetadata } from '@nestjs/common';
+import { AdminRole } from '@prisma/client';
 
-/** Administrative roles, in ascending order of privilege (CLAUDE.md §27). */
-export enum AdminRole {
-  Support = 'SUPPORT',
-  Editor = 'EDITOR',
-  Admin = 'ADMIN',
-  SuperAdmin = 'SUPER_ADMIN',
-}
+/**
+ * Administrative roles (CLAUDE.md §27), re-exported from the Prisma-generated
+ * enum so `request.user.role` (populated from a DB-backed JWT claim) and
+ * `@Roles(...)` always agree on the same values — no second, hand-written
+ * enum to drift out of sync.
+ */
+export { AdminRole };
 
 /** Metadata key read by `RolesGuard`. */
 export const ROLES_KEY = 'lk:roles';

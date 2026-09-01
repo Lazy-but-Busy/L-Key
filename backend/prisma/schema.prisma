@@ -70,6 +70,13 @@ model User {
 
   orders PaymentOrder[]
 
+  profile         UserProfile?
+  preferences     UserPreferences?
+  authCredentials AuthCredential[]
+  refreshTokens   RefreshToken[]
+  favorites       Favorite[]
+  notifications   Notification[]
+
   @@index([status])
   @@map("users")
 }
@@ -161,4 +168,296 @@ model Entitlement {
   @@unique([userId, planId])
   @@index([userId, status])
   @@map("entitlements")
+}
+
+// ---------------------------------------------------------------------------
+// Phase 09 — Backend
+//
+// Authentication, user profiles/preferences, the Song/Chord/Scale content
+// API, minimal sync (favorites + preferences), and a notifications inbox.
+// Content status stops at draft/review/published/unpublished/archived
+// (CLAUDE.md §29) with no version-history table — that is Phase 10 CMS
+// depth. `ContentTier` is a label only; nothing here enforces it
+// (CLAUDE.md §23, §51 — enforcement is Phase 11).
+// ---------------------------------------------------------------------------
+
+/// Content lifecycle (CLAUDE.md §29). Deletion is a transition to ARCHIVED,
+/// never a row removal (CLAUDE.md §30).
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  UNPUBLISHED
+  ARCHIVED
+}
+
+/// Commercial label only — mirrors mobile's FeatureTier
+/// (`mobile/lib/core/access/feature_tier.dart`). No enforcement in Phase 09.
+enum ContentTier {
+  FREE
+  PREMIUM
+}
+
+/// A single tag per record, mirroring mobile's SongLanguage — a song is
+/// either an English or a Myanmar song, not parallel bilingual columns.
+enum SongLanguage {
+  ENGLISH
+  MYANMAR
+}
+
+enum SongDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+/// Discriminator for a favoritable entity. A new favoritable type (PRD.md
+/// §39 lists more than Phase 09 models) only needs a new enum value, not a
+/// schema reshape.
+enum FavoriteTargetType {
+  SONG
+  CHORD
+  SCALE
+}
+
+/// How a login credential was established. PRD.md §9: "introduced
+/// incrementally" — Google/Apple arrive as new AuthCredential rows, no
+/// schema change.
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  APPLE
+}
+
+/// Mirrors mobile's persisted ThemeMode
+/// (`mobile/lib/features/settings/presentation/settings_controller.dart`).
+enum ThemeModePreference {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+/// One login method for a user. Kept off `User` so a second provider is a
+/// new row, never a migration.
+model AuthCredential {
+  id       String       @id @default(cuid())
+  userId   String
+  provider AuthProvider
+
+  /// Argon2id hash. Null for OAuth providers with no local password.
+  passwordHash String?
+
+  /// External provider's subject id. Null for EMAIL.
+  providerUserId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, provider])
+  @@unique([provider, providerUserId])
+  @@map("auth_credentials")
+}
+
+/// Revocable, rotating refresh tokens (CLAUDE.md §22 — tokens must be
+/// securely stored). Access tokens stay stateless JWTs; only the refresh
+/// token is persisted, and only as a hash of the opaque value — the raw
+/// token is never stored.
+model RefreshToken {
+  id     String @id @default(cuid())
+  userId String
+
+  /// SHA-256 of the opaque refresh token value.
+  tokenHash String @unique
+
+  /// Tokens rotated from one login share a family. Reusing an already
+  /// revoked token in a family revokes the whole family (theft detection).
+  familyId String
+
+  revokedAt DateTime?
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([familyId])
+  @@map("refresh_tokens")
+}
+
+/// Identity/display data shown on the Profile screen. "Member since" is
+/// `User.createdAt` — no duplicate column here.
+model UserProfile {
+  id          String  @id @default(cuid())
+  userId      String  @unique
+  displayName String?
+  avatarUrl   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_profiles")
+}
+
+/// Mirrors mobile's local `Settings` (locale/themeMode/referencePitchHz) so
+/// a registered user's device settings survive reinstall or a second
+/// device. A single whole-row upsert — the concrete, MVP-appropriate
+/// meaning of "required local user state", not a general sync engine.
+model UserPreferences {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  locale    String?
+  themeMode ThemeModePreference @default(SYSTEM)
+
+  /// Hz. Mobile clamps to 415–445 (Settings.minimumReferencePitchHz /
+  /// maximumReferencePitchHz); the DTO enforces the same range here.
+  referencePitchHz Float @default(440)
+
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_preferences")
+}
+
+/// A song's playable content. `sections`/`chords`/`metadata` are JSON:
+/// nothing in Phase 09 needs to query inside them, and a rigid relational
+/// shape would just be migrated again once Phase 10's real CMS needs
+/// arrive. The scalar/indexed fields are exactly what list/filter queries
+/// use. This contract is independent of today's placeholder mobile `Song`
+/// model (a single ChordPro blob) — see `mobile/lib/features/songs/domain/song.dart`.
+model Song {
+  id         String         @id @default(cuid())
+  title      String
+  artist     String
+  language   SongLanguage
+  key        String
+  capo       Int            @default(0)
+  tuning     String         @default("standard")
+  bpm        Int
+  difficulty SongDifficulty
+  genre      String
+
+  /// Ordered structural document: sections (intro/verse/chorus/...), each
+  /// with lines pairing lyric text with chord placements.
+  sections Json
+  /// Plain lyric text, for search and lyric-only display.
+  lyrics   String
+  /// Distinct chord names/voicings used in the song, independent of
+  /// `sections` — lets a list view show "Chords: C, G, Am, F" without
+  /// parsing the full structural document.
+  chords   Json
+  /// Extensible bag. Rights/copyright data (CLAUDE.md §31) lives at
+  /// `metadata.rights` by convention, validated at the service layer.
+  metadata Json?
+
+  status ContentStatus @default(DRAFT)
+  tier   ContentTier   @default(FREE)
+
+  publishedAt DateTime?
+  archivedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, language])
+  @@index([status, tier])
+  @@index([title])
+  @@map("songs")
+}
+
+/// No `language` field — chord names/formulas are notation, not prose.
+model Chord {
+  id       String  @id @default(cuid())
+  name     String
+  root     String
+  quality  String
+  /// Interval formula, e.g. ["1","3","5","7"].
+  formula  Json
+  /// [{ tuning, frets[], fingers[], barre? }, ...]
+  voicings Json
+  audioUrl String?
+
+  status ContentStatus @default(DRAFT)
+  tier   ContentTier   @default(FREE)
+
+  archivedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([root, quality, name])
+  @@index([status])
+  @@map("chords")
+}
+
+model Scale {
+  id       String @id @default(cuid())
+  name     String
+  category String
+  formula  Json
+  /// Fretboard box / three-notes-per-string patterns.
+  patterns Json
+
+  status ContentStatus @default(DRAFT)
+  tier   ContentTier   @default(FREE)
+
+  archivedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name])
+  @@index([status])
+  @@map("scales")
+}
+
+/// A user's saved song/chord/scale. `targetId` is validated against the
+/// right table at the service layer rather than a typed FK — Songs are
+/// never hard-deleted, so a favorite pointing at a since-archived Song
+/// stays valid.
+model Favorite {
+  id         String             @id @default(cuid())
+  userId     String
+  targetType FavoriteTargetType
+  targetId   String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, targetType, targetId])
+  @@index([userId, targetType])
+  @@map("favorites")
+}
+
+/// An in-app notification. The row itself is real, working functionality;
+/// only the external delivery channel is a stub in Phase 09 (see
+/// `NotificationDispatcher` / `UnavailableNotificationDispatcher`).
+model Notification {
+  id     String @id @default(cuid())
+  userId String
+
+  /// Free-form category, e.g. "content.published" — mirrors
+  /// PaymentEvent.type so a new category never needs a migration.
+  type  String
+  title String
+  body  String
+  /// Deep-link target, related entity ids, etc.
+  data  Json?
+
+  /// Null means unread.
+  readAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+  @@map("notifications")
 }

@@ -2,7 +2,7 @@
   "name": "l-key",
   "version": "0.1.0",
   "private": true,
-  "description": "L Key \u2014 Everything Your Guitar Needs. Tune. Learn. Practice. Play.",
+  "description": "L Key — Everything Your Guitar Needs. Tune. Learn. Practice. Play.",
   "workspaces": [
     "packages/*",
     "backend",
@@ -25,5 +25,8 @@
     "mobile:test": "cd mobile && flutter test",
     "mobile:verify": "npm run mobile:format && npm run mobile:analyze && npm run mobile:test",
     "verify": "npm run tokens:check && npm run lint && npm run typecheck && npm run test && npm run mobile:verify"
+  },
+  "allowScripts": {
+    "argon2@0.45.1": true
   }
 }

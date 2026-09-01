@@ -12,7 +12,7 @@ void main() {
       });
     });
 
-    test('all five documented flags are present', () {
+    test('all six documented flags are present', () {
       expect(
         FeatureFlags.all.keys,
         containsAll(<String>[
@@ -21,6 +21,7 @@ void main() {
           'backingTracks',
           'recording',
           'community',
+          'ads',
         ]),
       );
     });

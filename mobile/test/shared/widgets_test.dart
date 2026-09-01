@@ -2,13 +2,17 @@ import 'dart:ui' show Tristate;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:l_key/app/theme/app_theme.dart';
 import 'package:l_key/app/theme/tokens.g.dart';
+import 'package:l_key/core/access/entitlement.dart';
+import 'package:l_key/core/access/feature_tier.dart';
 import 'package:l_key/core/errors/failure.dart';
 import 'package:l_key/shared/widgets/lk_async_view.dart';
 import 'package:l_key/shared/widgets/lk_bottom_nav_bar.dart';
 import 'package:l_key/shared/widgets/lk_button.dart';
+import 'package:l_key/shared/widgets/lk_capability_gate.dart';
 import 'package:l_key/shared/widgets/lk_empty_state.dart';
 import 'package:l_key/shared/widgets/lk_error_state.dart';
 import 'package:l_key/shared/widgets/lk_premium_badge.dart';
@@ -269,4 +273,72 @@ void main() {
       expect(find.text('PRO'), findsOneWidget);
     });
   });
+
+  group('LkCapabilityGate', () {
+    Widget gate() => const LkCapabilityGate(
+      tier: FeatureTier.premium,
+      entitled: _buildOpen,
+      locked: _buildLocked,
+    );
+
+    testWidgets('free content always renders open', (tester) async {
+      await pumpLk(
+        tester,
+        child: const LkCapabilityGate(
+          tier: FeatureTier.free,
+          entitled: _buildOpen,
+          locked: _buildLocked,
+        ),
+      );
+      expect(find.text('open'), findsOneWidget);
+    });
+
+    testWidgets('the honest default is not-entitled for premium', (
+      tester,
+    ) async {
+      // UnavailableEntitlementProvider is the wired default — no server has
+      // answered yet, so premium content renders locked (CLAUDE.md §47).
+      await pumpLk(tester, child: gate());
+      expect(find.text('locked'), findsOneWidget);
+    });
+
+    testWidgets('an entitled override renders open', (tester) async {
+      await pumpLk(
+        tester,
+        child: gate(),
+        overrides: <Override>[
+          entitlementProviderProvider.overrideWithValue(
+            const _FakeEntitlementProvider(EntitlementStatus.entitled),
+          ),
+        ],
+      );
+      expect(find.text('open'), findsOneWidget);
+    });
+
+    testWidgets('an unknown status does not block the player', (
+      tester,
+    ) async {
+      await pumpLk(
+        tester,
+        child: gate(),
+        overrides: <Override>[
+          entitlementProviderProvider.overrideWithValue(
+            const _FakeEntitlementProvider(EntitlementStatus.unknown),
+          ),
+        ],
+      );
+      expect(find.text('open'), findsOneWidget);
+    });
+  });
+}
+
+Widget _buildOpen(BuildContext context) => const Text('open');
+Widget _buildLocked(BuildContext context) => const Text('locked');
+
+final class _FakeEntitlementProvider implements EntitlementProvider {
+  const _FakeEntitlementProvider(this._status);
+  final EntitlementStatus _status;
+
+  @override
+  EntitlementStatus statusFor(FeatureTier tier) => _status;
 }

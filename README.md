@@ -1202,10 +1202,9 @@ overrides the other.
 | 05 | Audio / Tuner | ✅ Complete \* |
 | 05.1 | UX Stabilization | ✅ Complete |
 | 06 | Rhythm | ✅ Complete \* |
-| 06.1 | Rhythm Training | ☐ Not started |
+| 06.1 | Rhythm Training | ✂ Cut |
 | 07 | Songs | ⏭ **Next** |
-| 08 | Practice | ☐ Not started |
-| 09 | Backend | ◐ Scaffold only |
+| 09 | Backend | ✅ Complete |
 | 10 | Admin Portal | ◐ Scaffold only |
 | 11 | Premium | ☐ Not started |
 | 12 | Payments | ☐ Not started |
@@ -1222,6 +1221,9 @@ the website yet.
 
 **Scaffold only** means the application builds, its configuration validates and
 its module boundaries are marked — and nothing behind them is implemented.
+
+**Cut** means the phase is removed from scope, not silently deleted from this
+table — see the phase's own section below for why.
 
 ## Phase 01 — Foundation ✅
 
@@ -1243,8 +1245,9 @@ its module boundaries are marked — and nothing behind them is implemented.
 ## Phase 02 — Flutter Shell ✅
 
 * [x] Shell — five-section `StatefulShellRoute`, per-branch stacks, Android
-  back (ADR-0007)
-* [x] Screens — Home, Tools, Learn, Practice, Songs, Profile
+  back (ADR-0007) *(Learn and Practice later cut — ADR-0017)*
+* [x] Screens — Home, Tools, Learn, Practice, Songs, Profile *(Learn and
+  Practice later removed — ADR-0017)*
 * [x] Tool layouts — tuner, metronome, chords, scales (presentation only at
   this stage)
 * [x] Components — buttons, cards, headers, navigation, empty/error/loading
@@ -1311,19 +1314,20 @@ corrected what those phases shipped and did not add a feature area.
 * [x] Rhythm visualization — a beat indicator driven by the audio playhead
 * [ ] Device verification — docs/DEVICE-TESTING.md Part B has not been run
 
-## Phase 06.1 — Rhythm training
+## Phase 06.1 — Rhythm training ✂ Cut
 
-Both need practice-session persistence to score against, and both are V2 in
+Both needed practice-session persistence to score against, and both were V2 in
 PRD.md §66. The accent model was built to receive them: a strumming pattern is
 a per-pulse list of emphasis levels, which the schedule and renderer already
-take.
+take. **Cut** — Practice is no longer part of the product (ADR-0017), and
+neither trainer has anywhere left to record a session against.
 
-* [ ] Rhythm Trainer (PRD.md §17)
-* [ ] Strumming Trainer (PRD.md §18)
+* [ ] ~~Rhythm Trainer (PRD.md §17)~~
+* [ ] ~~Strumming Trainer (PRD.md §18)~~
 
 ## Phase 07 — Songs
 
-Phase 02 built the song and learning screens against placeholder content.
+Phase 02 built the song screen against placeholder content.
 
 * [ ] Song model and content
 * [ ] Song viewer
@@ -1331,28 +1335,25 @@ Phase 02 built the song and learning screens against placeholder content.
 * [ ] Favorites
 * [ ] Transposer (PRD.md §21)
 * [ ] Capo Assistant (PRD.md §22)
-* [ ] Lessons
 
-## Phase 08 — Practice
-
-Phase 02 built the practice screen; the timer does not run.
-
-* [ ] Practice sessions
-* [ ] Exercises
-* [ ] Practice history
-* [ ] Streaks
-* [ ] Progress
-* [ ] Basic analytics
-
-## Phase 09 — Backend ◐
+## Phase 09 — Backend ✅
 
 * [x] Scaffold — configuration validation, role guard, exception filter,
   redacting logger and the Prisma schema *(delivered in Phase 01)*
-* [ ] Authentication
-* [ ] User profiles
-* [ ] Content API
-* [ ] Synchronization
-* [ ] Notifications
+* [x] Authentication — email/password registration and login, argon2 password
+  hashing, stateless access JWTs with DB-backed rotating/revocable refresh
+  tokens (theft detection via family revocation)
+* [x] User profiles — display name/avatar, backed by `UserProfile`
+* [x] Content API — Songs, Chords, Scales: public read (published content
+  only, non-editors 404 on drafts rather than exposing their existence),
+  `EDITOR`+ role-gated CRUD and draft/review/published/unpublished/archived
+  status transitions, never a hard delete
+* [x] Synchronization — favorites (idempotent add/remove) and preferences
+  (locale/theme/reference pitch, mirroring mobile's local `Settings`) as a
+  whole-row sync, not a general sync engine
+* [x] Notifications — a real in-app inbox (list/mark-read), with the
+  external delivery channel an honest stub (`UnavailableNotificationDispatcher`)
+  pending a production push/email provider
 
 ## Phase 10 — Admin Portal ◐
 
@@ -1377,10 +1378,23 @@ Phase 02 built the practice screen; the timer does not run.
 and every labelled row still opens — entitlement is the server's decision
 (CLAUDE.md §23, §51).
 
+`EntitlementProvider` (`core/access/entitlement.dart`) and `LkCapabilityGate`
+are the mobile-only capability-gating seam, wired to an honest
+`UnavailableEntitlementProvider` that always answers not-entitled for Premium
+— server entitlement is still Phase 09/11 backend work, not yet started.
+
+An AdMob seam (`core/ads/`, ADR-0018) exists for the same reason: an
+`AdProvider`/`ConsentManager` interface and their `Unavailable*` defaults,
+with no plugin behind them yet — see the ADR for exactly what's deferred and
+why.
+
 * [ ] Premium plans
 * [ ] Entitlements, server-authoritative
-* [ ] Capability system
+* [x] Capability system — mobile-only seam (`EntitlementProvider`,
+  `LkCapabilityGate`), honestly stubbed pending server entitlement
 * [ ] Premium UX
+* [ ] AdMob integration — seam exists (ADR-0018); dependency, platform
+  wrapper and native manifest configuration are not yet added
 
 ## Phase 12 — Payments
 
@@ -1406,7 +1420,7 @@ Specified by PRD.md §60 and DESIGN.md §59–60.
 ## Phase 14 — AI
 
 * [ ] AI Guitar Assistant
-* [ ] AI Practice Coach
+* [ ] ~~AI Practice Coach~~ ✂ Cut — no Practice feature left to coach (ADR-0017)
 * [ ] AI songwriting assistance
 
 ## Phase 15 — Advanced Audio

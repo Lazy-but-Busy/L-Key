@@ -6,7 +6,7 @@ import 'package:l_key/shared/widgets/lk_bottom_nav_bar.dart';
 import 'package:l_key/shared/widgets/lk_icon_button.dart';
 import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 
-/// The five branch roots.
+/// The four branch roots (ADR-0017).
 ///
 /// Every screen below them now pushes on the root navigator (ADR-0014), so in
 /// practice the shell only ever builds one of these. The set stays as the
@@ -15,12 +15,11 @@ import 'package:l_key/shared/widgets/lk_top_app_bar.dart';
 const Set<String> _branchRoots = <String>{
   AppRoutes.home,
   AppRoutes.tools,
-  AppRoutes.learn,
   AppRoutes.songs,
   AppRoutes.profile,
 };
 
-/// The persistent frame around the five primary sections.
+/// The persistent frame around the four primary sections.
 ///
 /// Holds the bottom navigation and the top app bar so neither is rebuilt on a
 /// tab switch, and keeps each section's navigation stack alive through
@@ -45,9 +44,9 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    // The wordmark belongs to the five sections. A tool or a practice session
-    // sits above the shell entirely and carries its own bar with a back
-    // control (ADR-0014), so the shell is not even built while one is open.
+    // The wordmark belongs to the four sections. A tool sits above the shell
+    // entirely and carries its own bar with a back control (ADR-0014), so the
+    // shell is not even built while one is open.
     final isBranchRoot = _branchRoots.contains(
       GoRouterState.of(context).matchedLocation,
     );
@@ -55,7 +54,6 @@ class AppShell extends StatelessWidget {
     final destinations = <LkNavDestination>[
       LkNavDestination(icon: Icons.home_outlined, label: l10n.navHome),
       LkNavDestination(icon: Icons.tune, label: l10n.navTools),
-      LkNavDestination(icon: Icons.school_outlined, label: l10n.navLearn),
       LkNavDestination(
         icon: Icons.library_music_outlined,
         label: l10n.navSongs,

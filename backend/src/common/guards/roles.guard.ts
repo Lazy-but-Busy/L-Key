@@ -7,9 +7,10 @@ import {
 import { Reflector } from '@nestjs/core';
 
 import { AdminRole, ROLES_KEY } from '../decorators/roles.decorator';
+import { AuthenticatedUser } from './jwt-auth.guard';
 
 interface RequestWithUser {
-  user?: { id: string; role?: AdminRole };
+  user?: AuthenticatedUser;
 }
 
 /**

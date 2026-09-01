@@ -81,26 +81,7 @@ class ProfilePage extends ConsumerWidget {
         ),
         const SizedBox(height: LkSpacing.s6),
 
-        Row(
-          spacing: LkSpacing.s4,
-          children: <Widget>[
-            Expanded(
-              child: LkStatChip(
-                label: l10n.practiceStatStreak,
-                value: l10n.practiceStreakDays(6),
-              ),
-            ),
-            Expanded(
-              child: LkStatChip(
-                label: l10n.profileStatPractice,
-                value: '14.2',
-              ),
-            ),
-            Expanded(
-              child: LkStatChip(label: l10n.profileStatSongs, value: '18'),
-            ),
-          ],
-        ),
+        LkStatChip(label: l10n.profileStatSongs, value: '18'),
         const SizedBox(height: LkSpacing.s6),
 
         // Premium is presentational only: there is no entitlement source yet

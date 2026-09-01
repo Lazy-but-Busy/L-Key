@@ -9,12 +9,11 @@ import 'package:l_key/features/chords/presentation/chords_page.dart';
 import 'package:l_key/features/foundation/presentation/foundation_page.dart';
 import 'package:l_key/features/fretboard/presentation/fretboard_page.dart';
 import 'package:l_key/features/home/presentation/home_page.dart';
-import 'package:l_key/features/learning/presentation/learn_page.dart';
 import 'package:l_key/features/metronome/presentation/metronome_page.dart';
-import 'package:l_key/features/practice/presentation/practice_page.dart';
 import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/scales/presentation/scales_page.dart';
 import 'package:l_key/features/settings/presentation/settings_page.dart';
+import 'package:l_key/features/songs/presentation/song_detail_page.dart';
 import 'package:l_key/features/songs/presentation/songs_page.dart';
 import 'package:l_key/features/tools/presentation/tools_page.dart';
 import 'package:l_key/features/tuner/presentation/tuner_page.dart';
@@ -113,26 +112,19 @@ GoRouter createRouter({Environment environment = Environment.local}) {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: AppRoutes.learn,
-                name: AppRoutes.learnName,
-                builder: (context, state) => const LearnPage(),
-                routes: <RouteBase>[
-                  GoRoute(
-                    path: 'practice',
-                    name: AppRoutes.practiceName,
-                    parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const PracticePage(),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: <RouteBase>[
-              GoRoute(
                 path: AppRoutes.songs,
                 name: AppRoutes.songsName,
                 builder: (context, state) => const SongsPage(),
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: ':songId',
+                    name: AppRoutes.songDetailName,
+                    parentNavigatorKey: rootNavigatorKey,
+                    builder: (context, state) => SongDetailPage(
+                      songId: state.pathParameters['songId'] ?? '',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -16,6 +16,7 @@ import 'package:l_key/features/metronome/presentation/metronome_page.dart';
 import 'package:l_key/features/profile/presentation/profile_page.dart';
 import 'package:l_key/features/settings/presentation/settings_controller.dart';
 import 'package:l_key/features/settings/presentation/settings_page.dart';
+import 'package:l_key/features/songs/presentation/song_detail_page.dart';
 import 'package:l_key/features/songs/presentation/songs_page.dart';
 import 'package:l_key/features/tools/presentation/tools_page.dart';
 import 'package:l_key/features/tuner/presentation/tuner_page.dart';
@@ -46,6 +47,11 @@ Future<GoRouter> pumpApp(
             environment: environment,
             apiBaseUrl: 'http://localhost:3000',
             enableVerboseLogging: false,
+            admobAppIdAndroid: 'ca-app-pub-3940256099942544~3347511713',
+            admobAppIdIos: 'ca-app-pub-3940256099942544~1458002511',
+            admobBannerUnitId: 'ca-app-pub-3940256099942544/6300978111',
+            admobNativeUnitId: 'ca-app-pub-3940256099942544/2247696110',
+            admobRewardedUnitId: 'ca-app-pub-3940256099942544/5224354917',
           ),
         ),
         sharedPreferencesProvider.overrideWithValue(prefs),
@@ -75,17 +81,11 @@ Finder tab(String label) => find.descendant(
 
 void main() {
   group('AppShell', () {
-    testWidgets('starts on Home and offers the five sections', (tester) async {
+    testWidgets('starts on Home and offers the four sections', (tester) async {
       await pumpApp(tester);
 
       expect(find.byType(HomePage), findsOneWidget);
-      for (final label in <String>[
-        'Home',
-        'Tools',
-        'Learn',
-        'Songs',
-        'Profile',
-      ]) {
+      for (final label in <String>['Home', 'Tools', 'Songs', 'Profile']) {
         expect(tab(label), findsOneWidget, reason: '$label tab missing');
       }
     });
@@ -205,13 +205,13 @@ void main() {
       expect(find.byType(SongsPage), findsNothing);
     });
 
-    testWidgets('the wordmark bar appears only on the five sections', (
+    testWidgets('the wordmark bar appears only on the four sections', (
       tester,
     ) async {
       await pumpApp(tester);
       expect(find.byType(LkTopAppBar), findsOneWidget);
 
-      for (final section in <String>['Tools', 'Learn', 'Songs', 'Profile']) {
+      for (final section in <String>['Tools', 'Songs', 'Profile']) {
         await tester.tap(tab(section));
         await tester.pumpAndSettle();
         expect(
@@ -223,11 +223,11 @@ void main() {
     });
 
     testWidgets('every section root keeps both bars', (tester) async {
-      // The counterpart to the tool tests: the five sections are the only
+      // The counterpart to the tool tests: the four sections are the only
       // surfaces that carry the wordmark and the bottom bar (ADR-0014).
       await pumpApp(tester);
 
-      for (final section in <String>['Home', 'Tools', 'Learn', 'Songs']) {
+      for (final section in <String>['Home', 'Tools', 'Songs']) {
         await tester.tap(tab(section));
         await tester.pumpAndSettle();
         expect(find.byType(LkTopAppBar), findsOneWidget, reason: section);
@@ -292,6 +292,34 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(ChordDetailPage), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a song deep link builds its way back to Songs', (
+      tester,
+    ) async {
+      final router = await pumpApp(tester);
+
+      router.go('/songs/amazing-grace');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SongDetailPage), findsOneWidget);
+      expect(find.byType(LkBottomNavBar), findsNothing);
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+      expect(find.byType(SongsPage), findsOneWidget);
+      expect(find.byType(LkBottomNavBar), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('an unknown song id is a screen, not a crash', (tester) async {
+      final router = await pumpApp(tester);
+
+      router.go('/songs/not-a-real-song');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SongDetailPage), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 

@@ -12,6 +12,11 @@ class AppConfig {
     required this.environment,
     required this.apiBaseUrl,
     required this.enableVerboseLogging,
+    required this.admobAppIdAndroid,
+    required this.admobAppIdIos,
+    required this.admobBannerUnitId,
+    required this.admobNativeUnitId,
+    required this.admobRewardedUnitId,
   });
 
   /// Reads configuration from the compile-time environment.
@@ -27,6 +32,30 @@ class AppConfig {
       apiBaseUrl: url,
       // Verbose logs must never reach production (CLAUDE.md §38).
       enableVerboseLogging: environment != Environment.production,
+      // Google's own published sample/test identifiers (docs/adr/0018) —
+      // safe as defaults, never real inventory. Every environment must
+      // override these with real ids before release; ADR-0018 and
+      // mobile/config/README.md say so.
+      admobAppIdAndroid: const String.fromEnvironment(
+        'ADMOB_APP_ID_ANDROID',
+        defaultValue: 'ca-app-pub-3940256099942544~3347511713',
+      ),
+      admobAppIdIos: const String.fromEnvironment(
+        'ADMOB_APP_ID_IOS',
+        defaultValue: 'ca-app-pub-3940256099942544~1458002511',
+      ),
+      admobBannerUnitId: const String.fromEnvironment(
+        'ADMOB_BANNER_UNIT_ID',
+        defaultValue: 'ca-app-pub-3940256099942544/6300978111',
+      ),
+      admobNativeUnitId: const String.fromEnvironment(
+        'ADMOB_NATIVE_UNIT_ID',
+        defaultValue: 'ca-app-pub-3940256099942544/2247696110',
+      ),
+      admobRewardedUnitId: const String.fromEnvironment(
+        'ADMOB_REWARDED_UNIT_ID',
+        defaultValue: 'ca-app-pub-3940256099942544/5224354917',
+      ),
     );
   }
 
@@ -38,6 +67,22 @@ class AppConfig {
 
   /// Whether debug-level logging is permitted.
   final bool enableVerboseLogging;
+
+  /// AdMob application id for Android. Not a secret (CLAUDE.md §22) — it
+  /// identifies the app to AdMob, the same way a bundle id does.
+  final String admobAppIdAndroid;
+
+  /// AdMob application id for iOS.
+  final String admobAppIdIos;
+
+  /// AdMob banner ad unit id.
+  final String admobBannerUnitId;
+
+  /// AdMob native ad unit id.
+  final String admobNativeUnitId;
+
+  /// AdMob rewarded ad unit id.
+  final String admobRewardedUnitId;
 }
 
 /// Provides the build-time configuration to the widget tree.
