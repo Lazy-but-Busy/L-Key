@@ -1,10 +1,13 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../common/guards/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UsersService } from './users.service';
 
+@ApiTags('users')
+@ApiBearerAuth()
 @Controller('users/me')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

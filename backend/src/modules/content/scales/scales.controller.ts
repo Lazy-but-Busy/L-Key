@@ -8,6 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AdminRole } from '@prisma/client';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import { OptionalAuth } from '../../../common/decorators/optional-auth.decorator';
@@ -21,6 +22,7 @@ import { ScalesService } from './scales.service';
 
 const EDITORS = [AdminRole.EDITOR, AdminRole.ADMIN, AdminRole.SUPER_ADMIN];
 
+@ApiTags('scales')
 @Controller('scales')
 export class ScalesController {
   constructor(private readonly scalesService: ScalesService) {}
@@ -43,18 +45,21 @@ export class ScalesController {
     return this.scalesService.detail(id, user);
   }
 
+  @ApiBearerAuth()
   @Roles(...EDITORS)
   @Post()
   create(@Body() dto: CreateScaleDto) {
     return this.scalesService.create(dto);
   }
 
+  @ApiBearerAuth()
   @Roles(...EDITORS)
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateScaleDto) {
     return this.scalesService.update(id, dto);
   }
 
+  @ApiBearerAuth()
   @Roles(...EDITORS)
   @Post(':id/status')
   updateStatus(@Param('id') id: string, @Body() dto: UpdateStatusDto) {

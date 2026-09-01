@@ -8,6 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AdminRole } from '@prisma/client';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import { OptionalAuth } from '../../../common/decorators/optional-auth.decorator';
@@ -21,6 +22,7 @@ import { UpdateChordDto } from './dto/update-chord.dto';
 
 const EDITORS = [AdminRole.EDITOR, AdminRole.ADMIN, AdminRole.SUPER_ADMIN];
 
+@ApiTags('chords')
 @Controller('chords')
 export class ChordsController {
   constructor(private readonly chordsService: ChordsService) {}
@@ -43,18 +45,21 @@ export class ChordsController {
     return this.chordsService.detail(id, user);
   }
 
+  @ApiBearerAuth()
   @Roles(...EDITORS)
   @Post()
   create(@Body() dto: CreateChordDto) {
     return this.chordsService.create(dto);
   }
 
+  @ApiBearerAuth()
   @Roles(...EDITORS)
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateChordDto) {
     return this.chordsService.update(id, dto);
   }
 
+  @ApiBearerAuth()
   @Roles(...EDITORS)
   @Post(':id/status')
   updateStatus(@Param('id') id: string, @Body() dto: UpdateStatusDto) {

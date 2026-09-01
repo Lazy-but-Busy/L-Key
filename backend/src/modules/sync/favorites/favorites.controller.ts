@@ -11,12 +11,15 @@ import {
   Query,
 } from '@nestjs/common';
 import { FavoriteTargetType } from '@prisma/client';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../../common/guards/jwt-auth.guard';
 import { AddFavoriteDto } from './dto/add-favorite.dto';
 import { FavoritesService } from './favorites.service';
 
+@ApiTags('sync')
+@ApiBearerAuth()
 @Controller('sync/favorites')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
